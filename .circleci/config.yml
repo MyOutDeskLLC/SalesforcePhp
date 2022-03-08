@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: sudo npm install -g semantic-release
-      - run: cp .circleci/package.json ${CIRCLE_WORKING_DIRECTORY}/package.json # this is a placeholder package just to make releases happen
+      - run: sudo cp .circleci/package.json . # this is a placeholder package just to make releases happen
       - semantic-release/release
   test:
     docker:

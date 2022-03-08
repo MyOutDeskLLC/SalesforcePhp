@@ -5,7 +5,6 @@ namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
 class GetJobResults extends \Sammyjo20\Saloon\Http\SaloonRequest
 {
@@ -17,7 +16,7 @@ class GetJobResults extends \Sammyjo20\Saloon\Http\SaloonRequest
     public function __construct(string $id, string $resultType)
     {
         $this->id = $id;
-        if($resultType === BulkApiOptions::SUCCESSFUL_RESULTS) {
+        if ($resultType === BulkApiOptions::SUCCESSFUL_RESULTS) {
             $this->type = BulkApiOptions::SUCCESSFUL_RESULTS;
         } else {
             $this->type = BulkApiOptions::UNSUCCESSFUL_RESULTS;
@@ -26,6 +25,6 @@ class GetJobResults extends \Sammyjo20\Saloon\Http\SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/jobs/ingest/{$this->id}/" . $this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
+        return "/jobs/ingest/{$this->id}/".$this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
     }
 }

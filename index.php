@@ -3,34 +3,33 @@
 use myoutdeskllc\SalesforcePhp\OAuth\SalesforceAuthenticator;
 use myoutdeskllc\SalesforcePhp\OAuth\SalesforceOAuthConfiguration;
 
-require('vendor/autoload.php');
-
+require 'vendor/autoload.php';
 
 function getCredentialsFileLayout()
 {
     return [
         'salesforce' => [
-            'client_id' => '',
-            'secret' => '',
+            'client_id'    => '',
+            'secret'       => '',
             'redirect_uri' => '',
-            'base_uri' => 'https://test.salesforce.com',
+            'base_uri'     => 'https://test.salesforce.com',
             'instance_url' => '',
-            'api_version' => 'v42.0'
+            'api_version'  => 'v42.0',
         ],
         'credentials' => [
-            'token' => '',
-            'refresh' => ''
+            'token'   => '',
+            'refresh' => '',
         ],
         'direct' => [
             'username' => '',
-            'password' => ''
-        ]
+            'password' => '',
+        ],
     ];
 }
 
-if(!file_exists('creds.json')) {
+if (!file_exists('creds.json')) {
     file_put_contents('creds.json', json_encode(getCredentialsFileLayout(), JSON_PRETTY_PRINT));
-    echo "Please fill out the salesforce section in creds.json";
+    echo 'Please fill out the salesforce section in creds.json';
     exit(0);
 }
 
@@ -45,8 +44,8 @@ $sfAuth->setBaseUrl($credentials['salesforce']['base_uri']);
 $sfAuthenticator = new SalesforceAuthenticator();
 $sfAuthenticator->configure($sfAuth);
 
-if(!isset($_GET['code'])) {
-    header('Location: ' . $sfAuthenticator->getAuthorizationUrl());
+if (!isset($_GET['code'])) {
+    header('Location: '.$sfAuthenticator->getAuthorizationUrl());
 } else {
     $token = $sfAuthenticator->handleAuthorizationCallback($_GET['code']);
     $owner = $sfAuthenticator->getProvider()->getResourceOwner($token);

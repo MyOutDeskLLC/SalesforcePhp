@@ -16,6 +16,6 @@ class UpdateRecords extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "composite/sobjects";
+        return 'composite/sobjects';
     }
 }

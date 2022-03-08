@@ -29,13 +29,13 @@ class SalesforceOAuthConfiguration
         $this->baseUrl = $baseUrl;
     }
 
-    public function toArray() : array
+    public function toArray(): array
     {
         return [
-            'clientId' => $this->clientId,
+            'clientId'     => $this->clientId,
             'clientSecret' => $this->clientSecret,
-            'redirectUri' => $this->redirectUri,
-            'baseUrl' => $this->baseUrl
+            'redirectUri'  => $this->redirectUri,
+            'baseUrl'      => $this->baseUrl,
         ];
     }
 }

@@ -2,8 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Connectors;
 
-use myoutdeskllc\SalesforcePhp\Plugins\WithSalesforceAuthHeader;
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use Sammyjo20\Saloon\Http\SaloonConnector;
 use Sammyjo20\Saloon\Traits\Plugins\AcceptsJson;
 use Sammyjo20\Saloon\Traits\Plugins\AlwaysThrowsOnErrors;

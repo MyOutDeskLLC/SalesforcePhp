@@ -13,6 +13,6 @@ class DescribeGlobal extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "sobjects";
+        return 'sobjects';
     }
 }

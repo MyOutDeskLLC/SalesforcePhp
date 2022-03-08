@@ -26,7 +26,7 @@ class QueryRequest extends SaloonRequest
     public function defaultQuery(): array
     {
         return [
-            'q' => $this->query
+            'q' => $this->query,
         ];
     }
 }

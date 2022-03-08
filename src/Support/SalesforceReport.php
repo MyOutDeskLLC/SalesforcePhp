@@ -3,7 +3,7 @@
 namespace myoutdeskllc\SalesforcePhp\Support;
 
 /**
- * TODO: Reports are huge, having a helper decode the fact maps would be a massive help
+ * TODO: Reports are huge, having a helper decode the fact maps would be a massive help.
  */
 class SalesforceReport
 {

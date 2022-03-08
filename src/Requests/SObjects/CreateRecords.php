@@ -16,6 +16,6 @@ class CreateRecords extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "composite/sobjects";
+        return 'composite/sobjects';
     }
 }

@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Attachment;
 
-use Carbon\Carbon;
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use Sammyjo20\Saloon\Constants\Saloon;
 use Sammyjo20\Saloon\Http\SaloonRequest;

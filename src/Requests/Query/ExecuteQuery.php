@@ -2,4 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Query;
 
-class ExecuteQuery extends QueryRequest{}
+class ExecuteQuery extends QueryRequest
+{
+}

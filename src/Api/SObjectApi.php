@@ -11,7 +11,7 @@ use myoutdeskllc\SalesforcePhp\SalesforceApi;
 class SObjectApi extends SalesforceApi
 {
     /**
-     * Return basic information about the Object
+     * Return basic information about the Object.
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_basic_info.htm
      */
@@ -23,7 +23,7 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
-     * Return basic information about all objects available to this instance
+     * Return basic information about all objects available to this instance.
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_describeGlobal.htm
      */
@@ -35,7 +35,7 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
-     * Return full metadata information about the object
+     * Return full metadata information about the object.
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_describe.htm
      */
@@ -47,7 +47,7 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
-     * Returns object fields, but with limited information that is more easily understandable for serialization, etc
+     * Returns object fields, but with limited information that is more easily understandable for serialization, etc.
      *
      * @link describeObject
      */
@@ -56,13 +56,13 @@ class SObjectApi extends SalesforceApi
         $toSelect = array_merge(['label', 'length', 'name', 'type', 'calculated', 'unique'], $additionalSelects);
         $objectMetadata = $this->describeObject($object);
 
-        return array_map(function($field) use ($toSelect) {
+        return array_map(function ($field) use ($toSelect) {
             return array_intersect_key($field, array_flip($toSelect));
         }, $objectMetadata['fields']);
     }
 
     /**
-     * Return a list of recently deleted records for a given SObject. Start and End must be valid datetime in UTC
+     * Return a list of recently deleted records for a given SObject. Start and End must be valid datetime in UTC.
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_getdeleted.htm
      */
@@ -71,7 +71,7 @@ class SObjectApi extends SalesforceApi
         $request = new GetDeletedRecords($object);
         $request->setQuery([
             'start' => $start,
-            'end' => $end
+            'end'   => $end,
         ]);
 
         return $this->executeRequest($request);

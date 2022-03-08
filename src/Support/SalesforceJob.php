@@ -3,11 +3,11 @@
 namespace myoutdeskllc\SalesforcePhp\Support;
 
 use InvalidArgumentException;
-use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use League\Csv\AbstractCsv;
 use League\Csv\Reader;
 use League\Csv\Writer;
+use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
+use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 
 /**
  * Helper class to assist with the creation and uploading of Salesforce Jobs. You do not need to use this class.
@@ -43,7 +43,7 @@ class SalesforceJob
     protected ?BulkApi2 $api = null;
 
     /**
-     * Construct a new instance of the job helper class. This class can interface with the API directly if you pass in an instance
+     * Construct a new instance of the job helper class. This class can interface with the API directly if you pass in an instance.
      *
      * @param BulkApi2|null $api
      */
@@ -53,144 +53,150 @@ class SalesforceJob
     }
 
     /**
-     * if you want to check the status of a job, set its ID here
+     * if you want to check the status of a job, set its ID here.
      *
      * @param string $id salesforce if of the job
+     *
      * @return void
      */
-    public function setId(string $id) : void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * This is set automatically by the CSV reader, no need to set this
+     * This is set automatically by the CSV reader, no need to set this.
      *
      * @param string $delimiter
+     *
      * @return void
      */
-    public function setDelimiter(string $delimiter) : void
+    public function setDelimiter(string $delimiter): void
     {
         $this->delimiter = $delimiter;
     }
 
     /**
-     * Returns the type of line ending to be used for CSV uploads
+     * Returns the type of line ending to be used for CSV uploads.
      *
      * @return string
      */
-    public function getDelimiter() : string
+    public function getDelimiter(): string
     {
         return $this->delimiter;
     }
 
     /**
-     * This is set by default to LINEFEED
+     * This is set by default to LINEFEED.
      *
      * @param string $returnType
+     *
      * @return void
      */
-    public function setLineEnding(string $returnType) : void
+    public function setLineEnding(string $returnType): void
     {
         $this->lineEnding = $returnType;
     }
 
     /**
-     * Returns the line ending type for the underlying data
+     * Returns the line ending type for the underlying data.
      *
      * @return string
      */
-    public function getLineEnding() : string
+    public function getLineEnding(): string
     {
         return $this->lineEnding;
     }
 
     /**
-     * Sets the salesforce object to upload against (custom or built in)
+     * Sets the salesforce object to upload against (custom or built in).
      *
      * @param string $object
+     *
      * @return void
      */
-    public function setObject(string $object) : void
+    public function setObject(string $object): void
     {
         $this->object = $object;
     }
 
     /**
-     * Returns the object this job is interacting with, if set
+     * Returns the object this job is interacting with, if set.
      *
      * @return string
      */
-    public function getObject() : string
+    public function getObject(): string
     {
         return $this->object;
     }
 
     /**
-     * Sets the operation (by default, insert)
+     * Sets the operation (by default, insert).
      *
      * Reference BulkApiConstants for available operation types
      *
      * @param string $operation
+     *
      * @return void
      */
-    public function setOperation(string $operation) : void
+    public function setOperation(string $operation): void
     {
         $this->operation = $operation;
     }
 
     /**
-     * Returns the operation (by default, insert)
+     * Returns the operation (by default, insert).
      *
      * @return string
      */
-    public function getOperation() : string
+    public function getOperation(): string
     {
         return $this->operation;
     }
 
     /**
-     * Returns the URL (only available when the JOB is in open state)
+     * Returns the URL (only available when the JOB is in open state).
      *
      * @return string|null
      */
-    public function getContentUrl() : ?string
+    public function getContentUrl(): ?string
     {
         return $this->contentUrl;
     }
 
     /**
-     * Sets the instance of the bulk api to use
+     * Sets the instance of the bulk api to use.
      *
      * @param BulkApi2 $api
+     *
      * @return void
      */
-    public function setApi(BulkApi2 $api) : void
+    public function setApi(BulkApi2 $api): void
     {
         $this->api = $api;
     }
 
     /**
-     * Returns the job state, if available
+     * Returns the job state, if available.
      *
      * @return string|null
      */
-    public function getState() : ?string
+    public function getState(): ?string
     {
         return $this->state;
     }
 
     /**
-     * If this job has not been initialized, will attempt to create it
+     * If this job has not been initialized, will attempt to create it.
      *
      * @return void|null
      */
     public function initJob()
     {
-        if($this->api === null) {
+        if ($this->api === null) {
             throw new InvalidArgumentException('API has not been set');
         }
-        if($this->id !== null) {
+        if ($this->id !== null) {
             throw new InvalidArgumentException('Job has already been created');
         }
 
@@ -198,9 +204,10 @@ class SalesforceJob
     }
 
     /**
-     * If you have your own file stream, you can supply it here
+     * If you have your own file stream, you can supply it here.
      *
      * @param $stream
+     *
      * @return $this
      */
     public function setFileStream($stream)
@@ -213,9 +220,10 @@ class SalesforceJob
 
     /**
      * If you want to bulk upload records from a CSV, pass them in here.
-     * Be sure the first item in the list of records is the header for the columns
+     * Be sure the first item in the list of records is the header for the columns.
      *
      * @param array $records
+     *
      * @return $this
      */
     public function setRecordsToUpload(array $records)
@@ -229,9 +237,10 @@ class SalesforceJob
     }
 
     /**
-     * If you want to just supply a file path, do so here
+     * If you want to just supply a file path, do so here.
      *
      * @param string $csvFile
+     *
      * @return $this
      */
     public function setCsvFile(string $csvFile)
@@ -243,7 +252,7 @@ class SalesforceJob
     }
 
     /**
-     * Uploads the data to salesforce
+     * Uploads the data to salesforce.
      *
      * @return bool true if the upload was successful (we got status code 201)
      */
@@ -253,51 +262,51 @@ class SalesforceJob
     }
 
     /**
-     * Returns an instance of the underlying data stream (Abstract CSV)
+     * Returns an instance of the underlying data stream (Abstract CSV).
      *
      * @return AbstractCsv|null
      */
-    public function getUploadStream() : ?AbstractCsv
+    public function getUploadStream(): ?AbstractCsv
     {
         return $this->stream;
     }
 
     /**
-     * Returns the salesforce ID of the job
+     * Returns the salesforce ID of the job.
      *
      * @return string|null
      */
-    public function getJobId() : ?string
+    public function getJobId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * Returns data on successful operations
+     * Returns data on successful operations.
      *
      * @return array
      */
-    public function getSuccessfulResults() : array
+    public function getSuccessfulResults(): array
     {
         return $this->api->getSuccessfulRecords($this);
     }
 
     /**
-     * Returns data from salesforce on failed records
+     * Returns data from salesforce on failed records.
      *
      * @return array
      */
-    public function getFailedResults() : array
+    public function getFailedResults(): array
     {
         return $this->api->getFailedRecords($this);
     }
 
     /**
-     * Aborts the bulk data job
+     * Aborts the bulk data job.
      *
      * @return $this
      */
-    public function abortJob() : self
+    public function abortJob(): self
     {
         $this->setDataFromApiResponse($this->api->abortJob($this));
 
@@ -305,11 +314,11 @@ class SalesforceJob
     }
 
     /**
-     * Closes the job, marking it as upload ready (salesforce will begin processing it)
+     * Closes the job, marking it as upload ready (salesforce will begin processing it).
      *
      * @return $this
      */
-    public function closeJob() : self
+    public function closeJob(): self
     {
         $this->setDataFromApiResponse($this->api->closeJob($this));
 
@@ -327,9 +336,10 @@ class SalesforceJob
     }
 
     /**
-     * Helper method to upload bulk records quickly, directly
+     * Helper method to upload bulk records quickly, directly.
      *
      * @param array $records
+     *
      * @return void
      */
     public function uploadRecordsBulk(array $records)
@@ -341,9 +351,10 @@ class SalesforceJob
     }
 
     /**
-     * Helper method to upload a file stream directly
+     * Helper method to upload a file stream directly.
      *
      * @param $streamToCsvFile
+     *
      * @return void
      */
     public function uploadFileStreamAndClose($streamToCsvFile)
@@ -355,9 +366,10 @@ class SalesforceJob
     }
 
     /**
-     * Helper method that uploads a CSV immediately
+     * Helper method that uploads a CSV immediately.
      *
      * @param string $filePath
+     *
      * @return void
      */
     public function uploadCsvFileAndClose(string $filePath)
@@ -369,14 +381,15 @@ class SalesforceJob
     }
 
     /**
-     * Helper method to make a job, upload data, and close the job immediately
+     * Helper method to make a job, upload data, and close the job immediately.
      *
-     * @param string $object the object to create
-     * @param string $csvFile the CSV file path to upload
-     * @param BulkApi2 $api instance of the Bulk API to use
+     * @param string   $object  the object to create
+     * @param string   $csvFile the CSV file path to upload
+     * @param BulkApi2 $api     instance of the Bulk API to use
+     *
      * @return SalesforceJob
      */
-    public static function createJobAndUploadCsv(string $object, string $csvFile, BulkApi2 $api) : self
+    public static function createJobAndUploadCsv(string $object, string $csvFile, BulkApi2 $api): self
     {
         $job = new self($api);
         $job->setObject($object);
@@ -390,12 +403,13 @@ class SalesforceJob
     }
 
     /**
-     * Parses the response from Salesforce and updates this object as necessary
+     * Parses the response from Salesforce and updates this object as necessary.
      *
      * @param array $apiResponse
+     *
      * @return void
      */
-    public function setDataFromApiResponse(array $apiResponse) : void
+    public function setDataFromApiResponse(array $apiResponse): void
     {
         $this->id = $apiResponse['id'];
         $this->apiVersion = $apiResponse['apiVersion'];
@@ -415,10 +429,11 @@ class SalesforceJob
     }
 
     /**
-     * Initializes and creates an instance of this class based on data from salesforce. Useful for getting existing job status'
+     * Initializes and creates an instance of this class based on data from salesforce. Useful for getting existing job status'.
      *
-     * @param string $id ID of the salesforce job
+     * @param string   $id  ID of the salesforce job
      * @param BulkApi2 $api instance of the Bulk API to use
+     *
      * @return SalesforceJob
      */
     public static function getExistingJobById(string $id, BulkApi2 $api)

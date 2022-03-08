@@ -2,3 +2,4 @@ creds.json
 vendor/*
 .phpunit*
 .idea
+.env

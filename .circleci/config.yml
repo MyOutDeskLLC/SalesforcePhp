@@ -1,0 +1,29 @@
+# PHP CircleCI configuration file
+# Runs tests against configured scratch organization in environment variables
+version: 2
+jobs:
+  test:
+    docker:
+      - image: cimg/php:8.0
+    steps:
+      - checkout
+      # composer cache
+      - restore_cache:
+          keys:
+            # "composer.json" can be used if "composer.json"
+            # is not committed to the repository.
+            - composer-v1-{{ checksum "composer.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - composer-v1-
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - run: ./vendor/bin/pest
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - test

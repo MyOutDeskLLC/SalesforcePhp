@@ -117,7 +117,7 @@ Copy example.creds.json to creds.json, update the redirect_uri to be your local 
 
 ### Password Flow
 Password flow is possible using the `SalesforceApiUserLogin` class. Please do an API only user profile for this, and ensure you use
-whitelisted IP addresses on production if you take this approach.
+whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `login` inside of `creds.json`.
 ```php
 $apiUserLogin = new SalesforceApiUserLogin();
 $apiUserLogin->configureApp('MY_CONSUMER_KEY', 'MY_CONSUMER_SECRET');
@@ -129,6 +129,10 @@ $api = new SalesforceApi($credentials['access_token'], $credentials['instance_ur
 $api->getLimits();
 ```
 
+### Security Token
+Please visit `YOUR_DOMAIN.com/_ui/system/security/ResetApiTokenEdit` to get a security token reset. It will email the user. This must be
+appended to the back of the password when authenticating with the password flow **unless** you are using a whitelisted IP address range.
+
 ### OAuth Flow (Recommended)
 When deploying the above, a new application should be installed called `SalesforcePhpApi` under `Apps -> App Manager`, find
 SalesforcePhpApi, click the dropdown and select `View`
@@ -139,7 +143,9 @@ SalesforcePhpApi, click the dropdown and select `View`
 
 #### OAuth Usage
 OAuth is implemented using [league/oauth2](https://oauth2.thephpleague.com/). The index.php has a sample of how to get OAuth
-working. Here is how it can work in your application:
+working. The default `method` in `creds.json` is oauth. 
+
+Here is how it can work in your application:
 ```php
 $sfAuth = new SalesforceOAuthConfiguration();
 $sfAuth->setClientId('client_id');

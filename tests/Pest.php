@@ -43,9 +43,10 @@ expect()->extend('toBeOne', function () {
 
 function getAPI()
 {
-    $credentials = json_decode(file_get_contents(__DIR__.'/../creds.json'), true);
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+    $dotenv->load();
 
-    return new SalesforceApi($credentials['credentials']['token'], $credentials['salesforce']['instance_url'], $credentials['salesforce']['api_version']);
+    return new SalesforceApi(env('TOKEN'), env('INSTANCE_URL'), env('API_VERSION'));
 }
 
 function toFlatArray(array $results, string $key)

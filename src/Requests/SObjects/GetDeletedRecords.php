@@ -27,7 +27,7 @@ class GetDeletedRecords extends SaloonRequest
     {
         return [
             'start' => SoqlDates::THIS_MONTH,
-            'end' => SoqlDates::THIS_MONTH
+            'end'   => SoqlDates::THIS_MONTH,
         ];
     }
 }

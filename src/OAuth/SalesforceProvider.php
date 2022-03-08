@@ -4,7 +4,6 @@ namespace myoutdeskllc\SalesforcePhp\OAuth;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -21,19 +20,19 @@ class SalesforceProvider extends AbstractProvider
         parent::__construct($options, $collaborators);
     }
 
-    public function getBaseAuthorizationUrl() : string
+    public function getBaseAuthorizationUrl(): string
     {
         return $this->domain.'/services/oauth2/authorize';
     }
 
-    public function getBaseAccessTokenUrl(array $params) : string
+    public function getBaseAccessTokenUrl(array $params): string
     {
         return $this->domain.'/services/oauth2/token';
     }
 
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return $this->domain . '/services/oauth2/userinfo';
+        return $this->domain.'/services/oauth2/userinfo';
     }
 
     protected function getDefaultScopes()

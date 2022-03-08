@@ -4,7 +4,6 @@ namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
 class GetJob extends \Sammyjo20\Saloon\Http\SaloonRequest
 {

@@ -2,9 +2,9 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Auth;
 
+use myoutdeskllc\SalesforcePhp\Connectors\ApiUserConnector;
 use Sammyjo20\Saloon\Constants\Saloon;
 use Sammyjo20\Saloon\Http\SaloonRequest;
-use myoutdeskllc\SalesforcePhp\Connectors\ApiUserConnector;
 use Sammyjo20\Saloon\Traits\Plugins\HasFormParams;
 
 class LoginApiUser extends SaloonRequest
@@ -17,7 +17,7 @@ class LoginApiUser extends SaloonRequest
     public function defaultData(): array
     {
         return [
-            'grant_type'    => "password",
+            'grant_type'    => 'password',
             'client_id'     => '',
             'client_secret' => '',
             'username'      => '',

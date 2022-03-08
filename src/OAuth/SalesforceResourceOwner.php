@@ -14,11 +14,11 @@ class SalesforceResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Get the connected users salesforce id
+     * Get the connected users salesforce id.
      *
      * @return string
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->getResponseData('user_id');
     }
@@ -28,7 +28,7 @@ class SalesforceResourceOwner implements ResourceOwnerInterface
      *
      * @return string
      */
-    public function getFirstName() : string
+    public function getFirstName(): string
     {
         return $this->getResponseData('first_name');
     }
@@ -38,7 +38,7 @@ class SalesforceResourceOwner implements ResourceOwnerInterface
      *
      * @return string
      */
-    public function getLastName() : string
+    public function getLastName(): string
     {
         return $this->getResponseData('last_name');
     }
@@ -48,43 +48,44 @@ class SalesforceResourceOwner implements ResourceOwnerInterface
      *
      * @return string
      */
-    public function getEmail() : string
+    public function getEmail(): string
     {
         return $this->getResponseData('email');
     }
 
     /**
-     * Returns the instance URL
+     * Returns the instance URL.
      *
      * @return string
      */
-    public function getInstanceUrl() : string
+    public function getInstanceUrl(): string
     {
         return $this->getResponseData('instance_url');
     }
 
     /**
-     * Returns the response as an array
+     * Returns the response as an array.
      *
      * @return array
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         return $this->response;
     }
 
     /**
-     * Returns data from the response
+     * Returns data from the response.
      *
      * @param $path
      * @param $default
+     *
      * @return array|mixed|null
      */
     protected function getResponseData($path, $default = null): mixed
     {
         $array = $this->response;
 
-        if (! empty($path)) {
+        if (!empty($path)) {
             $keys = explode('.', $path);
 
             foreach ($keys as $key) {

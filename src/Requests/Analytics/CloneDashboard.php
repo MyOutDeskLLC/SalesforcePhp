@@ -30,14 +30,14 @@ class CloneDashboard extends SaloonRequest
     public function defaultData(): array
     {
         return [
-            'folderId' => $this->targetFolder
+            'folderId' => $this->targetFolder,
         ];
     }
 
     public function defaultQuery(): array
     {
         return [
-            'cloneId' => $this->dashboardId
+            'cloneId' => $this->dashboardId,
         ];
     }
 }

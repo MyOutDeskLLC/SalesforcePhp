@@ -2,11 +2,11 @@
 
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
-beforeEach(function() {
+beforeEach(function () {
     getAPI();
 });
 
-afterAll(function() {
+afterAll(function () {
     destroyPestPhpSalesforceChanges();
 });
 
@@ -18,7 +18,7 @@ test('it can query folders', function () {
 });
 
 test('it can create report folder(s)', function () {
-    $temporaryName = 'PESTPHP' . bin2hex(random_bytes(10));
+    $temporaryName = 'PESTPHP'.bin2hex(random_bytes(10));
     $reportApi = SalesforceApi::getReportApi();
     $reportApi->createReportFolder($temporaryName);
     $folder = $reportApi->recordsOnly()->getFolderByName("Sakura\'s Reports");
@@ -27,7 +27,7 @@ test('it can create report folder(s)', function () {
 });
 
 test('it can create dashboard folder(s)', function () {
-    $temporaryName = 'PESTPHP' . bin2hex(random_bytes(10));
+    $temporaryName = 'PESTPHP'.bin2hex(random_bytes(10));
     $reportApi = SalesforceApi::getReportApi();
     $reportApi->createDashboardFolder($temporaryName);
     $folder = $reportApi->recordsOnly()->getFolderByName("Sakura\'s Reports");
@@ -36,7 +36,7 @@ test('it can create dashboard folder(s)', function () {
 });
 
 test('it can delete folder(s)', function () {
-    $temporaryName = 'PESTPHP' . bin2hex(random_bytes(10));
+    $temporaryName = 'PESTPHP'.bin2hex(random_bytes(10));
     $reportApi = SalesforceApi::getReportApi();
     $reportApi->createReportFolder($temporaryName);
     $folder = $reportApi->recordsOnly()->getFolderByName($temporaryName);
@@ -55,48 +55,48 @@ test('it can find folders by name', function () {
 
 test('it returns null when folders are not found', function () {
     $reportApi = SalesforceApi::getReportApi();
-    $foldersAvailable = $reportApi->recordsOnly()->getFolderByName("This is not a real folder");
+    $foldersAvailable = $reportApi->recordsOnly()->getFolderByName('This is not a real folder');
 
     expect($foldersAvailable)->toBeNull();
 });
 
-test('it can find reports', function() {
+test('it can find reports', function () {
     $reportApi = SalesforceApi::getReportApi();
     $reports = toFlatArray($reportApi->recordsOnly()->listReports(), 'Name');
 
     expect($reports)->toContain('Account Test');
 });
 
-test('it can find reports by name', function() {
+test('it can find reports by name', function () {
     $reportApi = SalesforceApi::getReportApi();
-    $report = $reportApi->recordsOnly()->getReportByName("Account Test");
+    $report = $reportApi->recordsOnly()->getReportByName('Account Test');
 
     expect($report)->toHaveKey('Name', 'Account Test');
 });
 
-test('it returns null when a report cannot be found', function() {
+test('it returns null when a report cannot be found', function () {
     $reportApi = SalesforceApi::getReportApi();
-    $report = $reportApi->recordsOnly()->getReportByName("Games Done Quick 2020");
+    $report = $reportApi->recordsOnly()->getReportByName('Games Done Quick 2020');
 
     expect($report)->toBeNull();
 });
 
-test('it can copy a report to the same folder (Integration Tests folder)', function() {
-    $temporaryName = 'PESTPHP - ' . bin2hex(random_bytes(10));
+test('it can copy a report to the same folder (Integration Tests folder)', function () {
+    $temporaryName = 'PESTPHP - '.bin2hex(random_bytes(10));
 
     $reportApi = SalesforceApi::getReportApi();
-    $report = $reportApi->recordsOnly()->getReportByName("Account Test");
+    $report = $reportApi->recordsOnly()->getReportByName('Account Test');
     $reportApi->copyReportToSameFolder($report['Id'], $temporaryName);
     $reportJustCreated = $reportApi->recordsOnly()->getReportByName($temporaryName);
 
     expect($reportJustCreated)->not()->toBeNull();
 });
 
-test('it can copy a report to a new folder (Integration Test -> Sakura\'s Folder)', function() {
-    $temporaryName = 'PESTPHP - ' . bin2hex(random_bytes(10));
+test('it can copy a report to a new folder (Integration Test -> Sakura\'s Folder)', function () {
+    $temporaryName = 'PESTPHP - '.bin2hex(random_bytes(10));
 
     $reportApi = SalesforceApi::getReportApi();
-    $report = $reportApi->recordsOnly()->getReportByName("Account Test");
+    $report = $reportApi->recordsOnly()->getReportByName('Account Test');
     $sakuraFolder = $reportApi->recordsOnly()->getFolderByName("Sakura\'s Reports");
 
     $reportApi->copyReportToNewFolder($report['Id'], $temporaryName, $sakuraFolder['Id']);
@@ -106,15 +106,15 @@ test('it can copy a report to a new folder (Integration Test -> Sakura\'s Folder
     expect($reportJustCreated['FolderName'])->toEqual('Sakura\'s Reports');
 });
 
-test('it can get a list of dashboards', function() {
+test('it can get a list of dashboards', function () {
     $reportApi = SalesforceApi::getReportApi();
     $dashboards = toFlatArray($reportApi->recordsOnly()->listDashboards(), 'Title');
 
     expect($dashboards)->toContain('Elite Dashboard');
 });
 
-test('it can create a folder for dashboards', function() {
-    $temporaryName = 'PESTPHP' . bin2hex(random_bytes(10));
+test('it can create a folder for dashboards', function () {
+    $temporaryName = 'PESTPHP'.bin2hex(random_bytes(10));
     $reportApi = SalesforceApi::getReportApi();
     $reportApi->createDashboardFolder($temporaryName);
     $folder = $reportApi->recordsOnly()->getDashboardFolderByName($temporaryName);
@@ -122,8 +122,8 @@ test('it can create a folder for dashboards', function() {
     expect($folder)->not()->toBe(null);
 });
 
-test('it can clone a dashboard into a new folder', function() {
-    $temporaryName = 'PESTPHP' . bin2hex(random_bytes(10));
+test('it can clone a dashboard into a new folder', function () {
+    $temporaryName = 'PESTPHP'.bin2hex(random_bytes(10));
     $reportApi = SalesforceApi::getReportApi();
     $reportApi->createDashboardFolder($temporaryName);
     $folder = $reportApi->recordsOnly()->getDashboardFolderByName($temporaryName);
@@ -134,7 +134,7 @@ test('it can clone a dashboard into a new folder', function() {
     expect($createdDashboards)->not()->toBeEmpty();
 });
 
-test('it can query dashboard results', function() {
+test('it can query dashboard results', function () {
     $reportApi = SalesforceApi::getReportApi();
     $existingDashboard = $reportApi->recordsOnly()->getDashboardByName('Elite Dashboard');
     $existingDashboard = $reportApi->getDashboardResults($existingDashboard['Id']);
@@ -143,9 +143,9 @@ test('it can query dashboard results', function() {
     expect($firstComponentFactMap)->toHaveKey('T!T');
 });
 
-test('it can run reports asynchronously', function() {
+test('it can run reports asynchronously', function () {
     $reportApi = SalesforceApi::getReportApi();
-    $report = $reportApi->recordsOnly()->getReportByName("Account Test");
+    $report = $reportApi->recordsOnly()->getReportByName('Account Test');
     $asyncRun = $reportApi->runReportAsync($report['Id']);
     sleep(2);
     $finalResults = $reportApi->getAsyncReportResults($report['Id'], $asyncRun['id']);

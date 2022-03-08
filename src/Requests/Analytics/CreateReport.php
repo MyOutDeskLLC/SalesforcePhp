@@ -16,6 +16,6 @@ class CreateReport extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/analytics/reports";
+        return '/analytics/reports';
     }
 }

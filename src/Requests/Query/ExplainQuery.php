@@ -7,7 +7,7 @@ class ExplainQuery extends QueryRequest
     public function defaultQuery(): array
     {
         return [
-            'explain' => $this->query
+            'explain' => $this->query,
         ];
     }
 }

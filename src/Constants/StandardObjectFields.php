@@ -4,7 +4,7 @@ namespace myoutdeskllc\SalesforcePhp\Constants;
 
 class StandardObjectFields
 {
-    public CONST DASHBOARD_FIELDS = [
+    public const DASHBOARD_FIELDS = [
         'BackgroundDirection',
         'BackgroundEnd',
         'BackgroundStart',
@@ -34,6 +34,6 @@ class StandardObjectFields
         'Title',
         'TitleColor',
         'TitleSize',
-        'Type'
+        'Type',
     ];
 }

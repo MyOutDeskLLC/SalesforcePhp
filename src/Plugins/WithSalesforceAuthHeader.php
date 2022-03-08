@@ -6,10 +6,10 @@ use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
 trait WithSalesforceAuthHeader
 {
-    public function bootWithSalesforceAuthHeader() : void
+    public function bootWithSalesforceAuthHeader(): void
     {
         $this->mergeHeaders([
-            'Authorization' => 'Bearer ' . SalesforceApi::token()
+            'Authorization' => 'Bearer '.SalesforceApi::token(),
         ]);
     }
 }

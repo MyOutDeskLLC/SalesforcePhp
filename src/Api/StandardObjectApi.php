@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Api;
 
-use Carbon\Carbon;
 use myoutdeskllc\SalesforcePhp\Constants\StandardObjects;
 use myoutdeskllc\SalesforcePhp\Requests\Attachment\CreateAttachment;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
@@ -80,12 +79,12 @@ class StandardObjectApi extends SalesforceApi
     }
 
     /**
-     * Creates an attachment in Salesforce using the base64 encoded body of the file (buffer)
+     * Creates an attachment in Salesforce using the base64 encoded body of the file (buffer).
      *
-     * @param string $parentObjectId object this attaches to under notes & attachments
-     * @param string $name name of the attachment in salesforce
-     * @param string $contentType mime type, aka: application/pdf, image/jpeg, etc
-     * @param string $description used for information
+     * @param string   $parentObjectId object this attaches to under notes & attachments
+     * @param string   $name           name of the attachment in salesforce
+     * @param string   $contentType    mime type, aka: application/pdf, image/jpeg, etc
+     * @param string   $description    used for information
      * @param resource $attachmentBody should be a resource, stream, buffer of the file. Not a path.
      */
     public function createAttachment(string $parentObjectId, string $name, string $contentType, string $description, $attachmentBody)

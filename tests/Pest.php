@@ -24,8 +24,6 @@
 |
 */
 
-use myoutdeskllc\SalesforcePhp\OAuth\SalesforceAuthenticator;
-use myoutdeskllc\SalesforcePhp\OAuth\SalesforceOAuthConfiguration;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
 expect()->extend('toBeOne', function () {
@@ -45,13 +43,14 @@ expect()->extend('toBeOne', function () {
 
 function getAPI()
 {
-    $credentials = json_decode(file_get_contents(__DIR__ . '/../creds.json'), true);
+    $credentials = json_decode(file_get_contents(__DIR__.'/../creds.json'), true);
+
     return new SalesforceApi($credentials['credentials']['token'], $credentials['salesforce']['instance_url'], $credentials['salesforce']['api_version']);
 }
 
 function toFlatArray(array $results, string $key)
 {
-    return array_map(function($result) use ($key) {
+    return array_map(function ($result) use ($key) {
         return $result[$key];
     }, $results);
 }
@@ -62,19 +61,20 @@ function destroyPestPhpSalesforceChanges()
     $reports = $reportApi->listReports();
     $folders = $reportApi->listFolders();
 
-    foreach($reports as $report) {
-        if(str_starts_with($report['Name'], 'PESTPHP')) {
+    foreach ($reports as $report) {
+        if (str_starts_with($report['Name'], 'PESTPHP')) {
             $reportApi->deleteReport($report['Id']);
         }
     }
-    foreach($folders as $folder) {
-        if(str_starts_with($folder['Name'], 'PESTPHP')) {
-            if($folder['Type'] === 'Dashboard') {
+    foreach ($folders as $folder) {
+        if (str_starts_with($folder['Name'], 'PESTPHP')) {
+            if ($folder['Type'] === 'Dashboard') {
                 $dashboardsInFolder = $reportApi->recordsOnly()->listDashboardsInFolderById($folder['Id']);
-                foreach($dashboardsInFolder as $dashboard) {
+                foreach ($dashboardsInFolder as $dashboard) {
                     $reportApi->deleteDashboard($dashboard['Id']);
                 }
             }
+
             try {
                 $reportApi->deleteFolder($folder['Id']);
             } catch (\Exception $e) {

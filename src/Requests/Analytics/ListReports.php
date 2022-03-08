@@ -13,6 +13,6 @@ class ListReports extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/analytics/reports";
+        return '/analytics/reports';
     }
 }

@@ -4,7 +4,7 @@ use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
 
-beforeEach(function() {
+beforeEach(function () {
     getAPI();
 });
 
@@ -22,14 +22,14 @@ test('Can create a bulk API job', function () {
 test('has proper csv data in upload stream', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setCsvFile(__DIR__ . '/fixtures/vtubers.csv');
+    $salesforceJob->setCsvFile(__DIR__.'/fixtures/vtubers.csv');
     expect($salesforceJob->getUploadStream()->toString())->toContain('sakura miko');
 });
 
 test('has proper csv data in raw file read stream', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setFileStream(fopen(__DIR__ . '/fixtures/vtubers.csv', 'r'));
+    $salesforceJob->setFileStream(fopen(__DIR__.'/fixtures/vtubers.csv', 'r'));
     expect($salesforceJob->getUploadStream()->toString())->toContain('sakura miko');
 });
 
@@ -37,7 +37,7 @@ test('has proper csv data when set from an array', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setRecordsToUpload([
-        ['Sakura Miko', '@sakuramiko35']
+        ['Sakura Miko', '@sakuramiko35'],
     ]);
     expect($salesforceJob->getUploadStream()->toString())->toContain('Sakura Miko');
 });
@@ -47,7 +47,7 @@ test('has proper csv data when records are pushed one at a time', function () {
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setRecordsToUpload([
         ['Sakura Miko', '@sakuramiko35'],
-        ['usadapekora', '@test']
+        ['usadapekora', '@test'],
     ]);
     expect($salesforceJob->getUploadStream()->toString())->toContain('Sakura Miko', 'usadapekora');
 });

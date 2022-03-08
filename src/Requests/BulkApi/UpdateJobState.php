@@ -25,7 +25,7 @@ class UpdateJobState extends \Sammyjo20\Saloon\Http\SaloonRequest
     public function defaultData(): array
     {
         return [
-            'state' => $this->state
+            'state' => $this->state,
         ];
     }
 

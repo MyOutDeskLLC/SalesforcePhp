@@ -7,7 +7,7 @@ use Sammyjo20\Saloon\Constants\Saloon;
 use Sammyjo20\Saloon\Http\SaloonRequest;
 
 /**
- * TODO: These yield "HTTP Method not allowed" despite docs
+ * TODO: These yield "HTTP Method not allowed" despite docs.
  *
  * It seemed to suggest that it would be at /analytics/folders instead of folders, but neither seemed to work
  *
@@ -20,6 +20,6 @@ class ListFolders extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/folders/";
+        return '/folders/';
     }
 }

@@ -2,7 +2,7 @@
 
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
-beforeEach(function() {
+beforeEach(function () {
     getAPI();
 });
 
@@ -42,19 +42,19 @@ test('Can request a more specific set of field keys from an SObject (add scale t
     expect($fieldInformation[0])->toHaveCount(7);
 });
 
-test('Can create a record', function() {
+test('Can create a record', function () {
     $api = getAPI();
     $faker = Faker\Factory::create();
 
     $response = $api->createRecord('Virtual_Youtuber__c', [
-        'name' => $faker->name,
-        'Twitter__c' => $faker->randomAscii(5)
+        'name'       => $faker->name,
+        'Twitter__c' => $faker->randomAscii(5),
     ]);
 
     expect($response)->toHaveKey('success', true);
 });
 
-test('Can create multiple records', function() {
+test('Can create multiple records', function () {
     $api = getAPI();
     $faker = Faker\Factory::create();
 
@@ -65,8 +65,8 @@ test('Can create multiple records', function() {
     expect($response)->toHaveCount(2);
 });
 
-test('Throws on non-existent records', function() {
-    expect(function() {
+test('Throws on non-existent records', function () {
+    expect(function () {
         $api = getAPI();
         $api->getRecord('Virtual_Youtuber__c', 'TestNotExisting', ['Id']);
     })->toThrow(\Sammyjo20\Saloon\Exceptions\SaloonRequestException::class);

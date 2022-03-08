@@ -37,9 +37,9 @@ workflows:
   workflow:
     jobs:
       - test
-      - release
-        requires:
-          - test
+      - release:
+          requires:
+            - test
           filters:
             branches:
               only:

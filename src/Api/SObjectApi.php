@@ -13,9 +13,13 @@ class SObjectApi extends SalesforceApi
     /**
      * Return basic information about the Object.
      *
+     * @param string $object object to query. Include __c if this is a custom object.
+     *
+     * @return array
+     *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_basic_info.htm
      */
-    public function getObjectInformation(string $object)
+    public function getObjectInformation(string $object): array
     {
         $request = new GetObjectInformation($object);
 
@@ -23,11 +27,13 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
-     * Return basic information about all objects available to this instance.
+     * Return basic information about all objects available to this instance. This list will be very large as it includes standard objects.
+     *
+     * @return array
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_describeGlobal.htm
      */
-    public function listObjects()
+    public function listObjects(): array
     {
         $request = new DescribeGlobal();
 
@@ -36,6 +42,10 @@ class SObjectApi extends SalesforceApi
 
     /**
      * Return full metadata information about the object.
+     *
+     * @param string $object object to query. Include __c for custom objects.
+     *
+     * @return array|mixed
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_describe.htm
      */
@@ -49,9 +59,14 @@ class SObjectApi extends SalesforceApi
     /**
      * Returns object fields, but with limited information that is more easily understandable for serialization, etc.
      *
+     * @param string $object            object to query. include __c for custom objects
+     * @param array  $additionalSelects additional fields to select (default: label, length, name, type, calculated, unique)
+     *
+     * @return array
+     *
      * @link describeObject
      */
-    public function getObjectFields(string $object, array $additionalSelects = [])
+    public function getObjectFields(string $object, array $additionalSelects = []): array
     {
         $toSelect = array_merge(['label', 'length', 'name', 'type', 'calculated', 'unique'], $additionalSelects);
         $objectMetadata = $this->describeObject($object);
@@ -63,6 +78,12 @@ class SObjectApi extends SalesforceApi
 
     /**
      * Return a list of recently deleted records for a given SObject. Start and End must be valid datetime in UTC.
+     *
+     * @param string $object object to query. Include __c for custom objects.
+     * @param string $start  start date, in UTC
+     * @param string $end    end date, in UTC
+     *
+     * @return array|mixed
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_getdeleted.htm
      */

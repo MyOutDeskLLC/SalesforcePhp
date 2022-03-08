@@ -9,7 +9,7 @@ jobs:
       - image: cimg/node:current
     steps:
       - checkout
-      - run: sudo npm install -g semantic-release
+      - run: sudo npm install -g @semantic-release/git semantic-release
       - run: sudo cp .circleci/package.json . # this is a placeholder package just to make releases happen
       - semantic-release/release
   test:

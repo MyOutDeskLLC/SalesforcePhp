@@ -1,10 +1,8 @@
 # PHP CircleCI configuration file
 # Runs tests against configured scratch organization in environment variables
-version: 2
-
+version: 2.1
 orbs:
   semantic-release: proxyco/semantic-release@3.0.0
-
 jobs:
   release:
     docker:

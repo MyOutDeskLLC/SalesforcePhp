@@ -20,6 +20,7 @@ jobs:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
+      - run: touch .env
       - run: ./vendor/bin/pest
 
 workflows:

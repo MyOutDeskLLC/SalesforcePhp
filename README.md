@@ -2,6 +2,7 @@
 A beautiful, extendable API powered by [Saloon](https://github.com/sammyjo20/saloon)
 
 ![img](https://github.styleci.io/repos/467300822/shield)
+![MyOutDeskLLC](https://circleci.com/gh/MyOutDeskLLC/SalesforcePhp.svg?style=shield)
 
 ## Introduction
 The goal of this API was to create a feature rich, elegant baseline for working with the Salesforce API. Developers can 

@@ -2,6 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp;
 
+
+use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
@@ -18,6 +20,7 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
+use Sammyjo20\Saloon\Exceptions\SaloonException;
 use Sammyjo20\Saloon\Http\SaloonRequest;
 
 class SalesforceApi
@@ -85,9 +88,9 @@ class SalesforceApi
      * @param string $id
      * @param array  $recordInformation
      *
-     * @return array|mixed
+     * @return array
      */
-    public function updateRecord(string $object, string $id, array $recordInformation)
+    public function updateRecord(string $object, string $id, array $recordInformation): array
     {
         $request = new UpdateRecord($object, $id);
         $request->setData($recordInformation);
@@ -102,9 +105,9 @@ class SalesforceApi
      * @param array  $recordInformation
      * @param bool   $allOrNone
      *
-     * @return array|mixed
+     * @return array
      */
-    public function updateRecords(string $object, array $recordInformation, bool $allOrNone = true)
+    public function updateRecords(string $object, array $recordInformation, bool $allOrNone = true): array
     {
         $payload = [
             'allOrNone' => $allOrNone,
@@ -129,11 +132,13 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_create.htm
      *
-     * @param string $object
+     * @param string $object object to create. Include __c for custom objects.
      * @param array  $recordsToInsert array of records to insert
      * @param bool   $allOrNone       should this operation fail if any are not inserted
+     *
+     * @return array
      */
-    public function createRecords(string $object, array $recordsToInsert, bool $allOrNone = true)
+    public function createRecords(string $object, array $recordsToInsert, bool $allOrNone = true): array
     {
         $payload = [
             'allOrNone' => $allOrNone,
@@ -205,9 +210,9 @@ class SalesforceApi
      *
      * @param string $rawQuery
      *
-     * @return array|mixed
+     * @return array
      */
-    public function executeQueryRaw(string $rawQuery)
+    public function executeQueryRaw(string $rawQuery): array
     {
         $request = new ExecuteQuery($rawQuery);
 
@@ -226,10 +231,20 @@ class SalesforceApi
         return $this->executeRequest($request);
     }
 
-    protected function executeRequest(SaloonRequest $request)
+    /**
+     * Executes the request, extracting records only if needed.
+     *
+     * @param SaloonRequest $request
+     *
+     * @return array
+     *
+     * @throws GuzzleException|SaloonException|\ReflectionException
+     */
+    protected function executeRequest(SaloonRequest $request): array
     {
         $response = $request->send()->json();
-        if ($this->recordsOnly() && isset($response['records'])) {
+
+        if (isset($response['records']) && $this->recordsOnly()) {
             return array_map(function ($item) {
                 unset($item['attributes']);
 
@@ -240,6 +255,11 @@ class SalesforceApi
         return $response;
     }
 
+    /**
+     * Configures this API to unset the 'attribute' key and return only records
+     *
+     * @return $this
+     */
     public function recordsOnly(): self
     {
         $this->recordsOnly = true;
@@ -247,6 +267,11 @@ class SalesforceApi
         return $this;
     }
 
+    /**
+     * Configures this API to return all data (attribute and records)
+     *
+     * @return $this
+     */
     public function allAttributes(): self
     {
         $this->recordsOnly = false;
@@ -254,33 +279,63 @@ class SalesforceApi
         return $this;
     }
 
-    public function listApiVersionsAvailable()
+    /**
+     * Returns available API versions for this organizations instance
+     *
+     * @return array
+     */
+    public function listApiVersionsAvailable(): array
     {
         $request = new GetSupportedApiVersions();
 
-        return $request->send()->json();
+        return $this->executeRequest($request);
     }
 
-    public static function getReportApi()
+    /**
+     * Returns an instance of the ReportApi
+     *
+     * @return ReportApi
+     */
+    public static function getReportApi(): ReportApi
     {
         return new ReportApi(self::$token, self::$instanceUrl, self::$apiVersion);
     }
 
-    public static function getSObjectApi()
+    /**
+     * Returns an instance of the SObjectApi
+     *
+     * @return SObjectApi
+     */
+    public static function getSObjectApi(): SObjectApi
     {
         return new SObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
     }
 
-    public static function getBulkApi()
+    /**
+     * Returns an instance of the BulkApi2
+     *
+     * @return BulkApi2
+     */
+    public static function getBulkApi(): BulkApi2
     {
         return new BulkApi2(self::$token, self::$instanceUrl, self::$apiVersion);
     }
 
+    /**
+     * Returns an instance of the Standard Object API (mostly helper methods)
+     *
+     * @return StandardObjectApi
+     */
     public static function getStandardObjectApi(): StandardObjectApi
     {
         return new StandardObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
     }
 
+    /**
+     * Returns an instance of the SoqlQueryBuilder
+     *
+     * @return SoqlQueryBuilder
+     */
     public static function getQueryBuilder(): SoqlQueryBuilder
     {
         return new SoqlQueryBuilder();

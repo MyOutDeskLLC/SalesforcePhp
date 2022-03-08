@@ -1,6 +1,6 @@
 <?php
 
-namespace myoutdeskllc\SalesforcePhp\Helpers;
+namespace myoutdeskllc\SalesforcePhp\Support;
 
 use myoutdeskllc\SalesforcePhp\Constants\SoqlDates;
 use SalesforceQueryBuilder\QueryBuilder;

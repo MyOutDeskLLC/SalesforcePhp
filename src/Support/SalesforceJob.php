@@ -40,12 +40,13 @@ class SalesforceJob
     protected string $delimiter = BulkApiOptions::DELIMITER_COMMA;
     protected string $lineEnding = BulkApiOptions::LINEFEED_ENDING;
 
+    // This class needs a reference to an authenticated API to run most functions
     protected ?BulkApi2 $api = null;
 
     /**
      * Construct a new instance of the job helper class. This class can interface with the API directly if you pass in an instance.
      *
-     * @param BulkApi2|null $api
+     * @param BulkApi2|null $api an authenticated instance of the BulkApi2 connector
      */
     public function __construct(?BulkApi2 $api = null)
     {
@@ -111,7 +112,7 @@ class SalesforceJob
     /**
      * Sets the salesforce object to upload against (custom or built in).
      *
-     * @param string $object
+     * @param string $object sets the object to perform bulk operations on (insert, update, delete, etc)
      *
      * @return void
      */
@@ -189,15 +190,18 @@ class SalesforceJob
     /**
      * If this job has not been initialized, will attempt to create it.
      *
-     * @return void|null
+     * @return void
      */
-    public function initJob()
+    public function initJob(): void
     {
         if ($this->api === null) {
             throw new InvalidArgumentException('API has not been set');
         }
         if ($this->id !== null) {
             throw new InvalidArgumentException('Job has already been created');
+        }
+        if($this->object === null) {
+            throw new InvalidArgumentException('Object has not been set');
         }
 
         $this->setDataFromApiResponse($this->api->createJob($this));
@@ -206,11 +210,11 @@ class SalesforceJob
     /**
      * If you have your own file stream, you can supply it here.
      *
-     * @param $stream
+     * @param resource $stream file stream
      *
      * @return $this
      */
-    public function setFileStream($stream)
+    public function setFileStream($stream): self
     {
         $this->stream = Reader::createFromStream($stream);
         $this->delimiter = $this->stream->getDelimiter();
@@ -226,7 +230,7 @@ class SalesforceJob
      *
      * @return $this
      */
-    public function setRecordsToUpload(array $records)
+    public function setRecordsToUpload(array $records): self
     {
         $this->closeExistingStream();
         $writer = Writer::createFromString();
@@ -243,7 +247,7 @@ class SalesforceJob
      *
      * @return $this
      */
-    public function setCsvFile(string $csvFile)
+    public function setCsvFile(string $csvFile): self
     {
         $this->closeExistingStream();
         $this->stream = Reader::createFromPath($csvFile);
@@ -256,7 +260,7 @@ class SalesforceJob
      *
      * @return bool true if the upload was successful (we got status code 201)
      */
-    public function upload()
+    public function upload(): bool
     {
         return $this->api->uploadJobData($this) === 201;
     }
@@ -326,13 +330,13 @@ class SalesforceJob
     }
 
     /**
+     * Frees an existing stream, if one is opened
+     *
      * @return void
      */
     protected function closeExistingStream(): void
     {
-        if ($this->stream) {
-            $this->stream->close();
-        }
+        $this->stream = null;
     }
 
     /**
@@ -340,44 +344,60 @@ class SalesforceJob
      *
      * @param array $records
      *
-     * @return void
+     * @return self
      */
-    public function uploadRecordsBulk(array $records)
+    public function uploadRecordsBulk(array $records): self
     {
         $this->closeExistingStream();
         $this->setRecordsToUpload($records);
         $this->api->uploadJobData($this);
         $this->closeJob();
+
+        return $this;
     }
 
     /**
      * Helper method to upload a file stream directly.
      *
-     * @param $streamToCsvFile
+     * @param resource $streamToCsvFile stream to valid CSV data (via fopen, url, etc)
      *
-     * @return void
+     * @return self
      */
-    public function uploadFileStreamAndClose($streamToCsvFile)
+    public function uploadFileStreamAndClose($streamToCsvFile): self
     {
         $this->closeExistingStream();
         $this->setFileStream($streamToCsvFile);
         $this->api->uploadJobData($this);
         $this->closeJob();
+
+        return $this;
     }
 
     /**
      * Helper method that uploads a CSV immediately.
      *
-     * @param string $filePath
+     * @param string $filePath readable path to a CSV file
      *
-     * @return void
+     * @return self
      */
-    public function uploadCsvFileAndClose(string $filePath)
+    public function uploadCsvFileAndClose(string $filePath): self
     {
         $this->closeExistingStream();
         $this->setCsvFile($filePath);
         $this->api->uploadJobData($this);
         $this->closeJob();
+
+        return $this;
+    }
+
+    /**
+     * Refreshes this job, querying salesforce again to get the current status.
+     *
+     * @return void
+     */
+    public function refreshStatus(): void
+    {
+        $this->setDataFromApiResponse($this->api->getJob($this));
     }
 
     /**
@@ -405,7 +425,7 @@ class SalesforceJob
     /**
      * Parses the response from Salesforce and updates this object as necessary.
      *
-     * @param array $apiResponse
+     * @param array $apiResponse API response from salesforce bulk api 2.0
      *
      * @return void
      */
@@ -436,7 +456,7 @@ class SalesforceJob
      *
      * @return SalesforceJob
      */
-    public static function getExistingJobById(string $id, BulkApi2 $api)
+    public static function getExistingJobById(string $id, BulkApi2 $api): self
     {
         $self = new self($api);
         $self->setId($id);

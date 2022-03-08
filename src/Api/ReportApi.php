@@ -3,7 +3,6 @@
 namespace myoutdeskllc\SalesforcePhp\Api;
 
 use myoutdeskllc\SalesforcePhp\Constants\StandardObjectFields;
-use myoutdeskllc\SalesforcePhp\Helpers\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CloneDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateFolder;
@@ -23,6 +22,7 @@ use myoutdeskllc\SalesforcePhp\Requests\Analytics\RunReport;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\SaveReport;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\UpdateDashboard;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
+use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 
 class ReportApi extends SalesforceApi
 {

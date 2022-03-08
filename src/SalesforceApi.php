@@ -7,7 +7,6 @@ use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
-use myoutdeskllc\SalesforcePhp\Helpers\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
@@ -17,6 +16,7 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
+use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
 use Sammyjo20\Saloon\Http\SaloonRequest;
 

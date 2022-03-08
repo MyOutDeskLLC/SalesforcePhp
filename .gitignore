@@ -1,0 +1,4 @@
+creds.json
+vendor/*
+.phpunit*
+.idea

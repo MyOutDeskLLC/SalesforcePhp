@@ -1,26 +1,24 @@
 <?php
 
-namespace myoutdeskllc\salesforcephp;
+namespace myoutdeskllc\SalesforcePhp;
 
 use \InvalidArgumentException;
+use Sammyjo20\Saloon\Http\SaloonRequest;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
+use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
-use myoutdeskllc\SalesforcePhp\Constants\SalesforceConstants;
 use myoutdeskllc\SalesforcePhp\Helpers\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
-use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateReport;
-use myoutdeskllc\SalesforcePhp\Requests\Analytics\GetReportMetadata;
-use myoutdeskllc\SalesforcePhp\Requests\Analytics\ListReports;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
-use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 
 class SalesforceApi
 {
@@ -68,11 +66,57 @@ class SalesforceApi
      *
      * @param string $object
      * @param array $recordInformation
+     *
+     * @return array|mixed
      */
     public function createRecord(string $object, array $recordInformation)
     {
         $request = new CreateRecord($object);
         $request->setData($recordInformation);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Updates the salesforce object with the given type and ID with new information
+     *
+     * @param string $object
+     * @param string $id
+     * @param array $recordInformation
+     * @return array|mixed
+     */
+    public function updateRecord(string $object, string $id, array $recordInformation)
+    {
+        $request = new UpdateRecord($object, $id);
+        $request->setData($recordInformation);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Updates the given records with the composite API
+     *
+     * @param string $object
+     * @param array $recordInformation
+     * @param bool $allOrNone
+     * @return array|mixed
+     */
+    public function updateRecords(string $object, array $recordInformation, bool $allOrNone = true)
+    {
+        $payload = [
+            'allOrNone' => $allOrNone,
+            'records' => array_map(function($field) use ($object) {
+                // Set the attributes key to contain the type of object for the composite API to use
+                $field['attributes'] = [
+                    'type' => $object
+                ];
+
+                return $field;
+            }, $recordInformation)
+        ];
+
+        $request = new UpdateRecords();
+        $request->setData($payload);
 
         return $this->executeRequest($request);
     }

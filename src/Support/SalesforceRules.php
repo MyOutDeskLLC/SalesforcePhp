@@ -5,7 +5,7 @@ namespace myoutdeskllc\SalesforcePhp\Support;
 class SalesforceRules
 {
     /**
-     * Returns regex validation to check folder api names generated
+     * Returns regex validation to check folder api names generated.
      *
      * @return string to be used for regex testing api folder names
      */

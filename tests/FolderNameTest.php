@@ -1,9 +1,11 @@
 <?php
 
+use myoutdeskllc\SalesforcePhp\Support\SalesforceRules;
+
 it('does not allow folders to be created that dont match the salesforce API spec', function () {
     // The Folder API Name can only contain underscores and alphanumeric characters.
     // It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.
-    $folderRegex = '/^([a-zA-Z])(?!\w*__)\w+?\w*(?<!_)$/m';
+    $folderRegex = SalesforceRules::getFolderNameValidation();
 
     expect(preg_match($folderRegex, '1FolderSakura'))->toBe(0);
     expect(preg_match($folderRegex, '1Folder__'))->toBe(0);

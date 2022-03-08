@@ -22,6 +22,7 @@ use myoutdeskllc\SalesforcePhp\Requests\Analytics\RunReport;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\SaveReport;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\UpdateDashboard;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
+use myoutdeskllc\SalesforcePhp\Support\SalesforceRules;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 
 class ReportApi extends SalesforceApi
@@ -656,7 +657,7 @@ class ReportApi extends SalesforceApi
     {
         $apiName = str_replace(' ', '_', $folderName);
 
-        $folderRegex = '/^([a-zA-Z])(?!\w*__)\w+?\w*(?<!_)$/m';
+        $folderRegex = SalesforceRules::getFolderNameValidation();
         if (preg_match($folderRegex, $apiName) === 0) {
             throw new \InvalidArgumentException('The Folder API Name can only contain underscores and alphanumeric characters. It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.');
         }

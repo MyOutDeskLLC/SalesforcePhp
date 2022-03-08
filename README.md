@@ -104,7 +104,7 @@ While this means expanding tests is going to be more work, it also means it's ba
 
 [Get a copy of the scratch org definition](https://github.com/WalrusSoup/salesforce-php-dx)
 
-Copy example.creds.json to creds.json, update the redirect_uri to be your local machine URL. Set the base_uri to `https://test.salesforce.com`.
+Copy .env.example to .env, update the redirect_url to be your local machine URL. Set the base_url to `https://test.salesforce.com`.
 
 ### Scratch Org Setup
 1. Signup for a developer edition organization [here](https://developer.salesforce.com/signup)
@@ -118,7 +118,7 @@ Copy example.creds.json to creds.json, update the redirect_uri to be your local 
 
 ### Password Flow
 Password flow is possible using the `SalesforceApiUserLogin` class. Please do an API only user profile for this, and ensure you use
-whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `login` inside of `creds.json`.
+whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `AUTH_METHOD` inside of `.env` to `login`.
 ```php
 $apiUserLogin = new SalesforceApiUserLogin();
 $apiUserLogin->configureApp('MY_CONSUMER_KEY', 'MY_CONSUMER_SECRET');
@@ -139,12 +139,12 @@ When deploying the above, a new application should be installed called `Salesfor
 SalesforcePhpApi, click the dropdown and select `View`
 
 1. Adjust the callback URL to match your local machine
-2. Copy the consumer secret and key into your credentials (creds.json) file
+2. Copy the consumer secret and key into your .env file
 3. Launch this project's `index.php` in a browser, it should redirect you to authenticate against the scratch organization
 
 #### OAuth Usage
 OAuth is implemented using [league/oauth2](https://oauth2.thephpleague.com/). The index.php has a sample of how to get OAuth
-working. The default `method` in `creds.json` is oauth. 
+working. The default `AUTH_METHOD` in `.env` is oauth. 
 
 Here is how it can work in your application:
 ```php

@@ -1,6 +1,6 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiConstants;
+use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
 
@@ -12,7 +12,7 @@ test('Can create a bulk API job', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
-    $salesforceJob->setOperation(BulkApiConstants::INSERT);
+    $salesforceJob->setOperation(BulkApiOptions::INSERT);
 
     $salesforceJob->initJob();
 
@@ -23,7 +23,7 @@ test('Can upload records to a bulk API job', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
-    $salesforceJob->setOperation(BulkApiConstants::INSERT);
+    $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
 
     $salesforceJob->setCsvFile(__DIR__.'/fixtures/vtubers.csv')->upload();
@@ -36,7 +36,7 @@ test('Can get existing job status', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
-    $salesforceJob->setOperation(BulkApiConstants::INSERT);
+    $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
     // after this, store the ID and throw out the job
     $queriedJob = SalesforceJob::getExistingJobById($salesforceJob->getJobId(), $api);
@@ -48,7 +48,7 @@ test('Can abort a job', function () {
     $api = SalesforceApi::getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
-    $salesforceJob->setOperation(BulkApiConstants::INSERT);
+    $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
     // after this, store the ID and throw out the job
     $queriedJob = SalesforceJob::getExistingJobById($salesforceJob->getJobId(), $api);

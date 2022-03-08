@@ -4,7 +4,7 @@ namespace myoutdeskllc\SalesforcePhp\Support;
 
 use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiConstants;
+use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use League\Csv\AbstractCsv;
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -37,8 +37,8 @@ class SalesforceJob
     protected ?AbstractCsv $stream = null;
 
     // These will be handled internally by the CSV library
-    protected string $delimiter = BulkApiConstants::DELIMITER_COMMA;
-    protected string $lineEnding = BulkApiConstants::LINEFEED_ENDING;
+    protected string $delimiter = BulkApiOptions::DELIMITER_COMMA;
+    protected string $lineEnding = BulkApiOptions::LINEFEED_ENDING;
 
     protected ?BulkApi2 $api = null;
 
@@ -380,7 +380,7 @@ class SalesforceJob
     {
         $job = new self($api);
         $job->setObject($object);
-        $job->setOperation(BulkApiConstants::INSERT);
+        $job->setOperation(BulkApiOptions::INSERT);
         $job->setCsvFile($csvFile);
         $job->initJob();
         $job->upload();

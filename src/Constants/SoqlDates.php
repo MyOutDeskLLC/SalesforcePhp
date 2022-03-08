@@ -7,7 +7,7 @@ namespace myoutdeskllc\SalesforcePhp\Constants;
  *
  * @link https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_dateformats.htm
  */
-class SoqlDateConstants
+class SoqlDates
 {
     public CONST YESTERDAY = 'YESTERDAY';
     public CONST TODAY = 'TODAY';

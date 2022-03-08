@@ -2,7 +2,7 @@
 
 namespace myoutdeskllc\SalesforcePhp\Constants;
 
-class BulkApiConstants
+class BulkApiOptions
 {
     public const SUCCESSFUL_RESULTS = 'successfulResults';
     public const UNSUCCESSFUL_RESULTS = 'failedResults';

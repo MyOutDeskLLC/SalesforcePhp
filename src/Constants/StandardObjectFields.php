@@ -2,7 +2,7 @@
 
 namespace myoutdeskllc\SalesforcePhp\Constants;
 
-class SalesforceFieldConstants
+class StandardObjectFields
 {
     public CONST DASHBOARD_FIELDS = [
         'BackgroundDirection',

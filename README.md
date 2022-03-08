@@ -36,7 +36,7 @@ There are many out of the box features ready for you to build upon. Please consu
     - This is optional and direct methods are also exposed
 - Run SOQL Queries
   - Access [SOQL Query Builder](https://github.com/mihasicehcek/php-salesforce-soql-builder)
-  - Helper functions for [SOQL date constants](/src/Constants/SoqlDateConstants.php)
+  - Helper functions for [SOQL date constants](/src/Constants/SoqlDates.php)
 - Analytics API (Reports, Dashboards)
   - Query Basic Information, Metadata
     - List Reports

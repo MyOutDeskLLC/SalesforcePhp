@@ -3,7 +3,7 @@
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use myoutdeskllc\SalesforcePhp\Constants\SoqlDateConstants;
+use myoutdeskllc\SalesforcePhp\Constants\SoqlDates;
 use Sammyjo20\Saloon\Constants\Saloon;
 use Sammyjo20\Saloon\Http\SaloonRequest;
 
@@ -26,8 +26,8 @@ class GetDeletedRecords extends SaloonRequest
     public function defaultQuery(): array
     {
         return [
-            'start' => SoqlDateConstants::THIS_MONTH,
-            'end' => SoqlDateConstants::THIS_MONTH
+            'start' => SoqlDates::THIS_MONTH,
+            'end' => SoqlDates::THIS_MONTH
         ];
     }
 }

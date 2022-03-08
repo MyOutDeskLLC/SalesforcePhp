@@ -2,7 +2,7 @@
 
 namespace myoutdeskllc\SalesforcePhp\Api;
 
-use myoutdeskllc\SalesforcePhp\Constants\SalesforceFieldConstants;
+use myoutdeskllc\SalesforcePhp\Constants\StandardObjectFields;
 use myoutdeskllc\SalesforcePhp\Helpers\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CloneDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateDashboard;
@@ -387,7 +387,7 @@ class ReportApi extends SalesforceApi
     public function listDashboards()
     {
         $builder = (new SoqlQueryBuilder())
-            ->select(SalesforceFieldConstants::DASHBOARD_FIELDS)
+            ->select(StandardObjectFields::DASHBOARD_FIELDS)
             ->from('Dashboard');
 
         return $this->executeQuery($builder);

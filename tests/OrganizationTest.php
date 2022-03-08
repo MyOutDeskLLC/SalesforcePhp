@@ -1,6 +1,6 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiConstants;
+use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
 

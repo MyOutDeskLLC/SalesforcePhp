@@ -3,7 +3,7 @@
 namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiConstants;
+use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use Sammyjo20\Saloon\Constants\Saloon;
 use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
@@ -12,7 +12,7 @@ class UpdateJobState extends \Sammyjo20\Saloon\Http\SaloonRequest
     use HasJsonBody;
 
     protected ?string $id = null;
-    protected ?string $state = BulkApiConstants::UPLOAD_COMPLETE;
+    protected ?string $state = BulkApiOptions::UPLOAD_COMPLETE;
     protected ?string $method = Saloon::PATCH;
     protected ?string $connector = SalesforceConnector::class;
 

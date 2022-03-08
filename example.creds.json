@@ -1,0 +1,14 @@
+{
+    "salesforce": {
+        "client_id": "",
+        "secret": "",
+        "redirect_uri": "",
+        "base_uri": "",
+        "instance_url": "",
+        "api_version": "0"
+    },
+    "credentials": {
+        "token": "",
+        "refresh": ""
+    }
+}

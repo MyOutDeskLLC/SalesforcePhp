@@ -41,6 +41,7 @@ workflows:
             branches:
               only:
                 - develop
+                - main
       - release:
           requires:
             - test

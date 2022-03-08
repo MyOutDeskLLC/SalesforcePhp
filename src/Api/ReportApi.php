@@ -95,9 +95,9 @@ class ReportApi extends SalesforceApi
      *
      * @param string $reportId salesforce id of the report
      *
-     * @return array
+     * @return array|null
      */
-    public function deleteReport(string $reportId): array
+    public function deleteReport(string $reportId): ?array
     {
         $request = new DeleteReport($reportId);
 
@@ -109,9 +109,9 @@ class ReportApi extends SalesforceApi
      *
      * @param string $dashboardId salesforce id of the dashboard
      *
-     * @return array
+     * @return array|null
      */
-    public function deleteDashboard(string $dashboardId): array
+    public function deleteDashboard(string $dashboardId): ?array
     {
         $request = new DeleteDashboard($dashboardId);
 
@@ -681,11 +681,11 @@ class ReportApi extends SalesforceApi
      *
      * @param string $folderId salesforce id of the folder
      *
-     * @return array
+     * @return array|null
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
      */
-    public function deleteFolder(string $folderId): array
+    public function deleteFolder(string $folderId): ?array
     {
         $request = new DeleteFolder($folderId);
 

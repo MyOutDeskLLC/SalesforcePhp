@@ -237,9 +237,9 @@ class SalesforceApi
      *
      * @throws GuzzleException|SaloonException|\ReflectionException
      *
-     * @return array
+     * @return array|null
      */
-    protected function executeRequest(SaloonRequest $request): array
+    protected function executeRequest(SaloonRequest $request): ?array
     {
         $response = $request->send()->json();
 

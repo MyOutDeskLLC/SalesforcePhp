@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp;
 
-
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
@@ -132,7 +131,7 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_create.htm
      *
-     * @param string $object object to create. Include __c for custom objects.
+     * @param string $object          object to create. Include __c for custom objects.
      * @param array  $recordsToInsert array of records to insert
      * @param bool   $allOrNone       should this operation fail if any are not inserted
      *
@@ -236,9 +235,9 @@ class SalesforceApi
      *
      * @param SaloonRequest $request
      *
-     * @return array
-     *
      * @throws GuzzleException|SaloonException|\ReflectionException
+     *
+     * @return array
      */
     protected function executeRequest(SaloonRequest $request): array
     {
@@ -256,7 +255,7 @@ class SalesforceApi
     }
 
     /**
-     * Configures this API to unset the 'attribute' key and return only records
+     * Configures this API to unset the 'attribute' key and return only records.
      *
      * @return $this
      */
@@ -268,7 +267,7 @@ class SalesforceApi
     }
 
     /**
-     * Configures this API to return all data (attribute and records)
+     * Configures this API to return all data (attribute and records).
      *
      * @return $this
      */
@@ -280,7 +279,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns available API versions for this organizations instance
+     * Returns available API versions for this organizations instance.
      *
      * @return array
      */
@@ -292,7 +291,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the ReportApi
+     * Returns an instance of the ReportApi.
      *
      * @return ReportApi
      */
@@ -302,7 +301,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the SObjectApi
+     * Returns an instance of the SObjectApi.
      *
      * @return SObjectApi
      */
@@ -312,7 +311,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the BulkApi2
+     * Returns an instance of the BulkApi2.
      *
      * @return BulkApi2
      */
@@ -322,7 +321,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the Standard Object API (mostly helper methods)
+     * Returns an instance of the Standard Object API (mostly helper methods).
      *
      * @return StandardObjectApi
      */
@@ -332,7 +331,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the SoqlQueryBuilder
+     * Returns an instance of the SoqlQueryBuilder.
      *
      * @return SoqlQueryBuilder
      */

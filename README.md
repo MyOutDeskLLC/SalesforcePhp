@@ -10,7 +10,7 @@ responses, and most of the endpoints contain links to specific documentation.
 - [JL](https://github.com/WalrusSoup)
 
 ## Features
-There are many out of the box features ready for you to build upon.
+There are many out of the box features ready for you to build upon. Please consult the [tests](/tests/) folder for specific scenarios.
 
 - Login Support
   - OAuth via [league/oauth2](https://oauth2.thephpleague.com/)

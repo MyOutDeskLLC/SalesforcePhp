@@ -200,7 +200,7 @@ class SalesforceJob
         if ($this->id !== null) {
             throw new InvalidArgumentException('Job has already been created');
         }
-        if($this->object === null) {
+        if ($this->object === null) {
             throw new InvalidArgumentException('Object has not been set');
         }
 
@@ -330,7 +330,7 @@ class SalesforceJob
     }
 
     /**
-     * Frees an existing stream, if one is opened
+     * Frees an existing stream, if one is opened.
      *
      * @return void
      */

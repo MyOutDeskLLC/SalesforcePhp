@@ -1,5 +1,5 @@
 {
 "branches": ["main"],
 "repositoryUrl": "https://github.com/MyOutDeskLLC/SalesforcePhp.git",
-"plugins": ["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator","@semantic-release/git"]
+"plugins": ["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator", "@semantic-release/github", "@semantic-release/git"]
 }

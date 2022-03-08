@@ -9,7 +9,7 @@ jobs:
       - image: cimg/node:current
     steps:
       - checkout
-      - run: sudo npm install -g @semantic-release/git semantic-release
+      - run: sudo npm install -g @semantic-release/git @semantic-release/github semantic-release
       - semantic-release/release
   test:
     docker:

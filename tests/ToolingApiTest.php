@@ -1,8 +1,6 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
-use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
 
 beforeEach(function () {
     getAPI();
@@ -17,7 +15,6 @@ test('Can query list of apex classes, finding a class named Totoro', function ()
     expect($classes[0])->toHaveKey('name');
     expect($classes[0]['name'])->toContain('Totoro');
 });
-
 
 test('Can query list of apex pages, finding a page named TotoroPage', function () {
     $api = SalesforceApi::getToolingApi();
@@ -65,8 +62,8 @@ test('can execute apex tests with specific methods (1 test method)', function ()
     $api = SalesforceApi::getToolingApi();
     $totoroTest = $api->getApexClassByName('TotoroTest');
     $testResults = $api->runTestsSynchronous([[
-        'classId' => $totoroTest[0]['Id'],
-        'testMethods' => ['canGarden']
+        'classId'     => $totoroTest[0]['Id'],
+        'testMethods' => ['canGarden'],
     ]]);
 
     expect($testResults)->not()->toBeEmpty();
@@ -77,7 +74,7 @@ test('can execute apex tests with just class ID (4 test methods)', function () {
     $api = SalesforceApi::getToolingApi();
     $totoroTest = $api->getApexClassByName('TotoroTest');
     $testResults = $api->runTestsSynchronous([[
-        'classId' => $totoroTest[0]['Id']
+        'classId' => $totoroTest[0]['Id'],
     ]]);
 
     expect($testResults)->not()->toBeEmpty();
@@ -95,7 +92,7 @@ test('can execute apex tests async by using an array of ids', function () {
 });
 
 /**
- * Note on why these are commented out
+ * Note on why these are commented out.
  *
  * Salesforce testing queue is singular, meaning if we run these the tests will actually already be in queue.
  *

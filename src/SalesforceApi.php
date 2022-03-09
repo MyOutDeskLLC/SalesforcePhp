@@ -332,7 +332,7 @@ class SalesforceApi
     }
 
     /**
-     * Returns an instance of the tooling API
+     * Returns an instance of the tooling API.
      *
      * @return ToolingApi
      */

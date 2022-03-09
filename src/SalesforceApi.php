@@ -8,6 +8,7 @@ use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
+use myoutdeskllc\SalesforcePhp\Api\ToolingApi;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
@@ -328,6 +329,16 @@ class SalesforceApi
     public static function getStandardObjectApi(): StandardObjectApi
     {
         return new StandardObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
+    }
+
+    /**
+     * Returns an instance of the tooling API.
+     *
+     * @return ToolingApi
+     */
+    public static function getToolingApi(): ToolingApi
+    {
+        return new ToolingApi(self::$token, self::$instanceUrl, self::$apiVersion);
     }
 
     /**

@@ -19,7 +19,7 @@ class Search extends SaloonRequest
     public function defaultQuery(): array
     {
         return [
-            'q' => ''
+            'q' => '',
         ];
     }
 }

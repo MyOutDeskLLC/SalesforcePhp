@@ -1,9 +1,5 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
-use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
-
 beforeEach(function () {
     getAPI();
 });

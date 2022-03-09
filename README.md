@@ -26,6 +26,7 @@ There are many out of the box features ready for you to build upon. Please consu
     - Accounts
     - Opportunities
     - Contacts
+  - [Search Helpers](/tests/SearchTest.php)
 - SObject Metadata API
   - Query basic information
   - Query full metadata (fields, etc)

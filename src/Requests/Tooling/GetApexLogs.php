@@ -11,16 +11,15 @@ class GetApexLogs extends SaloonRequest
     protected ?string $method = Saloon::GET;
     protected ?string $connector = SalesforceConnector::class;
 
-
     public function defineEndpoint(): string
     {
-        return "/tooling/query/";
+        return '/tooling/query/';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'q' => 'SELECT Application, DurationMilliseconds, Id, LastModifiedDate, Location, LogLength, LogUserId, Operation, Request, StartTime, Status, SystemModstamp FROM ApexLog'
+            'q' => 'SELECT Application, DurationMilliseconds, Id, LastModifiedDate, Location, LogLength, LogUserId, Operation, Request, StartTime, Status, SystemModstamp FROM ApexLog',
         ];
     }
 }

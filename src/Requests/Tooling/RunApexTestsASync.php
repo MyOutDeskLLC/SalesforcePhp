@@ -16,7 +16,7 @@ class RunApexTestsASync extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/runTestsAsynchronous";
+        return '/tooling/runTestsAsynchronous';
     }
 
     public function defaultData(): array

@@ -13,13 +13,13 @@ class GetApexPages extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/query";
+        return '/tooling/query';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'q' => 'SELECT ApiVersion, ControllerKey, ControllerType, CreatedById, CreatedDate, Description, Id, IsAvailableInTouch, IsConfirmationTokenRequired, LastModifiedById, LastModifiedDate, Markup, MasterLabel, Name, NamespacePrefix, SystemModstamp FROM ApexPage'
+            'q' => 'SELECT ApiVersion, ControllerKey, ControllerType, CreatedById, CreatedDate, Description, Id, IsAvailableInTouch, IsConfirmationTokenRequired, LastModifiedById, LastModifiedDate, Markup, MasterLabel, Name, NamespacePrefix, SystemModstamp FROM ApexPage',
         ];
     }
 }

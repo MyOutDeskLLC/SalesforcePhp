@@ -264,12 +264,13 @@ class ToolingApi extends SalesforceApi
     }
 
     /**
-     * Lists email templates
+     * Lists email templates.
      *
-     * @return array array of email templates
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \ReflectionException
      * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @return array array of email templates
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
      */
@@ -279,14 +280,15 @@ class ToolingApi extends SalesforceApi
     }
 
     /**
-     * Returns metadata for a specific email template
+     * Returns metadata for a specific email template.
      *
      * @param string $templateId ID of the template to query
-     * @return array metadata for an email template
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \ReflectionException
      * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @return array metadata for an email template
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
      */
@@ -296,15 +298,16 @@ class ToolingApi extends SalesforceApi
     }
 
     /**
-     * Updates the given email template
+     * Updates the given email template.
      *
-     * @param string $templateId id of the email template to update
-     * @param array $templateMetadata updated template metadata
-     * @return array array updated metadata template (Docs are not clear)
+     * @param string $templateId       id of the email template to update
+     * @param array  $templateMetadata updated template metadata
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \ReflectionException
      * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @return array array updated metadata template (Docs are not clear)
      */
     public function updateEmailTemplate(string $templateId, array $templateMetadata)
     {
@@ -315,35 +318,39 @@ class ToolingApi extends SalesforceApi
     }
 
     /**
-     * Creates an email template
+     * Creates an email template.
      *
      * TODO: This does not work. I cannot figure out which form the email takes in the payload and only end up with
      *
      * @param array $metadata email template metadata
-     * @return array
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \ReflectionException
      * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @return array
      */
     public function createEmailTemplate(array $metadata)
     {
         $request = (new CreateEmailTemplate())->setData($metadata);
+
         return $this->executeRequest($request);
     }
 
     /**
-     * Deletes the given email template. This will fail if its in use via any dependency (trigger, workflow rule, etc)
+     * Deletes the given email template. This will fail if its in use via any dependency (trigger, workflow rule, etc).
      *
      * @param string $templateId ID of the template to delete
-     * @return bool if deletion succeeded
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \ReflectionException
      * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
+     * @return bool if deletion succeeded
+     *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
      */
-    public function deleteEmailTemplate(string $templateId) : bool
+    public function deleteEmailTemplate(string $templateId): bool
     {
         return (new DeleteEmailTemplate($templateId))->send()->successful();
     }

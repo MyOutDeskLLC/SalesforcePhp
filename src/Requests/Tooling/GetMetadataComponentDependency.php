@@ -13,13 +13,13 @@ class GetMetadataComponentDependency extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/query";
+        return '/query';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'q' => "SELECT MetadataComponentId,MetadataComponentName,MetadataComponentNamespace,MetadataComponentType,RefMetadataComponentId,RefMetadataComponentName,RefMetadataComponentNamespace,RefMetadataComponentType FROM MetadataComponentDependency"
+            'q' => 'SELECT MetadataComponentId,MetadataComponentName,MetadataComponentNamespace,MetadataComponentType,RefMetadataComponentId,RefMetadataComponentName,RefMetadataComponentNamespace,RefMetadataComponentType FROM MetadataComponentDependency',
         ];
     }
 }

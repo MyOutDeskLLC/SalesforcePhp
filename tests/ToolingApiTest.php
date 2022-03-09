@@ -93,7 +93,7 @@ test('can execute apex tests async by using an array of ids', function () {
 
 /**
  * Creating emails is awful and makes no sense. I don't recommend doing it via the API.
- * Your data should contain a FullName that resolves to a folder path
+ * Your data should contain a FullName that resolves to a folder path.
  *
  * For public, this would mean the full name InvoiceTemplate would be:
  * unfiled$public/InvoiceTemplate
@@ -101,22 +101,21 @@ test('can execute apex tests async by using an array of ids', function () {
  * style and type keys are supposed to be const values, but they are integer values instead
  *
  * Final payload will look something like the below tests
- *
  */
-test('it can create emails in the public folder', function() {
+test('it can create emails in the public folder', function () {
     $faker = Faker\Factory::create();
 
     $testEmailTemplate = [
-        'FullName' => 'unfiled$public/test' . $faker->randomNumber(4),
+        'FullName' => 'unfiled$public/test'.$faker->randomNumber(4),
         'Metadata' => [
             // If you add spaces here, it appears to fail
-            'subject' => 'Testing123',
-            'available' => true,
-            'name' => 'NotSureWhatGoesHere',
-            'style' => 0, // maps to none
-            'type' => 0, // maps to none
-            'encodingKey' => 'utf-8'
-        ]
+            'subject'     => 'Testing123',
+            'available'   => true,
+            'name'        => 'NotSureWhatGoesHere',
+            'style'       => 0, // maps to none
+            'type'        => 0, // maps to none
+            'encodingKey' => 'utf-8',
+        ],
     ];
     $result = SalesforceApi::getToolingApi()->createEmailTemplate($testEmailTemplate);
 

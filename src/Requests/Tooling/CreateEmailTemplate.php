@@ -16,6 +16,6 @@ class CreateEmailTemplate extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/sobjects/EmailTemplate";
+        return '/tooling/sobjects/EmailTemplate';
     }
 }

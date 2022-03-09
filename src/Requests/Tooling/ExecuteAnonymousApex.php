@@ -13,13 +13,13 @@ class ExecuteAnonymousApex extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/executeAnonymous/";
+        return '/tooling/executeAnonymous/';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'anonymousBody' => "System.debug('hello from myoutdesk!');"
+            'anonymousBody' => "System.debug('hello from myoutdesk!');",
         ];
     }
 }

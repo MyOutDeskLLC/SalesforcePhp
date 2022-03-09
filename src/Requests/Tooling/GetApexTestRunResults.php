@@ -13,13 +13,13 @@ class GetApexTestRunResults extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/query";
+        return '/tooling/query';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'q' => 'SELECT AsyncApexJobId, ClassesCompleted, ClassesEnqueued, CreatedById, CreatedDate, EndTime, Id, IsAllTests, IsDeleted, JobName, LastModifiedById, LastModifiedDate, MethodsCompleted, MethodsEnqueued, MethodsFailed, Source, StartTime, Status, SystemModstamp, TestTime, UserId FROM ApexTestRunResult'
+            'q' => 'SELECT AsyncApexJobId, ClassesCompleted, ClassesEnqueued, CreatedById, CreatedDate, EndTime, Id, IsAllTests, IsDeleted, JobName, LastModifiedById, LastModifiedDate, MethodsCompleted, MethodsEnqueued, MethodsFailed, Source, StartTime, Status, SystemModstamp, TestTime, UserId FROM ApexTestRunResult',
         ];
     }
 }

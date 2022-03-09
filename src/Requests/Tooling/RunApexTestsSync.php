@@ -16,16 +16,16 @@ class RunApexTestsSync extends SaloonRequest
 
     public function defineEndpoint(): string
     {
-        return "/tooling/runTestsSynchronous";
+        return '/tooling/runTestsSynchronous';
     }
 
     public function defaultData(): array
     {
         return [
             [
-                'classId' => 'nonExistentClassId',
-                'testMethods' => ['TestMethod1']
-            ]
+                'classId'     => 'nonExistentClassId',
+                'testMethods' => ['TestMethod1'],
+            ],
         ];
     }
 }

@@ -57,6 +57,7 @@ There are many out of the box features ready for you to build upon. Please consu
 - Organization
   - Supported API versions
   - Limits
+- Tinkerwell Support
 
 ## Implementing
 If you need to add specific low level operations, please submit a PR to this library. Most cases, however, should be available via
@@ -78,6 +79,13 @@ public function getMySalesforceObject(string $id)
     return $this->salesforceApi->getRecord('My_Record__c', $id, ['Name','Status__c']);
 }
 ```
+
+## Tinkerwell Support
+Once configured, this project supports [Tinkerwell](https://tinkerwell.app/) out of the box with the data supplied in your `.env`. Opening the working directory in Tinkerwell will have snippets and automatically make the api for you to use as `$api`. This will help you test and script the project, or simply interact with your own Salesforce instance.
+
+![tinkerwell_support](https://user-images.githubusercontent.com/5719851/157559447-c4513e0c-7da2-48e7-8971-e200e95b4afd.png)
+
+
 
 ## Soql Builder
 The SOQL builder can help build out queries in your app more effectively. You'll want to make sure security is tight before

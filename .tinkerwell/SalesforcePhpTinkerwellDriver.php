@@ -52,10 +52,10 @@ class SalesforcePhpTinkerwellDriver extends LaravelTinkerwellDriver
             OpenURL::create('Salesforce PHP Github', 'https://github.com/MyOutDeskLLC/SalesforcePhp'),
             Submenu::create('Snippets', [
                 SetCode::create('Get ReportApi', '$report = SalesforceApi::getReportApi();'),
-                SetCode::create('Get ToolingApi', '$report = SalesforceApi::getToolingApi();'),
-                SetCode::create('Get BulkApi', '$report = SalesforceApi::getBulkApi();'),
-                SetCode::create('Get SObjectApi', '$report = SalesforceApi::getSObjectApi();'),
-                SetCode::create('Get QueryBuilder', '$report = SalesforceApi::getQueryBuilder();'),
+                SetCode::create('Get ToolingApi', '$toolingApi = SalesforceApi::getToolingApi();'),
+                SetCode::create('Get BulkApi', '$bulkApi = SalesforceApi::getBulkApi();'),
+                SetCode::create('Get SObjectApi', '$sObjectApi = SalesforceApi::getSObjectApi();'),
+                SetCode::create('Get QueryBuilder', '$queryBuilder = SalesforceApi::getQueryBuilder();'),
             ])
         ];
     }

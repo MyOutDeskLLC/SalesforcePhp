@@ -41,20 +41,16 @@ There are many out of the box features ready for you to build upon. Please consu
   - Access [SOQL Query Builder](https://github.com/mihasicehcek/php-salesforce-soql-builder)
   - Helper functions for [SOQL date constants](/src/Constants/SoqlDates.php)
 - Analytics API (Reports, Dashboards)
-  - Query Basic Information, Metadata
-    - List Reports
-    - List Dashboard
-  - Manage Folders
-    - List, Create, Update, Delete report and dashboard folders
-  - Locate Folders
-    - Find by name, Id
-  - Manage Reports
-    - Create, Manage, Update, Delete, Copy Reports
-  - Manage Dashboards
-    - Create, Manage, Update, Delete, Copy Dashboards
-  - Results
-    - get results of dashboards, components
-    - run reports async
+  - List, Query Basic Information, Metadata for Reports, Dashboards
+  - List, Create, Update, Delete, Search for report and dashboard folders 
+  - Create, Manage, Update, Delete, Copy Reports 
+  - Create, Manage, Update, Delete, Copy Dashboards
+  - Run Dashboards, Reports & Get Results Synch, Asynch
+- Tooling API
+  - Get information on apex classes, apex pages
+  - List, Download Apex Logs
+  - List previous runs, run tests over REST (sync, async)
+  - Execute anonymous apex
 - Organization
   - Supported API versions
   - Limits

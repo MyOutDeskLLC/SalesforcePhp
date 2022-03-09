@@ -358,14 +358,15 @@ class SalesforceApi
     }
 
     /**
-     * Returns only one record found for the given sObject, based on its properties
+     * Returns only one record found for the given sObject, based on its properties.
      *
      * @param string $object         sObject name to search in
      * @param array  $properties     array of key value pairs, where the key is the field name
      * @param array  $fieldsToSelect which fields to return from the query
-     * @return array|null
      *
      * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     *
+     * @return array|null
      */
     public function findRecord(string $object, array $properties, array $fieldsToSelect): ?array
     {

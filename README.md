@@ -51,6 +51,8 @@ There are many out of the box features ready for you to build upon. Please consu
   - List, Download Apex Logs
   - List previous runs, run tests over REST (sync, async)
   - Execute anonymous apex
+  - List, Get, Delete Email Templates
+    - Creating email templates is horrific. You can, but don't bother.
 - Organization
   - Supported API versions
   - Limits

@@ -2,6 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp\Api;
 
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\CreateEmailTemplate;
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\DeleteEmailTemplate;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\ExecuteAnonymousApex;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexClass;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexClasses;
@@ -11,8 +13,12 @@ use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexPage;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexPages;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexTestRunResult;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetApexTestRunResults;
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetEmailTemplate;
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetEmailTemplates;
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\GetMetadataComponentDependency;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsASync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsSync;
+use myoutdeskllc\SalesforcePhp\Requests\Tooling\UpdateEmailTemplate;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
 class ToolingApi extends SalesforceApi
@@ -238,5 +244,97 @@ class ToolingApi extends SalesforceApi
     public function getApexClass(string $classId)
     {
         return $this->executeRequest(new GetApexClass($classId));
+    }
+
+
+    public function getDependencies()
+    {
+        // TODO: This is in pilot, no access yet
+        return $this->executeRequest(new GetMetadataComponentDependency());
+    }
+
+    /**
+     * Lists email templates
+     *
+     * @return array array of email templates
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \ReflectionException
+     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
+     */
+    public function getEmailTemplates()
+    {
+        return $this->executeRequest(new GetEmailTemplates());
+    }
+
+    /**
+     * Returns metadata for a specific email template
+     *
+     * @param string $templateId ID of the template to query
+     * @return array metadata for an email template
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \ReflectionException
+     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
+     */
+    public function getEmailTemplate(string $templateId)
+    {
+        return $this->executeRequest(new GetEmailTemplate($templateId));
+    }
+
+    /**
+     * Updates the given email template
+     *
+     * @param string $templateId id of the email template to update
+     * @param array $templateMetadata updated template metadata
+     * @return array array updated metadata template (Docs are not clear)
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \ReflectionException
+     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     */
+    public function updateEmailTemplate(string $templateId, array $templateMetadata)
+    {
+        $updateRequest = new UpdateEmailTemplate($templateId);
+        $updateRequest->setData($templateMetadata);
+
+        return $this->executeRequest($updateRequest);
+    }
+
+    /**
+     * Creates an email template
+     *
+     * TODO: This does not work. I cannot figure out which form the email takes in the payload and only end up with
+     *
+     * @param array $metadata email template metadata
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \ReflectionException
+     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     */
+    public function createEmailTemplate(array $metadata)
+    {
+        $request = (new CreateEmailTemplate())->setData($metadata);
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Deletes the given email template. This will fail if its in use via any dependency (trigger, workflow rule, etc)
+     *
+     * @param string $templateId ID of the template to delete
+     * @return bool if deletion succeeded
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \ReflectionException
+     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
+     */
+    public function deleteEmailTemplate(string $templateId) : bool
+    {
+        return (new DeleteEmailTemplate($templateId))->send()->successful();
     }
 }

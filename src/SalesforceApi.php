@@ -293,7 +293,7 @@ class SalesforceApi
     }
 
     /**
-     * Search for records across all records
+     * Search for records across all records.
      *
      * @param string $query query to search for
      *
@@ -309,38 +309,38 @@ class SalesforceApi
     }
 
     /**
-     * Search for records within a specific object type
+     * Search for records within a specific object type.
      *
-     * @param string $query query to search for
+     * @param string $query  query to search for
      * @param string $object object to search for records within
-     * @param array $fields which fields to return from this search (default id, name)
+     * @param array  $fields which fields to return from this search (default id, name)
      *
      * @return array
      */
     public function searchIn(string $query, string $object, array $fields = ['Name']): array
     {
         // Drop id as it's included by default
-        $fields = array_filter($fields, function($fieldName) {
+        $fields = array_filter($fields, function ($fieldName) {
             return strtolower($fieldName) !== 'id';
         });
 
         $searchRequest = (new Search())->setQuery([
-            'q' => $query,
+            'q'       => $query,
             'sobject' => $object,
-            'fields' => implode(',', array_map(function($field) use ($object) {
+            'fields'  => implode(',', array_map(function ($field) use ($object) {
                 return "{$object}.{$field}";
-            }, $fields))
+            }, $fields)),
         ]);
 
         return $this->executeRequest($searchRequest);
     }
 
     /**
-     * helper method to assist in searching for records
+     * helper method to assist in searching for records.
      *
-     * @param string $object sObject name to search in
-     * @param array $properties array of key value pairs, where the key is the field name
-     * @param array $fieldsToSelect which fields to return from the query
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
      *
      * @return array
      */
@@ -350,7 +350,7 @@ class SalesforceApi
         $builder = $builder->select($fieldsToSelect)
             ->from($object);
 
-        foreach($properties as $fieldName => $fieldValue) {
+        foreach ($properties as $fieldName => $fieldValue) {
             $builder->where($fieldName, '=', $fieldValue);
         }
 

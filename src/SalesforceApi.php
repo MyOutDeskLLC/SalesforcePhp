@@ -12,6 +12,7 @@ use myoutdeskllc\SalesforcePhp\Api\ToolingApi;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
+use myoutdeskllc\SalesforcePhp\Requests\Query\Search;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
@@ -289,6 +290,71 @@ class SalesforceApi
         $request = new GetSupportedApiVersions();
 
         return $this->executeRequest($request);
+    }
+
+    /**
+     * Search for records across all records.
+     *
+     * @param string $query query to search for
+     *
+     * @return array
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_search.htm
+     */
+    public function search(string $query): array
+    {
+        $searchRequest = (new Search())->setQuery(['q' => $query]);
+
+        return $this->executeRequest($searchRequest);
+    }
+
+    /**
+     * Search for records within a specific object type.
+     *
+     * @param string $query  query to search for
+     * @param string $object object to search for records within
+     * @param array  $fields which fields to return from this search (default id, name)
+     *
+     * @return array
+     */
+    public function searchIn(string $query, string $object, array $fields = ['Name']): array
+    {
+        // Drop id as it's included by default
+        $fields = array_filter($fields, function ($fieldName) {
+            return strtolower($fieldName) !== 'id';
+        });
+
+        $searchRequest = (new Search())->setQuery([
+            'q'       => $query,
+            'sobject' => $object,
+            'fields'  => implode(',', array_map(function ($field) use ($object) {
+                return "{$object}.{$field}";
+            }, $fields)),
+        ]);
+
+        return $this->executeRequest($searchRequest);
+    }
+
+    /**
+     * helper method to assist in searching for records.
+     *
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
+     *
+     * @return array
+     */
+    public function searchObjectWhereProperties(string $object, array $properties, array $fieldsToSelect = ['id']): array
+    {
+        $builder = self::getQueryBuilder();
+        $builder = $builder->select($fieldsToSelect)
+            ->from($object);
+
+        foreach ($properties as $fieldName => $fieldValue) {
+            $builder->where($fieldName, '=', $fieldValue);
+        }
+
+        return $this->executeQuery($builder);
     }
 
     /**

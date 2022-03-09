@@ -358,6 +358,32 @@ class SalesforceApi
     }
 
     /**
+     * Returns only one record found for the given sObject, based on its properties
+     *
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
+     * @return array|null
+     *
+     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     */
+    public function findRecord(string $object, array $properties, array $fieldsToSelect): ?array
+    {
+        $builder = self::getQueryBuilder();
+        $builder = $builder->select($fieldsToSelect)
+            ->from($object);
+
+        foreach ($properties as $fieldName => $fieldValue) {
+            $builder->where($fieldName, '=', $fieldValue);
+        }
+
+        $builder->limit(1);
+        $results = $this->executeQuery($builder);
+
+        return array_pop($results);
+    }
+
+    /**
      * Returns an instance of the ReportApi.
      *
      * @return ReportApi

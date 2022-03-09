@@ -28,7 +28,7 @@ class SalesforcePhpTinkerwellDriver extends LaravelTinkerwellDriver
     }
 
     /**
-     * Exposes $SalesforceApi to tinkerwell so it's ready to go out of the box
+     * Exposes SalesforceApi as $api to tinkerwell so it's ready to go out of the box
      *
      * @return SalesforceApi[]
      */

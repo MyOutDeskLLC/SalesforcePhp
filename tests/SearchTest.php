@@ -39,11 +39,11 @@ test('Can find a single record and return properties directly', function () {
     $result = $api->findRecord('Account', ['name' => 'SalesforcePhp Test'], ['Id', 'Name']);
 
     expect($result)->toHaveKey('Name', 'SalesforcePhp Test');
-})->only();
+});
 
 test('Returns null if it fails to find a record', function () {
     $api = getAPI();
     $result = $api->findRecord('Account', ['name' => 'Not A Real Record'], ['Id', 'Name']);
 
     expect($result)->toBeNull();
-})->only();
+});

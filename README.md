@@ -9,6 +9,19 @@ The goal of this API was to create a feature rich, elegant baseline for working 
 install and leverage this API to help them integrate Salesforce easily and beautifully. These endpoints return salesforce
 responses, and most of the endpoints contain links to specific documentation.
 
+### Why?
+While we did have the original [SalesforceRest](https://github.com/MyOutDeskLLC/SalesforceRest) library, there were several issues we ran into which were not practical with it. The gist of what spawned this library was the following needs:
+
+- Unstable testing due to the fact every SF org is different
+- Bulk API Uploads were messy
+- Ability to query field api names without digging into salesforce, opening fields with similiar names, etc
+- Ability to query chunks of data, by time frame, which matches expected data in salesforce (Soql Date Constants)
+- A nicer way to build queries due to soql conventions which are similiar but not 1:1 with typical sql
+
+And some other local needs by our team:
+- Faster way to copy paste templated reports to new team members
+- Copying & updating dashboads for specific team members, which are linked to said reports
+
 ## Authors
 - [JL](https://github.com/WalrusSoup)
 

@@ -18,11 +18,11 @@ class LoginApiUser extends Request implements HasBody
     public function defaultBody(): array
     {
         return [
-            'grant_type' => 'password',
-            'client_id' => '',
+            'grant_type'    => 'password',
+            'client_id'     => '',
             'client_secret' => '',
-            'username' => '',
-            'password' => '',
+            'username'      => '',
+            'password'      => '',
         ];
     }
 

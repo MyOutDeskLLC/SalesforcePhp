@@ -56,9 +56,9 @@ class SalesforceJob
     /**
      * Helper method to make a job, upload data, and close the job immediately.
      *
-     * @param string $object the object to create
-     * @param string $csvFile the CSV file path to upload
-     * @param BulkApi2 $api instance of the Bulk API to use
+     * @param string   $object  the object to create
+     * @param string   $csvFile the CSV file path to upload
+     * @param BulkApi2 $api     instance of the Bulk API to use
      *
      * @return SalesforceJob
      */
@@ -108,7 +108,7 @@ class SalesforceJob
     /**
      * Initializes and creates an instance of this class based on data from salesforce. Useful for getting existing job status'.
      *
-     * @param string $id ID of the salesforce job
+     * @param string   $id  ID of the salesforce job
      * @param BulkApi2 $api instance of the Bulk API to use
      *
      * @return SalesforceJob

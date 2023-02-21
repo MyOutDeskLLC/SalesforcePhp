@@ -22,7 +22,7 @@ class RunApexTestsSync extends Request implements HasBody
     {
         return [
             [
-                'classId' => 'nonExistentClassId',
+                'classId'     => 'nonExistentClassId',
                 'testMethods' => ['TestMethod1'],
             ],
         ];

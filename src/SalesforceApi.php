@@ -94,7 +94,7 @@ class SalesforceApi
      *
      * @param string $object
      * @param string $id
-     * @param array $fields
+     * @param array  $fields
      *
      * @return array|mixed
      */
@@ -130,8 +130,10 @@ class SalesforceApi
      * Unpacks a response object if needed.
      *
      * @param Response $response
-     * @return array|mixed|mixed[]
+     *
      * @throws JsonException
+     *
+     * @return array|mixed|mixed[]
      */
     protected function unpackResponseIfNeeded(Response $response)
     {
@@ -159,7 +161,7 @@ class SalesforceApi
     }
 
     /**
-     * Executes a request synchronously
+     * Executes a request synchronously.
      */
     protected function executeRequestSync(Request $request): Response
     {
@@ -170,7 +172,7 @@ class SalesforceApi
      * Creates a record in salesforce. This may fail depending on what is in the payload (such as a missing piece of information).
      *
      * @param string $object
-     * @param array $recordInformation
+     * @param array  $recordInformation
      *
      * @return array|mixed
      */
@@ -187,7 +189,7 @@ class SalesforceApi
      *
      * @param string $object
      * @param string $id
-     * @param array $recordInformation
+     * @param array  $recordInformation
      *
      * @return array
      */
@@ -203,8 +205,8 @@ class SalesforceApi
      * Updates the given records with the composite API.
      *
      * @param string $object
-     * @param array $recordInformation
-     * @param bool $allOrNone
+     * @param array  $recordInformation
+     * @param bool   $allOrNone
      *
      * @return array
      */
@@ -212,7 +214,7 @@ class SalesforceApi
     {
         $payload = [
             'allOrNone' => $allOrNone,
-            'records' => array_map(function ($field) use ($object) {
+            'records'   => array_map(function ($field) use ($object) {
                 // Set the attributes key to contain the type of object for the composite API to use
                 $field['attributes'] = [
                     'type' => $object,
@@ -233,9 +235,9 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_create.htm
      *
-     * @param string $object object to create. Include __c for custom objects.
-     * @param array $recordsToInsert array of records to insert
-     * @param bool $allOrNone should this operation fail if any are not inserted
+     * @param string $object          object to create. Include __c for custom objects.
+     * @param array  $recordsToInsert array of records to insert
+     * @param bool   $allOrNone       should this operation fail if any are not inserted
      *
      * @return array
      */
@@ -243,7 +245,7 @@ class SalesforceApi
     {
         $payload = [
             'allOrNone' => $allOrNone,
-            'records' => array_map(function ($field) use ($object) {
+            'records'   => array_map(function ($field) use ($object) {
                 // Set the attributes key to contain the type of object for the composite API to use
                 $field['attributes'] = [
                     'type' => $object,
@@ -265,8 +267,8 @@ class SalesforceApi
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_retrieve.htm
      *
      * @param string $object
-     * @param array $ids
-     * @param array $fields
+     * @param array  $ids
+     * @param array  $fields
      *
      * @return array|mixed
      */
@@ -344,9 +346,9 @@ class SalesforceApi
     /**
      * Search for records within a specific object type.
      *
-     * @param string $query query to search for
+     * @param string $query  query to search for
      * @param string $object object to search for records within
-     * @param array $fields which fields to return from this search (default id, name)
+     * @param array  $fields which fields to return from this search (default id, name)
      *
      * @return array
      */
@@ -359,9 +361,9 @@ class SalesforceApi
 
         $searchRequest = new Search();
         $searchRequest->query()->set([
-            'q' => $query,
+            'q'       => $query,
             'sobject' => $object,
-            'fields' => implode(',', array_map(function ($field) use ($object) {
+            'fields'  => implode(',', array_map(function ($field) use ($object) {
                 return "{$object}.{$field}";
             }, $fields)),
         ]);
@@ -372,9 +374,9 @@ class SalesforceApi
     /**
      * helper method to assist in searching for records.
      *
-     * @param string $object sObject name to search in
-     * @param array $properties array of key value pairs, where the key is the field name
-     * @param array $fieldsToSelect which fields to return from the query
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
      *
      * @return array
      */
@@ -432,13 +434,13 @@ class SalesforceApi
     /**
      * Returns only one record found for the given sObject, based on its properties.
      *
-     * @param string $object sObject name to search in
-     * @param array $properties array of key value pairs, where the key is the field name
-     * @param array $fieldsToSelect which fields to return from the query
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
      *
-     * @return array|null
      * @throws InvalidQueryException
      *
+     * @return array|null
      */
     public function findRecord(string $object, array $properties, array $fieldsToSelect): ?array
     {

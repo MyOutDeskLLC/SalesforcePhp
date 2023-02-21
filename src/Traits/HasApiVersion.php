@@ -8,7 +8,7 @@ trait HasApiVersion
 
     public function setApiVersion(string $apiVersion): void
     {
-        $this->apiVersion = 'v' . str_replace($apiVersion, 'v', '');
+        $this->apiVersion = 'v'.str_replace($apiVersion, 'v', '');
     }
 
     public function useProduction(): void

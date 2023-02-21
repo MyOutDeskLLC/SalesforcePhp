@@ -19,13 +19,13 @@ class SalesforceOAuthConnector extends Connector
         $this->oauthConfig()->setClientId($configuration->getClientId());
         $this->oauthConfig()->setClientSecret($configuration->getClientSecret());
         $this->oauthConfig()->setRedirectUri($configuration->getRedirectUri());
-        $this->oauthConfig()->setAuthorizeEndpoint($configuration->getBaseUri() . '/services/oauth2/authorize');
-        $this->oauthConfig()->setTokenEndpoint($configuration->getBaseUri() . '/services/oauth2/token');
-        $this->oauthConfig()->setUserEndpoint($configuration->getBaseUri() . '/services/oauth2/userinfo');
+        $this->oauthConfig()->setAuthorizeEndpoint($configuration->getBaseUri().'/services/oauth2/authorize');
+        $this->oauthConfig()->setTokenEndpoint($configuration->getBaseUri().'/services/oauth2/token');
+        $this->oauthConfig()->setUserEndpoint($configuration->getBaseUri().'/services/oauth2/userinfo');
     }
 
     public function resolveBaseUrl(): string
     {
-        return $this->instanceUrl . '/services/data/' . $this->apiVersion;
+        return $this->instanceUrl.'/services/data/'.$this->apiVersion;
     }
 }

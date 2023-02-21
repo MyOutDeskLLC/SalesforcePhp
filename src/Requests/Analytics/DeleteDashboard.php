@@ -5,7 +5,6 @@ namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-
 class DeleteDashboard extends Request
 {
     protected ?string $dashboardId = null;

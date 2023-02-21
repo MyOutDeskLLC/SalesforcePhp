@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -15,7 +14,6 @@ class UpdateRecord extends Request implements HasBody
     protected ?string $object = '';
     protected ?string $id = '';
     protected Method $method = Method::PATCH;
-
 
     public function __construct(string $object, string $id)
     {

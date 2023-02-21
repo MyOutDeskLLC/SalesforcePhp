@@ -5,7 +5,6 @@ namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-
 class GetAsyncReportResult extends Request
 {
     protected ?string $id = null;

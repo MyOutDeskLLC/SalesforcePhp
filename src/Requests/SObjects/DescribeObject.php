@@ -10,7 +10,6 @@ class DescribeObject extends Request
     protected ?string $object;
     protected Method $method = Method::GET;
 
-
     public function __construct(string $object)
     {
         $this->object = $object;

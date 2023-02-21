@@ -33,8 +33,8 @@ class ReportApi extends SalesforceApi
     /**
      * Save a report at the given ID with new metadata. If the metadata key is not set, we will set it prior to sending the PATCH request.
      *
-     * @param string $id salesforce id of the report to update
-     * @param array $metadata report metadata (see example)
+     * @param string $id       salesforce id of the report to update
+     * @param array  $metadata report metadata (see example)
      *
      * @return array
      *
@@ -85,8 +85,8 @@ class ReportApi extends SalesforceApi
     /**
      * Runs a report and returns the results in JSON. Runtime metadata MUST contain filters, etc under the reportMetadata key.
      *
-     * @param string $id salesforce id of the report to run
-     * @param array $runtimeMetadata additional filters, user settings for the report
+     * @param string $id              salesforce id of the report to run
+     * @param array  $runtimeMetadata additional filters, user settings for the report
      *
      * @return array
      *
@@ -106,8 +106,8 @@ class ReportApi extends SalesforceApi
     /**
      * Queues a report to run async. Runtime metadata MUST contain filters, etc under the reportMetadata key. Please store the ID and check again later.
      *
-     * @param string $id salesforce id of the report to queue a run of
-     * @param array $runtimeMetadata additional filters, user settings for the report
+     * @param string $id              salesforce id of the report to queue a run of
+     * @param array  $runtimeMetadata additional filters, user settings for the report
      *
      * @return array
      *
@@ -206,9 +206,9 @@ class ReportApi extends SalesforceApi
      *
      * @param array $additionalSelects additional fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listReports(array $additionalSelects = []): array
     {
@@ -223,12 +223,12 @@ class ReportApi extends SalesforceApi
     /**
      * Return a list of reports that the querying user has access to. May return odd results if two reports have the same exact name.
      *
-     * @param string $reportName name of the report
-     * @param array $additionalSelects additional fields to select
+     * @param string $reportName        name of the report
+     * @param array  $additionalSelects additional fields to select
      *
-     * @return array|null
      * @throws InvalidQueryException
      *
+     * @return array|null
      */
     public function getReportByName(string $reportName, array $additionalSelects = []): ?array
     {
@@ -251,12 +251,12 @@ class ReportApi extends SalesforceApi
     /**
      * Returns dashboard information (via soql). Use metadata call for more information.
      *
-     * @param string $dashboardName name of the dashboard
-     * @param array $additionalSelects additional fields to select
+     * @param string $dashboardName     name of the dashboard
+     * @param array  $additionalSelects additional fields to select
      *
-     * @return array|null
      * @throws InvalidQueryException
      *
+     * @return array|null
      */
     public function getDashboardByName(string $dashboardName, array $additionalSelects = []): ?array
     {
@@ -281,9 +281,9 @@ class ReportApi extends SalesforceApi
      *
      * @param array $additionalSelects additional fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listFolders(array $additionalSelects = []): array
     {
@@ -299,12 +299,12 @@ class ReportApi extends SalesforceApi
     /**
      * Returns a folder by name, but this one is set with the type to Dashboard as SF treats them differently.
      *
-     * @param string $folderName folder name to query
-     * @param array $additionalSelects fields to select
+     * @param string $folderName        folder name to query
+     * @param array  $additionalSelects fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function getDashboardFolderByName(string $folderName, array $additionalSelects = []): array
     {
@@ -314,13 +314,13 @@ class ReportApi extends SalesforceApi
     /**
      * Finds the folder with the given name.
      *
-     * @param string $folderName folder name to query
-     * @param string $type the type of folder (dashboard or report)
-     * @param array $additionalSelects fields to select
+     * @param string $folderName        folder name to query
+     * @param string $type              the type of folder (dashboard or report)
+     * @param array  $additionalSelects fields to select
      *
-     * @return array|null
      * @throws InvalidQueryException
      *
+     * @return array|null
      */
     public function getFolderByName(string $folderName, string $type = 'Report', array $additionalSelects = []): ?array
     {
@@ -345,12 +345,12 @@ class ReportApi extends SalesforceApi
     /**
      * Returns reports in the target folder name.
      *
-     * @param string $folderName folder name to query
-     * @param array $additionalSelects fields to select
+     * @param string $folderName        folder name to query
+     * @param array  $additionalSelects fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listReportsInFolderByName(string $folderName, array $additionalSelects = []): array
     {
@@ -367,12 +367,12 @@ class ReportApi extends SalesforceApi
     /**
      * Returns dashboards in a given folder.
      *
-     * @param string $folderName folder name to query
-     * @param array $additionalSelects fields to select
+     * @param string $folderName        folder name to query
+     * @param array  $additionalSelects fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listDashboardsInFolderByName(string $folderName, array $additionalSelects = []): array
     {
@@ -389,12 +389,12 @@ class ReportApi extends SalesforceApi
     /**
      * Returns dashboards in a given folder.
      *
-     * @param string $folderId salesforce id of the folder
-     * @param array $additionalSelects fields to select
+     * @param string $folderId          salesforce id of the folder
+     * @param array  $additionalSelects fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listDashboardsInFolderById(string $folderId, array $additionalSelects = []): array
     {
@@ -411,12 +411,12 @@ class ReportApi extends SalesforceApi
     /**
      * According to the docs, the "OwnerId" is not the owner but rather the folder for reports.
      *
-     * @param string $folderId salesforce id of the folder
-     * @param array $additionalSelects fields to select
+     * @param string $folderId          salesforce id of the folder
+     * @param array  $additionalSelects fields to select
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listReportsInFolderById(string $folderId, array $additionalSelects = []): array
     {
@@ -433,7 +433,7 @@ class ReportApi extends SalesforceApi
     /**
      * Copies a report to the same folder.
      *
-     * @param string $reportId salesforce id of the report
+     * @param string $reportId      salesforce id of the report
      * @param string $newReportName name of the report
      *
      * @return array
@@ -493,9 +493,9 @@ class ReportApi extends SalesforceApi
     /**
      * Copies a report to a new folder, with an updated name.
      *
-     * @param string $reportId salesforce id of the report
+     * @param string $reportId      salesforce id of the report
      * @param string $newReportName the new name of the report
-     * @param string $folderId salesforce id of the target folder
+     * @param string $folderId      salesforce id of the target folder
      *
      * @return array
      */
@@ -516,9 +516,9 @@ class ReportApi extends SalesforceApi
     /**
      * Uses SOQL to query for a list of Dashboards available to the user.
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function listDashboards(): array
     {
@@ -598,8 +598,8 @@ class ReportApi extends SalesforceApi
     /**
      * Updates an existing dashboard with new metadata.
      *
-     * @param string $dashboardId salesforce id of the dashboard
-     * @param array $dashboardMetadata dashboard metadata (see example)
+     * @param string $dashboardId       salesforce id of the dashboard
+     * @param array  $dashboardMetadata dashboard metadata (see example)
      *
      * @return array
      *
@@ -616,8 +616,8 @@ class ReportApi extends SalesforceApi
     /**
      * Return metadata information about components on a dashboard.
      *
-     * @param string $dashboardId salesforce id of the dashboard
-     * @param array $componentIds salesforce id of the components to fetch, in an array
+     * @param string $dashboardId  salesforce id of the dashboard
+     * @param array  $componentIds salesforce id of the components to fetch, in an array
      *
      * @return array
      *
@@ -647,8 +647,8 @@ class ReportApi extends SalesforceApi
         $request = new CreateFolder();
         $request->body()->set([
             'label' => $folderName,
-            'name' => $this->prepareFolderApiName($folderName),
-            'type' => 'report',
+            'name'  => $this->prepareFolderApiName($folderName),
+            'type'  => 'report',
         ]);
 
         return $this->executeRequest($request);
@@ -687,8 +687,8 @@ class ReportApi extends SalesforceApi
         $request = new CreateFolder();
         $request->body()->set([
             'label' => $folderName,
-            'name' => $this->prepareFolderApiName($folderName),
-            'type' => 'dashboard',
+            'name'  => $this->prepareFolderApiName($folderName),
+            'type'  => 'dashboard',
         ]);
 
         return $this->executeRequest($request);

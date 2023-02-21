@@ -16,19 +16,19 @@ class BulkApi2 extends SalesforceApi
     /**
      * Creates an bulk api job using the bulk api 2.0.
      *
-     * @param string $object salesforce object to create
-     * @param string $delimiter this must be the delimiter you wish to use with the CSV file
+     * @param string $object     salesforce object to create
+     * @param string $delimiter  this must be the delimiter you wish to use with the CSV file
      * @param string $lineEnding this must match your OS if you are not using a reader such as PHPLeagueCSV
-     * @param string $operation These can be found in the BulkApiConstants
+     * @param string $operation  These can be found in the BulkApiConstants
      */
     public function createJobDirectly(string $object, string $delimiter, string $lineEnding, string $operation): array
     {
         $request = new CreateJob();
         $request->body()->set([
             'columnDelimiter' => $delimiter,
-            'lineEnding' => $lineEnding,
-            'object' => $object,
-            'operation' => $operation,
+            'lineEnding'      => $lineEnding,
+            'object'          => $object,
+            'operation'       => $operation,
         ]);
 
         return $this->executeRequest($request);
@@ -119,16 +119,15 @@ class BulkApi2 extends SalesforceApi
      * Creates a job in Salesforce via the given SalesforceJob helper class.
      *
      * @param SalesforceJob $salesforceJob
-     *
      */
     public function createJob(SalesforceJob $salesforceJob): array
     {
         $request = new CreateJob();
         $request->body()->set([
             'columnDelimiter' => $salesforceJob->getDelimiter(),
-            'lineEnding' => $salesforceJob->getLineEnding(),
-            'object' => $salesforceJob->getObject(),
-            'operation' => $salesforceJob->getOperation(),
+            'lineEnding'      => $salesforceJob->getLineEnding(),
+            'object'          => $salesforceJob->getObject(),
+            'operation'       => $salesforceJob->getOperation(),
         ]);
 
         return $this->executeRequest($request);
@@ -164,7 +163,6 @@ class BulkApi2 extends SalesforceApi
      * Closes the job, marking it ready for processing inside salesforce.
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
-     *
      */
     public function closeJob(SalesforceJob $salesforceJob): array
     {
@@ -177,7 +175,6 @@ class BulkApi2 extends SalesforceApi
      * Marks a job as aborted, abandoning any batches.
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
-     *
      */
     public function abortJob(SalesforceJob $salesforceJob): array
     {
@@ -190,7 +187,6 @@ class BulkApi2 extends SalesforceApi
      * Returns records successfully processed for the given job.
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
-     *
      */
     public function getSuccessfulRecords(SalesforceJob $salesforceJob): array
     {

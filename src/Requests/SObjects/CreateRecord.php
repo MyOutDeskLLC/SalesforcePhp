@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -14,7 +13,6 @@ class CreateRecord extends Request implements HasBody
 
     protected ?string $object = '';
     protected Method $method = Method::POST;
-
 
     public function __construct(string $object)
     {

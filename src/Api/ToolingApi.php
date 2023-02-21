@@ -42,7 +42,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $logId id of the apex log to fetch
      *
-     *
      * @return string raw log contents
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_apexlog.htm
@@ -70,7 +69,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $pageId
      *
-     *
      * @return array
      */
     public function getApexPage(string $pageId): array
@@ -83,7 +81,6 @@ class ToolingApi extends SalesforceApi
      * Pass in an array of arrays, where each array is a declaration of the class to run (classId) with an optional set of methods (testMethods).
      *
      * @param array $testsToExecute array of test declarations ([classId: 'classId', testMethods: ['methodName']]
-     *
      *
      * @return array
      */
@@ -103,7 +100,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $listOfClassIds array of apex class ids
      *
-     *
      * @return string returns the string ID of the run for checking the status later, without quotes
      */
     public function runTestsAsynchronousById(array $listOfClassIds): string
@@ -118,7 +114,6 @@ class ToolingApi extends SalesforceApi
      * Run tests asynchronously.
      *
      * @param array $listOfClassNames array of apex test class names
-     *
      *
      * @return string returns the string ID of the run for checking the status later,  without quotes
      */
@@ -165,7 +160,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $testRunId the ID of the test run
      *
-     *
      * @return array
      */
     public function getApexTestRunResult(string $testRunId): array
@@ -178,9 +172,9 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $apexClassName
      *
-     * @return array
      * @throws InvalidQueryException
      *
+     * @return array
      */
     public function getApexClassByName(string $apexClassName): array
     {
@@ -209,7 +203,6 @@ class ToolingApi extends SalesforceApi
      * Returns metadata for the apex class, including the content itself.
      *
      * @param string $classId ID of the apex class
-     *
      *
      * @return array metadata of the apex class
      *
@@ -244,7 +237,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $templateId ID of the template to query
      *
-     *
      * @return array metadata for an email template
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
@@ -257,9 +249,8 @@ class ToolingApi extends SalesforceApi
     /**
      * Updates the given email template.
      *
-     * @param string $templateId id of the email template to update
-     * @param array $templateMetadata updated template metadata
-     *
+     * @param string $templateId       id of the email template to update
+     * @param array  $templateMetadata updated template metadata
      *
      * @return array array updated metadata template (Docs are not clear)
      */
@@ -278,7 +269,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $metadata email template metadata
      *
-     *
      * @return array
      */
     public function createEmailTemplate(array $metadata)
@@ -293,7 +283,6 @@ class ToolingApi extends SalesforceApi
      * Deletes the given email template. This will fail if its in use via any dependency (trigger, workflow rule, etc).
      *
      * @param string $templateId ID of the template to delete
-     *
      *
      * @return bool if deletion succeeded
      *

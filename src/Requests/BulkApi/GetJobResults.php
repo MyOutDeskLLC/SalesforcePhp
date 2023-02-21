@@ -12,7 +12,6 @@ class GetJobResults extends Request
     protected string $type;
     protected Method $method = Method::GET;
 
-
     public function __construct(string $id, string $resultType)
     {
         $this->id = $id;
@@ -25,6 +24,6 @@ class GetJobResults extends Request
 
     public function resolveEndpoint(): string
     {
-        return "/jobs/ingest/{$this->id}/" . $this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
+        return "/jobs/ingest/{$this->id}/".$this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
     }
 }

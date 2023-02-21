@@ -11,7 +11,6 @@ class GetDeletedRecords extends Request
     protected ?string $object;
     protected Method $method = Method::GET;
 
-
     public function __construct(string $object)
     {
         $this->object = $object;
@@ -26,7 +25,7 @@ class GetDeletedRecords extends Request
     {
         return [
             'start' => SoqlDates::THIS_MONTH,
-            'end' => SoqlDates::THIS_MONTH,
+            'end'   => SoqlDates::THIS_MONTH,
         ];
     }
 }

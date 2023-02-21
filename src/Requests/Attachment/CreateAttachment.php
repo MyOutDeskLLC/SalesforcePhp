@@ -7,7 +7,6 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-
 class CreateAttachment extends Request implements HasBody
 {
     use HasJsonBody;
@@ -22,11 +21,11 @@ class CreateAttachment extends Request implements HasBody
     public function defaultBody(): array
     {
         return [
-            'Name' => '',
-            'Body' => base64_encode(''),
+            'Name'        => '',
+            'Body'        => base64_encode(''),
             'ContentType' => 'application/pdf',
             'Description' => '',
-            'ParentId' => '',
+            'ParentId'    => '',
         ];
     }
 }

@@ -179,102 +179,102 @@ class SoqlQueryBuilder extends QueryBuilder
 
     public function whereLastDays(string $dateField, int $days): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_DAYS . ":$days");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_DAYS.":$days");
     }
 
     public function orWhereLastDays(string $dateField, int $days): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_DAYS . ":$days", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_DAYS.":$days", 'OR');
     }
 
     public function whereNextDays(string $dateField, int $days): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_DAYS . ":$days");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_DAYS.":$days");
     }
 
     public function orWhereNextDays(string $dateField, int $days): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_DAYS . ":$days", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_DAYS.":$days", 'OR');
     }
 
     public function whereNextWeeks(string $dateField, int $weeks): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_WEEKS . ":$weeks");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_WEEKS.":$weeks");
     }
 
     public function orWhereNextWeeks(string $dateField, int $weeks): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_WEEKS . ":$weeks", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_WEEKS.":$weeks", 'OR');
     }
 
     public function whereLastWeeks(string $dateField, int $weeks): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_WEEKS . ":$weeks");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_WEEKS.":$weeks");
     }
 
     public function orWhereLastWeeks(string $dateField, int $weeks): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_WEEKS . ":$weeks", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_WEEKS.":$weeks", 'OR');
     }
 
     public function whereNextMonths(string $dateField, int $months): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_MONTHS . ":$months");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_MONTHS.":$months");
     }
 
     public function orWhereNextMonths(string $dateField, int $months): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_MONTHS . ":$months", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_MONTHS.":$months", 'OR');
     }
 
     public function whereLastMonths(string $dateField, int $months): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_MONTHS . ":$months");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_MONTHS.":$months");
     }
 
     public function orWhereLastMonths(string $dateField, int $months): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_MONTHS . ":$months", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_MONTHS.":$months", 'OR');
     }
 
     public function whereNextQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_QUARTERS . ":$quarters");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_QUARTERS.":$quarters");
     }
 
     public function orWhereNextQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_QUARTERS . ":$quarters", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_QUARTERS.":$quarters", 'OR');
     }
 
     public function whereLastQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_QUARTERS . ":$quarters");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_QUARTERS.":$quarters");
     }
 
     public function orWhereLastQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_QUARTERS . ":$quarters", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_QUARTERS.":$quarters", 'OR');
     }
 
     public function whereNextYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_YEARS . ":$years");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_YEARS.":$years");
     }
 
     public function orWhereNextYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_YEARS . ":$years", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_YEARS.":$years", 'OR');
     }
 
     public function whereLastYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_YEARS . ":$years");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_YEARS.":$years");
     }
 
     public function orWhereLastYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_YEARS . ":$years", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_YEARS.":$years", 'OR');
     }
 
     public function whereThisFiscalQuarter(string $dateField): QueryBuilder
@@ -309,22 +309,22 @@ class SoqlQueryBuilder extends QueryBuilder
 
     public function whereNextFiscalQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_QUARTERS . ":$quarters");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_QUARTERS.":$quarters");
     }
 
     public function orWhereNextFiscalQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_QUARTERS . ":$quarters", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_QUARTERS.":$quarters", 'OR');
     }
 
     public function whereLastFiscalQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_QUARTERS . ":$quarters");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_QUARTERS.":$quarters");
     }
 
     public function orWhereLastFiscalQuarters(string $dateField, int $quarters): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_QUARTERS . ":$quarters", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_QUARTERS.":$quarters", 'OR');
     }
 
     public function whereThisFiscalYear(string $dateField): QueryBuilder
@@ -359,21 +359,21 @@ class SoqlQueryBuilder extends QueryBuilder
 
     public function whereNextFiscalYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_YEARS . ":$years");
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_YEARS.":$years");
     }
 
     public function orWhereNextFiscalYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_YEARS . ":$years", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::NEXT_N_FISCAL_YEARS.":$years", 'OR');
     }
 
     public function whereLastFiscalYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_YEARS . ":$years");
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_YEARS.":$years");
     }
 
     public function orWhereLastFiscalYears(string $dateField, int $years): QueryBuilder
     {
-        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_YEARS . ":$years", 'OR');
+        return $this->whereDate($dateField, '=', SoqlDates::LAST_N_FISCAL_YEARS.":$years", 'OR');
     }
 }

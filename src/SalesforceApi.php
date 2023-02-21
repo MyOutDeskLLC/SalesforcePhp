@@ -32,9 +32,16 @@ class SalesforceApi
     protected bool $async = false;
     protected bool $recordsOnly = false;
 
+    protected $authenticator = null;
+
     public function __construct(Connector $connector)
     {
         self::$connector = $connector;
+    }
+
+    public function setAuthenticator($authenticator)
+    {
+        $this->authenticator = $authenticator;
     }
 
     /**
@@ -163,6 +170,8 @@ class SalesforceApi
      */
     protected function executeRequestSync(Request $request): Response
     {
+        $request->authenticate($this->authenticator);
+
         return self::$connector->send($request);  // @phpstan-ignore-line
     }
 

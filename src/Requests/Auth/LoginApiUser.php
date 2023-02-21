@@ -11,9 +11,7 @@ use Saloon\Traits\Body\HasFormBody;
 class LoginApiUser extends Request implements HasBody
 {
     use HasFormBody;
-
     protected Method $method = Method::POST;
-    protected ?string $connector = SalesforceApiUserConnector::class;
 
     public function defaultBody(): array
     {

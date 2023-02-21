@@ -2,25 +2,26 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
-class UpdateEmailTemplate extends SaloonRequest
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
+
+class UpdateEmailTemplate extends Request implements HasBody
 {
     use HasJsonBody;
 
     protected ?string $templateId = null;
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::PATCH;
+
 
     public function __construct(string $templateId)
     {
         $this->templateId = $templateId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/tooling/sobjects/EmailTemplate/{$this->templateId}";
     }

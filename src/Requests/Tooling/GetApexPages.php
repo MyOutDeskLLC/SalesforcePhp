@@ -2,16 +2,15 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
 
-class GetApexPages extends SaloonRequest
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+
+class GetApexPages extends Request
 {
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return '/tooling/query';
     }

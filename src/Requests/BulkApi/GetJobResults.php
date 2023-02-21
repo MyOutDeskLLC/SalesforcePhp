@@ -2,16 +2,16 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
-use Sammyjo20\Saloon\Constants\Saloon;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetJobResults extends \Sammyjo20\Saloon\Http\SaloonRequest
+class GetJobResults extends Request
 {
-    protected ?string $id = null;
-    protected ?string $type = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected string $id;
+    protected string $type;
+    protected Method $method = Method::GET;
+
 
     public function __construct(string $id, string $resultType)
     {
@@ -23,8 +23,8 @@ class GetJobResults extends \Sammyjo20\Saloon\Http\SaloonRequest
         }
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
-        return "/jobs/ingest/{$this->id}/".$this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
+        return "/jobs/ingest/{$this->id}/" . $this->type === BulkApiOptions::SUCCESSFUL_RESULTS ? BulkApiOptions::SUCCESSFUL_RESULTS : BulkApiOptions::UNSUCCESSFUL_RESULTS;
     }
 }

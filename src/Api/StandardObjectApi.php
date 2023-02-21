@@ -35,8 +35,8 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns the given fields from lead.
      *
-     * @param string $id     salesforce id of the lead, should start with 00Q
-     * @param array  $fields array of fields to select
+     * @param string $id salesforce id of the lead, should start with 00Q
+     * @param array $fields array of fields to select
      *
      * @return array
      */
@@ -48,7 +48,7 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns many leads.
      *
-     * @param array $ids    salesforce id(s) of the lead(s), should start with 00Q
+     * @param array $ids salesforce id(s) of the lead(s), should start with 00Q
      * @param array $fields array of fields to select
      *
      * @return array
@@ -85,8 +85,8 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns the opportunity with the given Id. 006.
      *
-     * @param string $id     salesforce id of the opportunity
-     * @param array  $fields list of fields to select
+     * @param string $id salesforce id of the opportunity
+     * @param array $fields list of fields to select
      *
      * @return array
      */
@@ -98,7 +98,7 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns opportunities from an array of the given id's.
      *
-     * @param array $ids    salesforce id(s) of the opportunities
+     * @param array $ids salesforce id(s) of the opportunities
      * @param array $fields list of fields to select
      *
      * @return array
@@ -135,8 +135,8 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns an account with the given salesforce id.
      *
-     * @param string $id     salesforce id of the account
-     * @param array  $fields list of fields to select
+     * @param string $id salesforce id of the account
+     * @param array $fields list of fields to select
      *
      * @return array
      */
@@ -148,7 +148,7 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns a list of accounts with the given salesforce id's.
      *
-     * @param array $ids    salesforce id(s) of the account(s)
+     * @param array $ids salesforce id(s) of the account(s)
      * @param array $fields list of fields to select
      *
      * @return array
@@ -161,8 +161,8 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Return a contact from salesforce.
      *
-     * @param string $id     the salesforce id of the contact
-     * @param array  $fields the fields to select
+     * @param string $id the salesforce id of the contact
+     * @param array $fields the fields to select
      *
      * @return array
      */
@@ -174,7 +174,7 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Returns contact(s) from salesforce.
      *
-     * @param array $ids    the salesforce id(s) of the contacts
+     * @param array $ids the salesforce id(s) of the contacts
      * @param array $fields the fields to select
      *
      * @return array
@@ -187,20 +187,20 @@ class StandardObjectApi extends SalesforceApi
     /**
      * Creates an attachment in Salesforce using the base64 encoded body of the file (buffer).
      *
-     * @param string   $parentObjectId object this attaches to under notes & attachments
-     * @param string   $name           name of the attachment in salesforce
-     * @param string   $contentType    mime type, aka: application/pdf, image/jpeg, etc
-     * @param string   $description    used for information
+     * @param string $parentObjectId object this attaches to under notes & attachments
+     * @param string $name name of the attachment in salesforce
+     * @param string $contentType mime type, aka: application/pdf, image/jpeg, etc
+     * @param string $description used for information
      * @param resource $attachmentBody should be a resource, stream, buffer of the file. Not a path.
      */
     public function createAttachment(string $parentObjectId, string $name, string $contentType, string $description, $attachmentBody)
     {
         $request = new CreateAttachment();
 
-        $request->setData([
-            'ParentId'    => $parentObjectId,
-            'Name'        => $name,
-            'Body'        => base64_encode($attachmentBody),
+        $request->body()->set([
+            'ParentId' => $parentObjectId,
+            'Name' => $name,
+            'Body' => base64_encode($attachmentBody . ""),
             'ContentType' => $contentType,
             'Description' => $description,
         ]);

@@ -2,9 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
 /**
  * TODO: These yield "HTTP Method not allowed" despite docs.
@@ -13,12 +12,12 @@ use Sammyjo20\Saloon\Http\SaloonRequest;
  *
  * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/analytics_api_folders_reference_resource.htm
  */
-class ListFolders extends SaloonRequest
+class ListFolders extends Request
 {
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
-    public function defineEndpoint(): string
+
+    public function resolveEndpoint(): string
     {
         return '/folders/';
     }

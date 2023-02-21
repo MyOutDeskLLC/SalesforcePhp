@@ -2,22 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class DeleteFolder extends SaloonRequest
+class DeleteFolder extends Request
 {
     protected ?string $folderId = null;
-    protected ?string $method = Saloon::DELETE;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::DELETE;
 
     public function __construct(string $folderId)
     {
         $this->folderId = $folderId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/folders/{$this->folderId}";
     }

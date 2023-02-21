@@ -2,23 +2,21 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Query;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class QueryRequest extends SaloonRequest
+
+class QueryRequest extends Request
 {
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
-
-    protected string $query;
+    protected Method $method = Method::GET;
+    protected string $soqlQuery;
 
     public function __construct(string $query)
     {
-        $this->query = $query;
+        $this->soqlQuery = $query;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return '/query';
     }
@@ -26,7 +24,7 @@ class QueryRequest extends SaloonRequest
     public function defaultQuery(): array
     {
         return [
-            'q' => $this->query,
+            'q' => $this->soqlQuery,
         ];
     }
 }

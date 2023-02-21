@@ -2,22 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetReportTypeMetadata extends SaloonRequest
+class GetReportTypeMetadata extends Request
 {
     protected ?string $type = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
     public function __construct(string $type)
     {
         $this->type = $type;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/reportTypes/{$this->type}";
     }

@@ -41,26 +41,10 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
-     * Return full metadata information about the object.
-     *
-     * @param string $object object to query. Include __c for custom objects.
-     *
-     * @return array|mixed
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_describe.htm
-     */
-    public function describeObject(string $object)
-    {
-        $request = new DescribeObject($object);
-
-        return $this->executeRequest($request);
-    }
-
-    /**
      * Returns object fields, but with limited information that is more easily understandable for serialization, etc.
      *
-     * @param string $object            object to query. include __c for custom objects
-     * @param array  $additionalSelects additional fields to select (default: label, length, name, type, calculated, unique)
+     * @param string $object object to query. include __c for custom objects
+     * @param array $additionalSelects additional fields to select (default: label, length, name, type, calculated, unique)
      *
      * @return array
      *
@@ -77,11 +61,27 @@ class SObjectApi extends SalesforceApi
     }
 
     /**
+     * Return full metadata information about the object.
+     *
+     * @param string $object object to query. Include __c for custom objects.
+     *
+     * @return array|mixed
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_sobject_describe.htm
+     */
+    public function describeObject(string $object)
+    {
+        $request = new DescribeObject($object);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
      * Return a list of recently deleted records for a given SObject. Start and End must be valid datetime in UTC.
      *
      * @param string $object object to query. Include __c for custom objects.
-     * @param string $start  start date, in UTC
-     * @param string $end    end date, in UTC
+     * @param string $start start date, in UTC
+     * @param string $end end date, in UTC
      *
      * @return array|mixed
      *
@@ -90,9 +90,9 @@ class SObjectApi extends SalesforceApi
     public function getDeletedRecords(string $object, string $start, string $end)
     {
         $request = new GetDeletedRecords($object);
-        $request->setQuery([
+        $request->query()->set([
             'start' => $start,
-            'end'   => $end,
+            'end' => $end,
         ]);
 
         return $this->executeRequest($request);

@@ -29,7 +29,7 @@ And some other local needs by our team:
 There are many out of the box features ready for you to build upon. Please consult the [tests](/tests/) folder for specific scenarios.
 
 - Login Support
-  - OAuth via [league/oauth2](https://oauth2.thephpleague.com/)
+  - OAuth
   - Username \ Password Flow (API Users)
 - Basic Operations
   - Query record(s)
@@ -162,27 +162,39 @@ SalesforcePhpApi, click the dropdown and select `View`
 2. Copy the consumer secret and key into your .env file
 3. Launch this project's `index.php` in a browser, it should redirect you to authenticate against the scratch organization
 
-#### OAuth Usage
-OAuth is implemented using [league/oauth2](https://oauth2.thephpleague.com/). The index.php has a sample of how to get OAuth
-working. The default `AUTH_METHOD` in `.env` is oauth. 
-
 Here is how it can work in your application:
+
 ```php
-$sfAuth = new SalesforceOAuthConfiguration();
-$sfAuth->setClientId('client_id');
-$sfAuth->setSecret('secret');
-$sfAuth->setRedirectUri('redirect_uri');
-$sfAuth->setBaseUrl('base_uri');
+$sfOauthConfiguration = new \myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration();
+$sfOauthConfiguration->setClientId('client_id');
+$sfOauthConfiguration->setSecret('secret');
+$sfOauthConfiguration->setRedirectUri('redirect_uri');
+$sfOauthConfiguration->setBaseUrl('base_uri');
 
-$sfAuthenticator = new SalesforceAuthenticator();
-$sfAuthenticator->configure($sfAuth);
+$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+$connector->setOauthConfiguration($sfOauthConfiguration);
+$authorizationUrl = $connector->getAuthorizationUrl();
+$state = $connector->getState();
 
-// Do a redirect to the OAuth URL
-header('Location: ' . $sfAuthenticator->getAuthorizationUrl());
+// redirect to the authorization url and store the state locally in session
+$_GET['state'] = 'state_from_saloon';
+$_GET['code'] = 'code_from_salesforce';
 
-// When you approve the app and come back, you can get information here as you normally would
-$token = $sfAuthenticator->handleAuthorizationCallback($_GET['code']);
-$owner = $sfAuthenticator->getProvider()->getResourceOwner($token);
+$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+$authenticator = $connector->getAccessToken($code, $state);
+
+// store this in an encrypted field in the database
+$serialized = $authenticator->serialize();
+// unserialize it later
+$authenticator = AccessTokenAuthenticator::unserialize($serialized);
+
+if ($authenticator->hasExpired() === true) {
+    $authConnector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+    
+    // configure your auth connector again, then refresh the access token, passing the authenticator to it
+    $authenticator = $authConnector->refreshAccessToken($authenticator);
+    
+    $user->auth = $authenticator;
+    $user->save();
+}
 ```
-
-You will likely want to store the refresh token to allow requests at any time, depending on your applications needs.

@@ -2,19 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class UpdateJobState extends \Sammyjo20\Saloon\Http\SaloonRequest
+class UpdateJobState extends Request implements HasBody
 {
     use HasJsonBody;
 
-    protected ?string $id = null;
-    protected ?string $state = BulkApiOptions::UPLOAD_COMPLETE;
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected string $id;
+    protected string $state = BulkApiOptions::UPLOAD_COMPLETE;
+    protected Method $method = Method::PATCH;
+
 
     public function __construct(string $id, string $newJobState)
     {
@@ -22,14 +23,14 @@ class UpdateJobState extends \Sammyjo20\Saloon\Http\SaloonRequest
         $this->state = $newJobState;
     }
 
-    public function defaultData(): array
+    public function defaultBody(): array
     {
         return [
             'state' => $this->state,
         ];
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/jobs/ingest/{$this->id}";
     }

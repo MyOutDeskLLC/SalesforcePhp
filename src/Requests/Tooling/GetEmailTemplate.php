@@ -2,22 +2,22 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
 
-class GetEmailTemplate extends SaloonRequest
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+
+class GetEmailTemplate extends Request
 {
     protected ?string $templateId = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
+
 
     public function __construct(string $templateId)
     {
         $this->templateId = $templateId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/tooling/sobjects/EmailTemplate/{$this->templateId}";
     }

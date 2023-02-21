@@ -2,30 +2,31 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Auth;
 
-use myoutdeskllc\SalesforcePhp\Connectors\ApiUserConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasFormParams;
+use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiUserConnector;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasFormBody;
 
-class LoginApiUser extends SaloonRequest
+class LoginApiUser extends Request implements HasBody
 {
-    use HasFormParams;
+    use HasFormBody;
 
-    protected ?string $method = Saloon::POST;
-    protected ?string $connector = ApiUserConnector::class;
+    protected Method $method = Method::POST;
+    protected ?string $connector = SalesforceApiUserConnector::class;
 
-    public function defaultData(): array
+    public function defaultBody(): array
     {
         return [
-            'grant_type'    => 'password',
-            'client_id'     => '',
+            'grant_type' => 'password',
+            'client_id' => '',
             'client_secret' => '',
-            'username'      => '',
-            'password'      => '',
+            'username' => '',
+            'password' => '',
         ];
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return '/services/oauth2/token';
     }

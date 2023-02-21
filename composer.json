@@ -16,16 +16,23 @@
     ],
     "require": {
         "php": ">=8.0",
-        "guzzlehttp/guzzle": "^7.4",
-        "sammyjo20/saloon": "^0.8.0",
-        "league/oauth2-client": "^2.6",
+        "sammyjo20/saloon": "^2.0",
         "league/csv": "^9.8",
         "mihasicehcek/php_salesforce_soql_builder": "^1.0"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
         "fakerphp/faker": "^1.19",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "phpstan/phpstan": "^1.10"
+    },
+    "scripts": {
+        "test": "pest",
+        "phpstan": "phpstan analyse src --level=5"
+    },
+    "scripts-descriptions": {
+        "test": "Run the tests",
+        "phpstan": "Run phpstan"
     },
     "config": {
         "allow-plugins": {

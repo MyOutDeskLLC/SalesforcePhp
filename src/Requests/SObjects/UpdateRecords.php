@@ -2,19 +2,18 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
-class UpdateRecords extends SaloonRequest
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
+
+class UpdateRecords extends Request
 {
     use HasJsonBody;
 
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::PATCH;
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return 'composite/sobjects';
     }

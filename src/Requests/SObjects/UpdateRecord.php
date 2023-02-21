@@ -2,19 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
 
-class UpdateRecord extends SaloonRequest
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
+
+class UpdateRecord extends Request implements HasBody
 {
     use HasJsonBody;
 
     protected ?string $object = '';
     protected ?string $id = '';
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::PATCH;
+
 
     public function __construct(string $object, string $id)
     {
@@ -22,7 +23,7 @@ class UpdateRecord extends SaloonRequest
         $this->id = $id;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "sobjects/{$this->object}/{$this->id}";
     }

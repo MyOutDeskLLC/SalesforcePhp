@@ -2,16 +2,15 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetRecord extends SaloonRequest
+class GetRecord extends Request
 {
     protected ?string $recordId;
     protected ?string $object;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
+
 
     public function __construct(string $object, string $recordId)
     {
@@ -19,7 +18,7 @@ class GetRecord extends SaloonRequest
         $this->object = $object;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "sobjects/{$this->object}/{$this->recordId}";
     }

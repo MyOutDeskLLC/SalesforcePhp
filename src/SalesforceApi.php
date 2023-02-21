@@ -2,8 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp;
 
-use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
+use JsonException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
@@ -20,21 +20,71 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
-use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
-use Sammyjo20\Saloon\Exceptions\SaloonException;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
+use SalesforceQueryBuilder\QueryBuilder;
+use Saloon\Http\Connector;
+use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 class SalesforceApi
 {
-    use HasApiTokens;
-
+    protected static Connector $connector;
+    protected bool $async = false;
     protected bool $recordsOnly = false;
 
-    public function __construct(string $accessToken, string $instanceUrl, string $apiVersion = null)
+    public function __construct(Connector $connector)
     {
-        self::$token = $accessToken;
-        self::$instanceUrl = $instanceUrl;
-        self::$apiVersion = $apiVersion ?? null;
+        self::$connector = $connector;
+    }
+
+    /**
+     * Returns an instance of the ReportApi.
+     *
+     * @return ReportApi
+     */
+    public static function getReportApi(): ReportApi
+    {
+        return new ReportApi(self::$connector);
+    }
+
+    /**
+     * Returns an instance of the SObjectApi.
+     *
+     * @return SObjectApi
+     */
+    public static function getSObjectApi(): SObjectApi
+    {
+        return new SObjectApi(self::$connector);
+    }
+
+    /**
+     * Returns an instance of the BulkApi2.
+     *
+     * @return BulkApi2
+     */
+    public static function getBulkApi(): BulkApi2
+    {
+        return new BulkApi2(self::$connector);
+    }
+
+    /**
+     * Returns an instance of the Standard Object API (mostly helper methods).
+     *
+     * @return StandardObjectApi
+     */
+    public static function getStandardObjectApi(): StandardObjectApi
+    {
+        return new StandardObjectApi(self::$connector);
+    }
+
+    /**
+     * Returns an instance of the tooling API.
+     *
+     * @return ToolingApi
+     */
+    public static function getToolingApi(): ToolingApi
+    {
+        return new ToolingApi(self::$connector);
     }
 
     /**
@@ -44,7 +94,7 @@ class SalesforceApi
      *
      * @param string $object
      * @param string $id
-     * @param array  $fields
+     * @param array $fields
      *
      * @return array|mixed
      */
@@ -61,23 +111,73 @@ class SalesforceApi
         }
 
         $request = new GetRecord($object, $id);
-        $request->addQuery('fields', implode(',', $fields));
+        $request->query()->add('fields', implode(',', $fields));
 
         return $this->executeRequest($request);
+    }
+
+    /**
+     * Executes the request, extracting records only if needed.
+     *
+     * @return array|null
+     */
+    protected function executeRequest(Request $request): ?array
+    {
+        return $this->unpackResponseIfNeeded($this->executeRequestSync($request));
+    }
+
+    /**
+     * Unpacks a response object if needed.
+     *
+     * @param Response $response
+     * @return array|mixed|mixed[]
+     * @throws JsonException
+     */
+    protected function unpackResponseIfNeeded(Response $response)
+    {
+        if ($this->recordsOnly()) {  // @phpstan-ignore-line
+            return array_map(function ($item) {
+                unset($item['attributes']);
+
+                return $item;
+            }, $response->json('records'));
+        }
+
+        return $response->json();  // @phpstan-ignore-line
+    }
+
+    /**
+     * Configures this API to unset the 'attribute' key and return only records.
+     *
+     * @return $this
+     */
+    public function recordsOnly(): self
+    {
+        $this->recordsOnly = true;
+
+        return $this;
+    }
+
+    /**
+     * Executes a request synchronously
+     */
+    protected function executeRequestSync(Request $request): Response
+    {
+        return self::$connector->send($request);  // @phpstan-ignore-line
     }
 
     /**
      * Creates a record in salesforce. This may fail depending on what is in the payload (such as a missing piece of information).
      *
      * @param string $object
-     * @param array  $recordInformation
+     * @param array $recordInformation
      *
      * @return array|mixed
      */
     public function createRecord(string $object, array $recordInformation)
     {
         $request = new CreateRecord($object);
-        $request->setData($recordInformation);
+        $request->body()->set($recordInformation);
 
         return $this->executeRequest($request);
     }
@@ -87,14 +187,14 @@ class SalesforceApi
      *
      * @param string $object
      * @param string $id
-     * @param array  $recordInformation
+     * @param array $recordInformation
      *
      * @return array
      */
     public function updateRecord(string $object, string $id, array $recordInformation): array
     {
         $request = new UpdateRecord($object, $id);
-        $request->setData($recordInformation);
+        $request->body()->set($recordInformation);
 
         return $this->executeRequest($request);
     }
@@ -103,8 +203,8 @@ class SalesforceApi
      * Updates the given records with the composite API.
      *
      * @param string $object
-     * @param array  $recordInformation
-     * @param bool   $allOrNone
+     * @param array $recordInformation
+     * @param bool $allOrNone
      *
      * @return array
      */
@@ -112,7 +212,7 @@ class SalesforceApi
     {
         $payload = [
             'allOrNone' => $allOrNone,
-            'records'   => array_map(function ($field) use ($object) {
+            'records' => array_map(function ($field) use ($object) {
                 // Set the attributes key to contain the type of object for the composite API to use
                 $field['attributes'] = [
                     'type' => $object,
@@ -123,7 +223,7 @@ class SalesforceApi
         ];
 
         $request = new UpdateRecords();
-        $request->setData($payload);
+        $request->body()->set($payload);
 
         return $this->executeRequest($request);
     }
@@ -133,9 +233,9 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_create.htm
      *
-     * @param string $object          object to create. Include __c for custom objects.
-     * @param array  $recordsToInsert array of records to insert
-     * @param bool   $allOrNone       should this operation fail if any are not inserted
+     * @param string $object object to create. Include __c for custom objects.
+     * @param array $recordsToInsert array of records to insert
+     * @param bool $allOrNone should this operation fail if any are not inserted
      *
      * @return array
      */
@@ -143,7 +243,7 @@ class SalesforceApi
     {
         $payload = [
             'allOrNone' => $allOrNone,
-            'records'   => array_map(function ($field) use ($object) {
+            'records' => array_map(function ($field) use ($object) {
                 // Set the attributes key to contain the type of object for the composite API to use
                 $field['attributes'] = [
                     'type' => $object,
@@ -154,7 +254,7 @@ class SalesforceApi
         ];
 
         $request = new CreateRecords();
-        $request->setData($payload);
+        $request->body()->set($payload);
 
         return $this->executeRequest($request);
     }
@@ -165,8 +265,8 @@ class SalesforceApi
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_retrieve.htm
      *
      * @param string $object
-     * @param array  $ids
-     * @param array  $fields
+     * @param array $ids
+     * @param array $fields
      *
      * @return array|mixed
      */
@@ -182,40 +282,8 @@ class SalesforceApi
             throw new InvalidArgumentException('You must select at least one field');
         }
         $request = new GetRecords($object);
-        $request->addQuery('ids', implode(',', $ids));
-        $request->addQuery('fields', implode(',', $fields));
-
-        return $this->executeRequest($request);
-    }
-
-    /**
-     * Executes a query against salesforce. Make sure this is safe on your application end.
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
-     *
-     * @param SoqlQueryBuilder $builder
-     *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
-     *
-     * @return array|mixed
-     */
-    public function executeQuery(SoqlQueryBuilder $builder)
-    {
-        return $this->executeQueryRaw($builder->toSoql());
-    }
-
-    /**
-     * Directly execute SOQL and get results.
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
-     *
-     * @param string $rawQuery
-     *
-     * @return array
-     */
-    public function executeQueryRaw(string $rawQuery): array
-    {
-        $request = new ExecuteQuery($rawQuery);
+        $request->query()->add('ids', implode(',', $ids));
+        $request->query()->add('fields', implode(',', $fields));
 
         return $this->executeRequest($request);
     }
@@ -225,47 +293,11 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_limits.htm
      */
-    public function getLimits()
+    public function getLimits(): ?array
     {
         $request = new GetLimits();
 
         return $this->executeRequest($request);
-    }
-
-    /**
-     * Executes the request, extracting records only if needed.
-     *
-     * @param SaloonRequest $request
-     *
-     * @throws GuzzleException|SaloonException|\ReflectionException
-     *
-     * @return array|null
-     */
-    protected function executeRequest(SaloonRequest $request): ?array
-    {
-        $response = $request->send()->json();
-
-        if (isset($response['records']) && $this->recordsOnly()) {
-            return array_map(function ($item) {
-                unset($item['attributes']);
-
-                return $item;
-            }, $response['records']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Configures this API to unset the 'attribute' key and return only records.
-     *
-     * @return $this
-     */
-    public function recordsOnly(): self
-    {
-        $this->recordsOnly = true;
-
-        return $this;
     }
 
     /**
@@ -303,7 +335,8 @@ class SalesforceApi
      */
     public function search(string $query): array
     {
-        $searchRequest = (new Search())->setQuery(['q' => $query]);
+        $searchRequest = new Search();
+        $searchRequest->query()->set(['q' => $query]);
 
         return $this->executeRequest($searchRequest);
     }
@@ -311,9 +344,9 @@ class SalesforceApi
     /**
      * Search for records within a specific object type.
      *
-     * @param string $query  query to search for
+     * @param string $query query to search for
      * @param string $object object to search for records within
-     * @param array  $fields which fields to return from this search (default id, name)
+     * @param array $fields which fields to return from this search (default id, name)
      *
      * @return array
      */
@@ -324,10 +357,11 @@ class SalesforceApi
             return strtolower($fieldName) !== 'id';
         });
 
-        $searchRequest = (new Search())->setQuery([
-            'q'       => $query,
+        $searchRequest = new Search();
+        $searchRequest->query()->set([
+            'q' => $query,
             'sobject' => $object,
-            'fields'  => implode(',', array_map(function ($field) use ($object) {
+            'fields' => implode(',', array_map(function ($field) use ($object) {
                 return "{$object}.{$field}";
             }, $fields)),
         ]);
@@ -338,9 +372,9 @@ class SalesforceApi
     /**
      * helper method to assist in searching for records.
      *
-     * @param string $object         sObject name to search in
-     * @param array  $properties     array of key value pairs, where the key is the field name
-     * @param array  $fieldsToSelect which fields to return from the query
+     * @param string $object sObject name to search in
+     * @param array $properties array of key value pairs, where the key is the field name
+     * @param array $fieldsToSelect which fields to return from the query
      *
      * @return array
      */
@@ -358,15 +392,53 @@ class SalesforceApi
     }
 
     /**
+     * Returns an instance of the SoqlQueryBuilder.
+     *
+     * @return SoqlQueryBuilder
+     */
+    public static function getQueryBuilder(): SoqlQueryBuilder
+    {
+        return new SoqlQueryBuilder();
+    }
+
+    /**
+     * Executes a query against salesforce. Make sure this is safe on your application end.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param QueryBuilder $builder
+     */
+    public function executeQuery(QueryBuilder $builder)
+    {
+        return $this->executeQueryRaw($builder->toSoql());
+    }
+
+    /**
+     * Directly execute SOQL and get results.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param string $rawQuery
+     *
+     * @return array
+     */
+    public function executeQueryRaw(string $rawQuery): array
+    {
+        $request = new ExecuteQuery($rawQuery);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
      * Returns only one record found for the given sObject, based on its properties.
      *
-     * @param string $object         sObject name to search in
-     * @param array  $properties     array of key value pairs, where the key is the field name
-     * @param array  $fieldsToSelect which fields to return from the query
-     *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @param string $object sObject name to search in
+     * @param array $properties array of key value pairs, where the key is the field name
+     * @param array $fieldsToSelect which fields to return from the query
      *
      * @return array|null
+     * @throws InvalidQueryException
+     *
      */
     public function findRecord(string $object, array $properties, array $fieldsToSelect): ?array
     {
@@ -384,63 +456,8 @@ class SalesforceApi
         return array_pop($results);
     }
 
-    /**
-     * Returns an instance of the ReportApi.
-     *
-     * @return ReportApi
-     */
-    public static function getReportApi(): ReportApi
+    protected function executeRequestDirectly(Request $request): Response
     {
-        return new ReportApi(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
-
-    /**
-     * Returns an instance of the SObjectApi.
-     *
-     * @return SObjectApi
-     */
-    public static function getSObjectApi(): SObjectApi
-    {
-        return new SObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
-
-    /**
-     * Returns an instance of the BulkApi2.
-     *
-     * @return BulkApi2
-     */
-    public static function getBulkApi(): BulkApi2
-    {
-        return new BulkApi2(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
-
-    /**
-     * Returns an instance of the Standard Object API (mostly helper methods).
-     *
-     * @return StandardObjectApi
-     */
-    public static function getStandardObjectApi(): StandardObjectApi
-    {
-        return new StandardObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
-
-    /**
-     * Returns an instance of the tooling API.
-     *
-     * @return ToolingApi
-     */
-    public static function getToolingApi(): ToolingApi
-    {
-        return new ToolingApi(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
-
-    /**
-     * Returns an instance of the SoqlQueryBuilder.
-     *
-     * @return SoqlQueryBuilder
-     */
-    public static function getQueryBuilder(): SoqlQueryBuilder
-    {
-        return new SoqlQueryBuilder();
+        return $this->executeRequestSync($request);
     }
 }

@@ -16,19 +16,19 @@ class BulkApi2 extends SalesforceApi
     /**
      * Creates an bulk api job using the bulk api 2.0.
      *
-     * @param string $object     salesforce object to create
-     * @param string $delimiter  this must be the delimiter you wish to use with the CSV file
+     * @param string $object salesforce object to create
+     * @param string $delimiter this must be the delimiter you wish to use with the CSV file
      * @param string $lineEnding this must match your OS if you are not using a reader such as PHPLeagueCSV
-     * @param string $operation  These can be found in the BulkApiConstants
+     * @param string $operation These can be found in the BulkApiConstants
      */
-    public function createJobDirectly(string $object, string $delimiter, string $lineEnding, string $operation)
+    public function createJobDirectly(string $object, string $delimiter, string $lineEnding, string $operation): array
     {
         $request = new CreateJob();
-        $request->setData([
+        $request->body()->set([
             'columnDelimiter' => $delimiter,
-            'lineEnding'      => $lineEnding,
-            'object'          => $object,
-            'operation'       => $operation,
+            'lineEnding' => $lineEnding,
+            'object' => $object,
+            'operation' => $operation,
         ]);
 
         return $this->executeRequest($request);
@@ -39,9 +39,9 @@ class BulkApi2 extends SalesforceApi
      *
      * @param string $jobId salesforce ID of the job
      *
-     * @return array
+     * @return array *
      *
-     * * @link https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/get_job_info.htm
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/get_job_info.htm
      */
     public function getJobDirectly(string $jobId): array
     {
@@ -62,7 +62,7 @@ class BulkApi2 extends SalesforceApi
     {
         $request = new UploadJobData($jobId, $resourceStream);
 
-        return $request->send()->status();
+        return $this->executeRequestDirectly($request)->status();
     }
 
     /**
@@ -84,7 +84,7 @@ class BulkApi2 extends SalesforceApi
      *
      * @param string $jobId salesforce ID of the job
      */
-    public function abortJobDirectly(string $jobId)
+    public function abortJobDirectly(string $jobId): array
     {
         $request = new UpdateJobState($jobId, BulkApiOptions::ABORT);
 
@@ -96,7 +96,7 @@ class BulkApi2 extends SalesforceApi
      *
      * @param string $jobId salesforce ID of the job
      */
-    public function getSuccessfulRecordsDirectly(string $jobId)
+    public function getSuccessfulRecordsDirectly(string $jobId): array
     {
         $request = new GetJobResults($jobId, BulkApiOptions::SUCCESSFUL_RESULTS);
 
@@ -108,7 +108,7 @@ class BulkApi2 extends SalesforceApi
      *
      * @param string $jobId salesforce ID of the job
      */
-    public function getFailedRecordsDirectly(string $jobId)
+    public function getFailedRecordsDirectly(string $jobId): array
     {
         $request = new GetJobResults($jobId, BulkApiOptions::UNSUCCESSFUL_RESULTS);
 
@@ -120,16 +120,15 @@ class BulkApi2 extends SalesforceApi
      *
      * @param SalesforceJob $salesforceJob
      *
-     * @return array
      */
     public function createJob(SalesforceJob $salesforceJob): array
     {
         $request = new CreateJob();
-        $request->setData([
+        $request->body()->set([
             'columnDelimiter' => $salesforceJob->getDelimiter(),
-            'lineEnding'      => $salesforceJob->getLineEnding(),
-            'object'          => $salesforceJob->getObject(),
-            'operation'       => $salesforceJob->getOperation(),
+            'lineEnding' => $salesforceJob->getLineEnding(),
+            'object' => $salesforceJob->getObject(),
+            'operation' => $salesforceJob->getOperation(),
         ]);
 
         return $this->executeRequest($request);
@@ -158,7 +157,7 @@ class BulkApi2 extends SalesforceApi
     {
         $request = new UploadJobData($salesforceJob->getJobId(), $salesforceJob->getUploadStream());
 
-        return $request->send()->status();
+        return $this->executeRequestDirectly($request)->status();
     }
 
     /**
@@ -166,7 +165,6 @@ class BulkApi2 extends SalesforceApi
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
      *
-     * @return array
      */
     public function closeJob(SalesforceJob $salesforceJob): array
     {
@@ -180,7 +178,6 @@ class BulkApi2 extends SalesforceApi
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
      *
-     * @return array
      */
     public function abortJob(SalesforceJob $salesforceJob): array
     {
@@ -194,7 +191,6 @@ class BulkApi2 extends SalesforceApi
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
      *
-     * @return array
      */
     public function getSuccessfulRecords(SalesforceJob $salesforceJob): array
     {

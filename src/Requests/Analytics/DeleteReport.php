@@ -2,22 +2,21 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class DeleteReport extends SaloonRequest
+
+class DeleteReport extends Request
 {
     protected ?string $id = null;
-    protected ?string $method = Saloon::DELETE;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::DELETE;
 
     public function __construct(string $id)
     {
         $this->id = $id;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/reports/{$this->id}";
     }

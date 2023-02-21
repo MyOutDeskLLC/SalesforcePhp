@@ -2,19 +2,14 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class CloneDashboard extends SaloonRequest
+class CloneDashboard extends Request
 {
-    use HasJsonBody;
-
     protected ?string $dashboardId;
     protected ?string $targetFolder;
-    protected ?string $method = Saloon::POST;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::POST;
 
     public function __construct(string $dashboardId, string $newFolderId)
     {
@@ -22,12 +17,12 @@ class CloneDashboard extends SaloonRequest
         $this->targetFolder = $newFolderId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return '/analytics/dashboards';
     }
 
-    public function defaultData(): array
+    public function defaultBody(): array
     {
         return [
             'folderId' => $this->targetFolder,

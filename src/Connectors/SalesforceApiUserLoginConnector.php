@@ -16,7 +16,7 @@ class SalesforceApiUserLoginConnector extends Connector implements HasBody
 
     public function resolveBaseUrl(): string
     {
-        if($this->sandbox) {
+        if ($this->sandbox) {
             return 'https://test.salesforce.com';
         }
 

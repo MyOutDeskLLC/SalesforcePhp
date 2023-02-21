@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Auth;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiUserConnector;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;

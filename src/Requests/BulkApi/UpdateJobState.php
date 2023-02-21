@@ -16,7 +16,6 @@ class UpdateJobState extends Request implements HasBody
     protected string $state = BulkApiOptions::UPLOAD_COMPLETE;
     protected Method $method = Method::PATCH;
 
-
     public function __construct(string $id, string $newJobState)
     {
         $this->id = $id;

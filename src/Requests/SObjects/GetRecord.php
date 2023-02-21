@@ -11,7 +11,6 @@ class GetRecord extends Request
     protected ?string $object;
     protected Method $method = Method::GET;
 
-
     public function __construct(string $object, string $recordId)
     {
         $this->recordId = $recordId;

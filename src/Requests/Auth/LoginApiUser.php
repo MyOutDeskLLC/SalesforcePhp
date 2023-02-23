@@ -26,6 +26,6 @@ class LoginApiUser extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return SalesforceApi::getInstanceUrl() . '/services/oauth2/token';
+        return SalesforceApi::getInstanceUrl().'/services/oauth2/token';
     }
 }

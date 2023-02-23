@@ -3,7 +3,6 @@
 namespace myoutdeskllc\SalesforcePhp\Connectors;
 
 use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Traits\HasApiVersion;
 use Saloon\Http\Connector;
 use Saloon\Traits\OAuth2\AuthorizationCodeGrant;

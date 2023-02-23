@@ -26,7 +26,6 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 use SalesforceQueryBuilder\QueryBuilder;
-use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -61,7 +60,7 @@ class SalesforceApi
             'username'      => $username,
             'password'      => $password,
         ]);
-        if($sandbox) {
+        if ($sandbox) {
             $connector->useSandbox();
         } else {
             $connector->useProduction();
@@ -79,7 +78,7 @@ class SalesforceApi
 
         return [
             'state' => $connector->getState(),
-            'url' => $connector->getAuthorizationUrl(),
+            'url'   => $connector->getAuthorizationUrl(),
         ];
     }
 
@@ -99,7 +98,7 @@ class SalesforceApi
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $authenticator = SalesforceOAuthLoginConnector::unseriaize($serializedConnection);
 
-        if($authenticator->hasExpired()) {
+        if ($authenticator->hasExpired()) {
             $authenticator = $connector->refreshAccessToken($authenticator);
             $afterRefresh($authenticator);
         }

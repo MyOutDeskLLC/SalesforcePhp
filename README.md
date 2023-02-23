@@ -171,7 +171,7 @@ $sfOauthConfiguration->setSecret('secret');
 $sfOauthConfiguration->setRedirectUri('redirect_uri');
 $sfOauthConfiguration->setBaseUrl('base_uri');
 
-$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
 $connector->setOauthConfiguration($sfOauthConfiguration);
 $authorizationUrl = $connector->getAuthorizationUrl();
 $state = $connector->getState();
@@ -180,7 +180,7 @@ $state = $connector->getState();
 $_GET['state'] = 'state_from_saloon';
 $_GET['code'] = 'code_from_salesforce';
 
-$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
 $authenticator = $connector->getAccessToken($code, $state);
 
 // store this in an encrypted field in the database
@@ -189,7 +189,7 @@ $serialized = $authenticator->serialize();
 $authenticator = AccessTokenAuthenticator::unserialize($serialized);
 
 if ($authenticator->hasExpired() === true) {
-    $authConnector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthConnector();
+    $authConnector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
     
     // configure your auth connector again, then refresh the access token, passing the authenticator to it
     $authenticator = $authConnector->refreshAccessToken($authenticator);

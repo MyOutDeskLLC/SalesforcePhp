@@ -3,16 +3,15 @@
 namespace myoutdeskllc\SalesforcePhp\Connectors;
 
 use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
+use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Traits\HasApiVersion;
 use Saloon\Http\Connector;
 use Saloon\Traits\OAuth2\AuthorizationCodeGrant;
 
-class SalesforceOAuthConnector extends Connector
+class SalesforceOAuthLoginConnector extends Connector
 {
     use AuthorizationCodeGrant;
     use HasApiVersion;
-
-    protected ?string $instanceUrl;
 
     public function setOauthConfiguration(OAuthConfiguration $configuration): void
     {
@@ -26,6 +25,10 @@ class SalesforceOAuthConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return $this->instanceUrl.'/services/data/'.$this->apiVersion;
+        if ($this->sandbox) {
+            return 'https://test.salesforce.com';
+        }
+
+        return 'https://login.salesforce.com';
     }
 }

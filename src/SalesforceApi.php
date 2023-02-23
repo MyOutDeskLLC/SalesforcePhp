@@ -9,6 +9,10 @@ use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\ToolingApi;
+use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiConnector;
+use myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector;
+use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
+use myoutdeskllc\SalesforcePhp\Requests\Auth\LoginApiUser;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
@@ -22,6 +26,7 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 use SalesforceQueryBuilder\QueryBuilder;
+use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -32,16 +37,80 @@ class SalesforceApi
     protected bool $async = false;
     protected bool $recordsOnly = false;
 
-    protected $authenticator = null;
+    protected static $apiVersion = 'v51.0';
 
-    public function __construct(Connector $connector)
+    protected static $instanceUrl;
+
+    public function __construct()
     {
-        self::$connector = $connector;
     }
 
-    public function setAuthenticator($authenticator)
+    public function setApiVersion(string $version): void
     {
-        $this->authenticator = $authenticator;
+        self::$apiVersion = $version;
+    }
+
+    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, bool $sandbox = true): void
+    {
+        $connector = new Connectors\SalesforceApiConnector();
+        $loginRequest = new LoginApiUser();
+        $loginRequest->body()->set([
+            'grant_type'    => 'password',
+            'client_id'     => $consumerKey,
+            'client_secret' => $consumerSecret,
+            'username'      => $username,
+            'password'      => $password,
+        ]);
+        if($sandbox) {
+            $connector->useSandbox();
+        } else {
+            $connector->useProduction();
+        }
+
+        $response = $connector->send($loginRequest);
+
+        self::$connector->withTokenAuth($response['access_token']);
+    }
+
+    public function startOAuthLogin(OAuthConfiguration $configuration): array
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($configuration);
+
+        return [
+            'state' => $connector->getState(),
+            'url' => $connector->getAuthorizationUrl(),
+        ];
+    }
+
+    public function validateOAuthLogin(string $code, string $state)
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $authenticator = $connector->getAccessToken($code, $state);
+
+        self::$connector = new SalesforceApiConnector();
+        self::$connector->authenticate($authenticator);
+
+        return $authenticator;
+    }
+
+    public function useOAuthLogin($serializedConnection, callable $afterRefresh)
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $authenticator = SalesforceOAuthLoginConnector::unseriaize($serializedConnection);
+
+        if($authenticator->hasExpired()) {
+            $authenticator = $connector->refreshAccessToken($authenticator);
+            $afterRefresh($authenticator);
+        }
+
+        self::$connector = new SalesforceApiConnector();
+        self::$connector->authenticate($authenticator);
+    }
+
+    public static function getApiVersion(): string
+    {
+        return self::$apiVersion;
     }
 
     /**

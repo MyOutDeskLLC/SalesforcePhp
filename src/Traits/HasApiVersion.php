@@ -5,6 +5,7 @@ namespace myoutdeskllc\SalesforcePhp\Traits;
 trait HasApiVersion
 {
     protected ?string $apiVersion;
+    protected bool $sandbox = true;
 
     public function setApiVersion(string $apiVersion): void
     {

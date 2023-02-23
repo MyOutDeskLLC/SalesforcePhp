@@ -51,9 +51,9 @@ class SalesforceApi
 
     public function login(string $username, string $password, string $consumerKey, string $consumerSecret, string $instanceUrl = 'https://test.salesforce.com', bool $sandbox = true): void
     {
-        if($instanceUrl) {
+        if ($instanceUrl) {
             self::$instanceUrl = $instanceUrl;
-        } else if (!$sandbox) {
+        } elseif (!$sandbox) {
             self::$instanceUrl = 'https://login.salesforce.com';
         }
 

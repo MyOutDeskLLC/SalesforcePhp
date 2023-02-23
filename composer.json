@@ -23,7 +23,7 @@
     "require-dev": {
         "pestphp/pest": "^1.21",
         "fakerphp/faker": "^1.19",
-        "vlucas/phpdotenv": "^5.4",
+        "vlucas/phpdotenv": "^5.5",
         "phpstan/phpstan": "^1.10"
     },
     "scripts": {

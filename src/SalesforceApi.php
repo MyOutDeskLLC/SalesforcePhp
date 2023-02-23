@@ -39,7 +39,7 @@ class SalesforceApi
 
     protected static $apiVersion = 'v51.0';
 
-    protected static $instanceUrl;
+    protected static $instanceUrl = 'https://test.salesforce.com';
 
     public function __construct()
     {
@@ -50,9 +50,15 @@ class SalesforceApi
         self::$apiVersion = $version;
     }
 
-    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, bool $sandbox = true): void
+    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, string $instanceUrl = 'https://test.salesforce.com', bool $sandbox = true): void
     {
-        $connector = new Connectors\SalesforceApiConnector();
+        if($instanceUrl) {
+            self::$instanceUrl = $instanceUrl;
+        } else if (!$sandbox) {
+            self::$instanceUrl = 'https://login.salesforce.com';
+        }
+
+        self::$connector = new Connectors\SalesforceApiConnector();
         $loginRequest = new LoginApiUser();
         $loginRequest->body()->set([
             'grant_type'    => 'password',
@@ -61,13 +67,10 @@ class SalesforceApi
             'username'      => $username,
             'password'      => $password,
         ]);
-        if($sandbox) {
-            $connector->useSandbox();
-        } else {
-            $connector->useProduction();
-        }
 
-        $response = $connector->send($loginRequest);
+        $response = self::$connector->send($loginRequest)->json();
+
+        var_dump($response);
 
         self::$connector->withTokenAuth($response['access_token']);
     }
@@ -111,6 +114,11 @@ class SalesforceApi
     public static function getApiVersion(): string
     {
         return self::$apiVersion;
+    }
+
+    public static function getInstanceUrl(): string
+    {
+        return self::$instanceUrl;
     }
 
     /**

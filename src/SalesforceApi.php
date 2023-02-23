@@ -69,6 +69,9 @@ class SalesforceApi
 
         $response = self::$connector->send($loginRequest)->json();
 
+        // this must be set after the login request for both OAuth and username / password flows
+        self::$instanceUrl = $response['instance_url'];
+
         self::$connector->withTokenAuth($response['access_token']);
     }
 
@@ -223,7 +226,7 @@ class SalesforceApi
                 unset($item['attributes']);
 
                 return $item;
-            }, $response->json('records'));
+            }, $response->json()['records'] ?? []);
         }
 
         return $response->json();  // @phpstan-ignore-line
@@ -246,8 +249,6 @@ class SalesforceApi
      */
     protected function executeRequestSync(Request $request): Response
     {
-        $request->authenticate($this->authenticator);
-
         return self::$connector->send($request);  // @phpstan-ignore-line
     }
 

@@ -664,16 +664,16 @@
         },
         {
             "name": "sammyjo20/saloon",
-            "version": "v2.0.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sammyjo20/Saloon.git",
-                "reference": "b8a563292be83028e44a2b6f7c40a99d46bfc70d"
+                "reference": "3be28bf95ff921f556783898b767b7b40c5e7674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/b8a563292be83028e44a2b6f7c40a99d46bfc70d",
-                "reference": "b8a563292be83028e44a2b6f7c40a99d46bfc70d",
+                "url": "https://api.github.com/repos/Sammyjo20/Saloon/zipball/3be28bf95ff921f556783898b767b7b40c5e7674",
+                "reference": "3be28bf95ff921f556783898b767b7b40c5e7674",
                 "shasum": ""
             },
             "require": {
@@ -691,8 +691,7 @@
                 "pestphp/pest": "^1.21",
                 "phpstan/phpstan": "^1.9",
                 "spatie/ray": "^1.33",
-                "symfony/dom-crawler": "^6.0",
-                "symfony/stopwatch": "^6.2"
+                "symfony/dom-crawler": "^6.0"
             },
             "suggest": {
                 "illuminate/collections": "Required for the response collect() method.",
@@ -726,7 +725,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Sammyjo20/Saloon/issues",
-                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.0.0"
+                "source": "https://github.com/Sammyjo20/Saloon/tree/v2.0.2"
             },
             "funding": [
                 {
@@ -734,7 +733,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2023-02-20T20:00:37+00:00"
+            "time": "2023-02-24T20:18:44+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1648,16 +1647,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.0",
+            "version": "1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "71b28a67f01ac231f9a8f1ce242270bf4ec1f99c"
+                "reference": "a2ffec7db373d8da4973d1d62add872db5cd22dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/71b28a67f01ac231f9a8f1ce242270bf4ec1f99c",
-                "reference": "71b28a67f01ac231f9a8f1ce242270bf4ec1f99c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a2ffec7db373d8da4973d1d62add872db5cd22dd",
+                "reference": "a2ffec7db373d8da4973d1d62add872db5cd22dd",
                 "shasum": ""
             },
             "require": {
@@ -1687,7 +1686,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.10.0"
+                "source": "https://github.com/phpstan/phpstan/tree/1.10.2"
             },
             "funding": [
                 {
@@ -1703,7 +1702,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-21T13:50:49+00:00"
+            "time": "2023-02-23T14:36:46+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

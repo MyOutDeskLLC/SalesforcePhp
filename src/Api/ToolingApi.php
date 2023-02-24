@@ -50,7 +50,7 @@ class ToolingApi extends SalesforceApi
     {
         $request = new GetApexLog($logId);
 
-        return self::$connector->send($request)->body();
+        return $this->executeRequestDirectly($request)->body();
     }
 
     /**
@@ -107,7 +107,7 @@ class ToolingApi extends SalesforceApi
         $request = new RunApexTestsASync();
         $request->body()->set(['classids' => implode(',', $listOfClassIds)]);
 
-        return str_replace('"', '', self::$connector->send($request)->body());
+        return str_replace('"', '', $this->executeRequestDirectly($request)->body());
     }
 
     /**

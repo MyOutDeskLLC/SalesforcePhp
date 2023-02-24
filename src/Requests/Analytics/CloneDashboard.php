@@ -2,11 +2,15 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class CloneDashboard extends Request
+class CloneDashboard extends Request implements HasBody
 {
+    use HasJsonBody;
+
     protected ?string $dashboardId;
     protected ?string $targetFolder;
     protected Method $method = Method::POST;

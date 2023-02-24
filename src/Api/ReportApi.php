@@ -59,13 +59,13 @@ class ReportApi extends SalesforceApi
      *
      * @param string $reportId salesforce id of the report
      *
-     * @return array|null
+     * @return bool
      */
-    public function deleteReport(string $reportId): ?array
+    public function deleteReport(string $reportId): bool
     {
         $request = new DeleteReport($reportId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->status() === 204;
     }
 
     /**
@@ -73,13 +73,13 @@ class ReportApi extends SalesforceApi
      *
      * @param string $dashboardId salesforce id of the dashboard
      *
-     * @return array|null
+     * @return bool
      */
-    public function deleteDashboard(string $dashboardId): ?array
+    public function deleteDashboard(string $dashboardId): bool
     {
         $request = new DeleteDashboard($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->status() === 204;
     }
 
     /**
@@ -542,7 +542,7 @@ class ReportApi extends SalesforceApi
     {
         $request = new GetDashboardMetadata($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -558,7 +558,7 @@ class ReportApi extends SalesforceApi
     {
         $request = new GetDashboardResults($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -630,7 +630,7 @@ class ReportApi extends SalesforceApi
             'componentIds' => $componentIds,
         ]);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -699,14 +699,16 @@ class ReportApi extends SalesforceApi
      *
      * @param string $folderId salesforce id of the folder
      *
-     * @return array|null
+     * @return bool
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
      */
-    public function deleteFolder(string $folderId): ?array
+    public function deleteFolder(string $folderId): bool
     {
         $request = new DeleteFolder($folderId);
 
-        return $this->executeRequest($request);
+        $response = $this->executeRequestDirectly($request);
+
+        return $response->status() === 204;
     }
 }

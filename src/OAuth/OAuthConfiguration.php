@@ -8,7 +8,7 @@ class OAuthConfiguration
     protected string $clientSecret;
     protected string $redirectUri;
 
-    public static function withOauthConfiguration(array $oAuthConfiguration): self
+    public static function create(array $oAuthConfiguration): self
     {
         $oauthConfig = new self();
         $oauthConfig->setClientId($oAuthConfiguration['client_id']);

@@ -9,7 +9,8 @@ beforeEach(function () {
 });
 
 test('Can create a bulk API job', function () {
-    $api = SalesforceApi::getBulkApi();
+    $api = getAPI();
+    $api = $api->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -20,7 +21,7 @@ test('Can create a bulk API job', function () {
 });
 
 test('Can upload records to a bulk API job', function () {
-    $api = SalesforceApi::getBulkApi();
+    $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -33,7 +34,7 @@ test('Can upload records to a bulk API job', function () {
 });
 
 test('Can get existing job status', function () {
-    $api = SalesforceApi::getBulkApi();
+    $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -45,7 +46,7 @@ test('Can get existing job status', function () {
 });
 
 test('Can abort a job', function () {
-    $api = SalesforceApi::getBulkApi();
+    $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);

@@ -35,11 +35,10 @@ class SalesforceApi
 {
     protected Connector $connector;
     protected bool $async = false;
+    protected bool $eatErrors = false;
     protected bool $recordsOnly = false;
-
-    protected static $apiVersion = 'v51.0';
-
-    protected static $instanceUrl = 'https://test.salesforce.com';
+    protected static string $apiVersion = 'v51.0';
+    protected static string $instanceUrl = 'https://test.salesforce.com';
 
     public function __construct(string $instanceUrl = 'https://test.salesforce.com', string $apiVersion = 'v51.0')
     {
@@ -91,8 +90,8 @@ class SalesforceApi
         $connector->setOauthConfiguration($configuration);
 
         return [
-            'state' => $connector->getState(),
             'url'   => $connector->getAuthorizationUrl(),
+            'state' => $connector->getState(),
         ];
     }
 
@@ -178,6 +177,17 @@ class SalesforceApi
     }
 
     /**
+     * Executes the request directly, allowing the caller to handle the specifics of the response (it may not be JSON)
+     *
+     * @param Request $request
+     * @return Response
+     */
+    protected function executeRequestDirectly(Request $request): Response
+    {
+        return $this->executeRequestSync($request);
+    }
+
+    /**
      * Unpacks a response object if needed.
      *
      * @param Response $response
@@ -195,7 +205,7 @@ class SalesforceApi
                 unset($item['attributes']);
 
                 return $item;
-            }, $inlineData);
+            }, $inlineData['records']);
         }
 
         return $response->json();
@@ -218,7 +228,17 @@ class SalesforceApi
      */
     protected function executeRequestSync(Request $request): Response
     {
-        return $this->connector->send($request);  // @phpstan-ignore-line
+        if($this->eatErrors) {
+            return $this->connector->send($request);  // @phpstan-ignore-line
+        }
+
+        $response = $this->connector->send($request);
+
+        if($response->failed()) {
+            $response->throw();
+        }
+
+        return $response; // @phpstan-ignore-line
     }
 
     /**
@@ -527,9 +547,17 @@ class SalesforceApi
         $this->connector = $connector;
     }
 
-    protected function executeRequestDirectly(Request $request): Response
+    /**
+     * Set this to TRUE if you don't want to throw exceptions on errors.
+     *
+     * @param bool $eatErrors
+     * @return SalesforceApi
+     */
+    public function eatErrors(bool $eatErrors): SalesforceApi
     {
-        return $this->executeRequestSync($request);
+        $this->eatErrors = $eatErrors;
+
+        return $this;
     }
 
     /**
@@ -540,6 +568,9 @@ class SalesforceApi
     public function getReportApi(): ReportApi
     {
         $api = new ReportApi(self::$instanceUrl, self::$apiVersion);
+        if($this->recordsOnly) {
+            $api->recordsOnly();
+        }
         $api->setConnector($this->getConnector());
 
         return $api;
@@ -553,6 +584,9 @@ class SalesforceApi
     public function getSObjectApi(): SObjectApi
     {
         $api = new SObjectApi(self::$instanceUrl, self::$apiVersion);
+        if($this->recordsOnly) {
+            $api->recordsOnly();
+        }
         $api->setConnector($this->getConnector());
 
         return $api;
@@ -566,6 +600,9 @@ class SalesforceApi
     public function getBulkApi(): BulkApi2
     {
         $api = new BulkApi2(self::$instanceUrl, self::$apiVersion);
+        if($this->recordsOnly) {
+            $api->recordsOnly();
+        }
         $api->setConnector($this->getConnector());
 
         return $api;
@@ -579,6 +616,9 @@ class SalesforceApi
     public function getStandardObjectApi(): StandardObjectApi
     {
         $api = new StandardObjectApi(self::$instanceUrl, self::$apiVersion);
+        if($this->recordsOnly) {
+            $api->recordsOnly();
+        }
         $api->setConnector($this->getConnector());
 
         return $api;
@@ -592,6 +632,9 @@ class SalesforceApi
     public function getToolingApi(): ToolingApi
     {
         $api = new ToolingApi(self::$instanceUrl, self::$apiVersion);
+        if($this->recordsOnly) {
+            $api->recordsOnly();
+        }
         $api->setConnector($this->getConnector());
 
         return $api;

@@ -7,10 +7,11 @@ use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
+use Saloon\Traits\Body\HasMultipartBody;
 
 class UploadJobData extends Request implements HasBody
 {
-    use HasJsonBody;
+    use \Saloon\Traits\Body\HasBody;
 
     protected string $jobId;
     protected AbstractCsv $stream;

@@ -140,14 +140,12 @@ Copy .env.example to .env, update the redirect_url to be your local machine URL.
 Password flow is possible using the `SalesforceApiUserLogin` class. Please do an API only user profile for this, and ensure you use
 whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `AUTH_METHOD` inside of `.env` to `login`.
 ```php
-$apiUserLogin = new SalesforceApiUserLogin();
-$apiUserLogin->configureApp('MY_CONSUMER_KEY', 'MY_CONSUMER_SECRET');
-$credentials = $apiUserLogin->authenticateUser('USERNAME', 'PASSWORD');
-if(!$credentials['result']) {
-    // auth failed, check the message key
-}
-$api = new SalesforceApi($credentials['access_token'], $credentials['instance_url'], '42.0');
-$api->getLimits();
+$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi();
+// this call will return an access_token for you to cache in your own database for a time
+$salesforceApi->login('username', 'password', 'consumer_key', 'consumer_secret');
+// if you have an access token that is still valid, you can restore it
+// I recommend caching this for at least 5 minutes, so you don't bombard salesforce with password requests
+$salesforceApi->restoreAccessToken('access_token');
 ```
 
 ### Security Token
@@ -169,32 +167,14 @@ $sfOauthConfiguration = new \myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration
 $sfOauthConfiguration->setClientId('client_id');
 $sfOauthConfiguration->setSecret('secret');
 $sfOauthConfiguration->setRedirectUri('redirect_uri');
-$sfOauthConfiguration->setBaseUrl('base_uri');
 
-$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
-$connector->setOauthConfiguration($sfOauthConfiguration);
-$authorizationUrl = $connector->getAuthorizationUrl();
-$state = $connector->getState();
-
-// redirect to the authorization url and store the state locally in session
-$_GET['state'] = 'state_from_saloon';
-$_GET['code'] = 'code_from_salesforce';
-
-$connector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
-$authenticator = $connector->getAccessToken($code, $state);
-
+$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi($sfOauthConfiguration);
+[$state, $url] = array_values($salesforceApi->startOAuthLogin($oauthConfig));
+// store the state yourself somewhere and redirect to the url returned
+// once the user is redirected back to your application, you can get the access token
+$authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state);
 // store this in an encrypted field in the database
 $serialized = $authenticator->serialize();
-// unserialize it later
+// unserialize it later to restore 
 $authenticator = AccessTokenAuthenticator::unserialize($serialized);
-
-if ($authenticator->hasExpired() === true) {
-    $authConnector = new \myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector();
-    
-    // configure your auth connector again, then refresh the access token, passing the authenticator to it
-    $authenticator = $authConnector->refreshAccessToken($authenticator);
-    
-    $user->auth = $authenticator;
-    $user->save();
-}
 ```

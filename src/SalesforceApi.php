@@ -49,7 +49,7 @@ class SalesforceApi
         self::$apiVersion = $version;
     }
 
-    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, string $instanceUrl = 'https://test.salesforce.com', bool $sandbox = true): void
+    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, string $instanceUrl = 'https://test.salesforce.com', bool $sandbox = true): string
     {
         if ($instanceUrl) {
             self::$instanceUrl = $instanceUrl;
@@ -73,6 +73,13 @@ class SalesforceApi
         self::$instanceUrl = $response['instance_url'];
 
         self::$connector->withTokenAuth($response['access_token']);
+
+        return $response['access_token'];
+    }
+
+    public function restoreAccessToken(string $accessToken): void
+    {
+        self::$connector->withTokenAuth($accessToken);
     }
 
     public function startOAuthLogin(OAuthConfiguration $configuration): array

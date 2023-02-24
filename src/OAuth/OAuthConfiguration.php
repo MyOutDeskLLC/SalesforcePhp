@@ -8,7 +8,6 @@ class OAuthConfiguration
     protected string $clientSecret;
     protected string $redirectUri;
 
-
     public static function withOauthConfiguration(array $oAuthConfiguration): self
     {
         $oauthConfig = new self();

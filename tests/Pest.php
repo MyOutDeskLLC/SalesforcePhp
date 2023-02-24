@@ -49,7 +49,7 @@ function getAPI()
     $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL'], $_ENV['API_VERSION']);
 
     // this is questionable, but works for testing with OAuth connections
-    $api->restoreExistingOAuthConnection((file_get_contents('.authenticator')), function($authenticator) {
+    $api->restoreExistingOAuthConnection((file_get_contents('.authenticator')), function ($authenticator) {
         file_put_contents('.authenticator', $authenticator->serialize());
     });
 
@@ -77,7 +77,6 @@ function destroyPestPhpSalesforceChanges()
             $reportApi->deleteReport($report['Id']);
         }
     }
-
 
     foreach ($folders as $folder) {
         if (stripos($folder['Name'], 'PESTPHP') !== false) {

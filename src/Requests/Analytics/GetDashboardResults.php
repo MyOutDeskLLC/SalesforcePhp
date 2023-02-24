@@ -2,10 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Traits\Body\HasJsonBody;
 
 class GetDashboardResults extends Request
 {

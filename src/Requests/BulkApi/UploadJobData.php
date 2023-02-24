@@ -6,8 +6,6 @@ use League\Csv\AbstractCsv;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Traits\Body\HasJsonBody;
-use Saloon\Traits\Body\HasMultipartBody;
 
 class UploadJobData extends Request implements HasBody
 {

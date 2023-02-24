@@ -1,7 +1,5 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
-
 beforeEach(function () {
     getAPI();
 });

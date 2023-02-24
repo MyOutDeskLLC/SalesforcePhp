@@ -177,9 +177,10 @@ class SalesforceApi
     }
 
     /**
-     * Executes the request directly, allowing the caller to handle the specifics of the response (it may not be JSON)
+     * Executes the request directly, allowing the caller to handle the specifics of the response (it may not be JSON).
      *
      * @param Request $request
+     *
      * @return Response
      */
     protected function executeRequestDirectly(Request $request): Response
@@ -228,13 +229,13 @@ class SalesforceApi
      */
     protected function executeRequestSync(Request $request): Response
     {
-        if($this->eatErrors) {
+        if ($this->eatErrors) {
             return $this->connector->send($request);  // @phpstan-ignore-line
         }
 
         $response = $this->connector->send($request);
 
-        if($response->failed()) {
+        if ($response->failed()) {
             $response->throw();
         }
 
@@ -551,6 +552,7 @@ class SalesforceApi
      * Set this to TRUE if you don't want to throw exceptions on errors.
      *
      * @param bool $eatErrors
+     *
      * @return SalesforceApi
      */
     public function eatErrors(bool $eatErrors): SalesforceApi
@@ -568,7 +570,7 @@ class SalesforceApi
     public function getReportApi(): ReportApi
     {
         $api = new ReportApi(self::$instanceUrl, self::$apiVersion);
-        if($this->recordsOnly) {
+        if ($this->recordsOnly) {
             $api->recordsOnly();
         }
         $api->setConnector($this->getConnector());
@@ -584,7 +586,7 @@ class SalesforceApi
     public function getSObjectApi(): SObjectApi
     {
         $api = new SObjectApi(self::$instanceUrl, self::$apiVersion);
-        if($this->recordsOnly) {
+        if ($this->recordsOnly) {
             $api->recordsOnly();
         }
         $api->setConnector($this->getConnector());
@@ -600,7 +602,7 @@ class SalesforceApi
     public function getBulkApi(): BulkApi2
     {
         $api = new BulkApi2(self::$instanceUrl, self::$apiVersion);
-        if($this->recordsOnly) {
+        if ($this->recordsOnly) {
             $api->recordsOnly();
         }
         $api->setConnector($this->getConnector());
@@ -616,7 +618,7 @@ class SalesforceApi
     public function getStandardObjectApi(): StandardObjectApi
     {
         $api = new StandardObjectApi(self::$instanceUrl, self::$apiVersion);
-        if($this->recordsOnly) {
+        if ($this->recordsOnly) {
             $api->recordsOnly();
         }
         $api->setConnector($this->getConnector());
@@ -632,7 +634,7 @@ class SalesforceApi
     public function getToolingApi(): ToolingApi
     {
         $api = new ToolingApi(self::$instanceUrl, self::$apiVersion);
-        if($this->recordsOnly) {
+        if ($this->recordsOnly) {
             $api->recordsOnly();
         }
         $api->setConnector($this->getConnector());

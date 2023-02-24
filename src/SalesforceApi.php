@@ -26,6 +26,7 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 use SalesforceQueryBuilder\QueryBuilder;
+use Saloon\Contracts\OAuthAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -40,8 +41,10 @@ class SalesforceApi
 
     protected static $instanceUrl = 'https://test.salesforce.com';
 
-    public function __construct()
+    public function __construct(string $instanceUrl = 'https://test.salesforce.com', string $apiVersion = 'v51.0')
     {
+        self::$instanceUrl = $instanceUrl;
+        self::$apiVersion = $apiVersion;
     }
 
     public function setApiVersion(string $version): void
@@ -49,15 +52,15 @@ class SalesforceApi
         self::$apiVersion = $version;
     }
 
-    public function login(string $username, string $password, string $consumerKey, string $consumerSecret, string $instanceUrl = 'https://test.salesforce.com', bool $sandbox = true): string
+    public function setInstanceUrl(string $instanceUrl): void
     {
-        if ($instanceUrl) {
-            self::$instanceUrl = $instanceUrl;
-        } elseif (!$sandbox) {
-            self::$instanceUrl = 'https://login.salesforce.com';
-        }
+        self::$instanceUrl = $instanceUrl;
+    }
 
+    public function login(string $username, string $password, string $consumerKey, string $consumerSecret): string
+    {
         self::$connector = new Connectors\SalesforceApiConnector();
+
         $loginRequest = new LoginApiUser();
         $loginRequest->body()->set([
             'grant_type'    => 'password',
@@ -93,7 +96,7 @@ class SalesforceApi
         ];
     }
 
-    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state)
+    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state): OAuthAuthenticator
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $connector->setOauthConfiguration($configuration);

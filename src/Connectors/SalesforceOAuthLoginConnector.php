@@ -3,15 +3,13 @@
 namespace myoutdeskllc\SalesforcePhp\Connectors;
 
 use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
-use myoutdeskllc\SalesforcePhp\Traits\HasApiVersion;
+use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use Saloon\Http\Connector;
 use Saloon\Traits\OAuth2\AuthorizationCodeGrant;
 
 class SalesforceOAuthLoginConnector extends Connector
 {
     use AuthorizationCodeGrant;
-    use HasApiVersion;
-
     public function setOauthConfiguration(OAuthConfiguration $configuration): void
     {
         $this->oauthConfig()->setClientId($configuration->getClientId());
@@ -23,10 +21,6 @@ class SalesforceOAuthLoginConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        if ($this->sandbox) {
-            return 'https://test.salesforce.com';
-        }
-
-        return 'https://login.salesforce.com';
+        return SalesforceApi::getInstanceUrl();
     }
 }

@@ -136,11 +136,18 @@ Copy .env.example to .env, update the redirect_url to be your local machine URL.
 7. Use `sfdx force:org:open` to open your scratch organization
 8. Execute the apex in `scripts/apex/seed.apex` in dev console (or use VSCODE)
 
+
+## Authentication
+
+### Instance URL
+Automatic instance url detection is now removed. You can find your instance via the URL (which salesforce required you to set up as part of Enhanced Domains)
+or by running `System.debug(System.URL.getSalesforceBaseURL());` in the developer console. Please set this before doing any calls.
+
 ### Password Flow
 Password flow is possible using the `SalesforceApiUserLogin` class. Please do an API only user profile for this, and ensure you use
 whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `AUTH_METHOD` inside of `.env` to `login`.
 ```php
-$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi();
+$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi('https://MY_INSTANCE.my.salesforce.com');
 // this call will return an access_token for you to cache in your own database for a time
 $salesforceApi->login('username', 'password', 'consumer_key', 'consumer_secret');
 // if you have an access token that is still valid, you can restore it
@@ -163,12 +170,13 @@ SalesforcePhpApi, click the dropdown and select `View`
 Here is how it can work in your application:
 
 ```php
+$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi('https://MY_INSTANCE.my.salesforce.com');
+
 $sfOauthConfiguration = new \myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration();
 $sfOauthConfiguration->setClientId('client_id');
 $sfOauthConfiguration->setSecret('secret');
 $sfOauthConfiguration->setRedirectUri('redirect_uri');
 
-$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi($sfOauthConfiguration);
 [$state, $url] = array_values($salesforceApi->startOAuthLogin($oauthConfig));
 // store the state yourself somewhere and redirect to the url returned
 // once the user is redirected back to your application, you can get the access token

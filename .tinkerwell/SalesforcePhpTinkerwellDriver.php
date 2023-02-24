@@ -35,7 +35,13 @@ class SalesforcePhpTinkerwellDriver extends LaravelTinkerwellDriver
     public function getAvailableVariables()
     {
         return [
-            'api' => new SalesforceApi(env('TOKEN'), env('INSTANCE_URL'), env('API_VERSION'))
+            'api' =>(function() : SalesforceApi {
+                $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL']);
+                $api->restoreExistingOAuthConnection((file_get_contents('.authenticator')), function($authenticator) {
+                    file_put_contents('.authenticator', $authenticator->serialize());
+                });
+                return $api;
+            })()
         ];
     }
 
@@ -50,13 +56,6 @@ class SalesforcePhpTinkerwellDriver extends LaravelTinkerwellDriver
             Label::create('Salesforce Auth Method: ' . ucfirst(env('AUTH_METHOD'))),
             Label::create('Salesforce API version: ' . env('API_VERSION')),
             OpenURL::create('Salesforce PHP Github', 'https://github.com/MyOutDeskLLC/SalesforcePhp'),
-            Submenu::create('Snippets', [
-                SetCode::create('Get ReportApi', '$report = SalesforceApi::getReportApi();'),
-                SetCode::create('Get ToolingApi', '$toolingApi = SalesforceApi::getToolingApi();'),
-                SetCode::create('Get BulkApi', '$bulkApi = SalesforceApi::getBulkApi();'),
-                SetCode::create('Get SObjectApi', '$sObjectApi = SalesforceApi::getSObjectApi();'),
-                SetCode::create('Get QueryBuilder', '$queryBuilder = SalesforceApi::getQueryBuilder();'),
-            ])
         ];
     }
 }

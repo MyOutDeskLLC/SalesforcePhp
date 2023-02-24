@@ -10,7 +10,6 @@ use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\ToolingApi;
 use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiConnector;
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceOAuthLoginConnector;
 use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
 use myoutdeskllc\SalesforcePhp\Requests\Auth\LoginApiUser;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
@@ -27,13 +26,14 @@ use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
 use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 use SalesforceQueryBuilder\QueryBuilder;
 use Saloon\Contracts\OAuthAuthenticator;
+use Saloon\Http\Auth\AccessTokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
 class SalesforceApi
 {
-    protected static Connector $connector;
+    protected Connector $connector;
     protected bool $async = false;
     protected bool $recordsOnly = false;
 
@@ -59,7 +59,7 @@ class SalesforceApi
 
     public function login(string $username, string $password, string $consumerKey, string $consumerSecret): string
     {
-        self::$connector = new Connectors\SalesforceApiConnector();
+        $this->connector = new Connectors\SalesforceApiConnector();
 
         $loginRequest = new LoginApiUser();
         $loginRequest->body()->set([
@@ -70,19 +70,19 @@ class SalesforceApi
             'password'      => $password,
         ]);
 
-        $response = self::$connector->send($loginRequest)->json();
+        $response = $this->connector->send($loginRequest)->json();
 
         // this must be set after the login request for both OAuth and username / password flows
         self::$instanceUrl = $response['instance_url'];
 
-        self::$connector->withTokenAuth($response['access_token']);
+        $this->connector->withTokenAuth($response['access_token']);
 
         return $response['access_token'];
     }
 
     public function restoreAccessToken(string $accessToken): void
     {
-        self::$connector->withTokenAuth($accessToken);
+        $this->connector->withTokenAuth($accessToken);
     }
 
     public function startOAuthLogin(OAuthConfiguration $configuration): array
@@ -102,24 +102,30 @@ class SalesforceApi
         $connector->setOauthConfiguration($configuration);
         $authenticator = $connector->getAccessToken($code, $state);
 
-        self::$connector = new SalesforceApiConnector();
-        self::$connector->authenticate($authenticator);
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
 
         return $authenticator;
     }
 
-    public function useOAuthLogin($serializedConnection, callable $afterRefresh)
+    public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $authenticator = SalesforceOAuthLoginConnector::unseriaize($serializedConnection);
+        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $connector->authenticate($authenticator);
 
         if ($authenticator->hasExpired()) {
             $authenticator = $connector->refreshAccessToken($authenticator);
             $afterRefresh($authenticator);
         }
 
-        self::$connector = new SalesforceApiConnector();
-        self::$connector->authenticate($authenticator);
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
+    }
+
+    public function refreshToken($serializedAuthenticator, callable $afterRefresh)
+    {
+        return $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
     }
 
     public static function getApiVersion(): string
@@ -130,56 +136,6 @@ class SalesforceApi
     public static function getInstanceUrl(): string
     {
         return self::$instanceUrl;
-    }
-
-    /**
-     * Returns an instance of the ReportApi.
-     *
-     * @return ReportApi
-     */
-    public static function getReportApi(): ReportApi
-    {
-        return new ReportApi(self::$connector);
-    }
-
-    /**
-     * Returns an instance of the SObjectApi.
-     *
-     * @return SObjectApi
-     */
-    public static function getSObjectApi(): SObjectApi
-    {
-        return new SObjectApi(self::$connector);
-    }
-
-    /**
-     * Returns an instance of the BulkApi2.
-     *
-     * @return BulkApi2
-     */
-    public static function getBulkApi(): BulkApi2
-    {
-        return new BulkApi2(self::$connector);
-    }
-
-    /**
-     * Returns an instance of the Standard Object API (mostly helper methods).
-     *
-     * @return StandardObjectApi
-     */
-    public static function getStandardObjectApi(): StandardObjectApi
-    {
-        return new StandardObjectApi(self::$connector);
-    }
-
-    /**
-     * Returns an instance of the tooling API.
-     *
-     * @return ToolingApi
-     */
-    public static function getToolingApi(): ToolingApi
-    {
-        return new ToolingApi(self::$connector);
     }
 
     /**
@@ -232,15 +188,17 @@ class SalesforceApi
      */
     protected function unpackResponseIfNeeded(Response $response)
     {
-        if ($this->recordsOnly()) {  // @phpstan-ignore-line
+        $inlineData = $response->json();
+
+        if (isset($inlineData['records']) && $this->recordsOnly) {
             return array_map(function ($item) {
                 unset($item['attributes']);
 
                 return $item;
-            }, $response->json()['records'] ?? []);
+            }, $inlineData);
         }
 
-        return $response->json();  // @phpstan-ignore-line
+        return $response->json();
     }
 
     /**
@@ -260,7 +218,7 @@ class SalesforceApi
      */
     protected function executeRequestSync(Request $request): Response
     {
-        return self::$connector->send($request);  // @phpstan-ignore-line
+        return $this->connector->send($request);  // @phpstan-ignore-line
     }
 
     /**
@@ -553,8 +511,89 @@ class SalesforceApi
         return array_pop($results);
     }
 
+    /**
+     * @return Connector
+     */
+    public function getConnector(): Connector
+    {
+        return $this->connector;
+    }
+
+    /**
+     * @param Connector $connector
+     */
+    public function setConnector(Connector $connector): void
+    {
+        $this->connector = $connector;
+    }
+
     protected function executeRequestDirectly(Request $request): Response
     {
         return $this->executeRequestSync($request);
+    }
+
+    /**
+     * Returns an instance of the ReportApi.
+     *
+     * @return ReportApi
+     */
+    public function getReportApi(): ReportApi
+    {
+        $api = new ReportApi(self::$instanceUrl, self::$apiVersion);
+        $api->setConnector($this->getConnector());
+
+        return $api;
+    }
+
+    /**
+     * Returns an instance of the SObjectApi.
+     *
+     * @return SObjectApi
+     */
+    public function getSObjectApi(): SObjectApi
+    {
+        $api = new SObjectApi(self::$instanceUrl, self::$apiVersion);
+        $api->setConnector($this->getConnector());
+
+        return $api;
+    }
+
+    /**
+     * Returns an instance of the BulkApi2.
+     *
+     * @return BulkApi2
+     */
+    public function getBulkApi(): BulkApi2
+    {
+        $api = new BulkApi2(self::$instanceUrl, self::$apiVersion);
+        $api->setConnector($this->getConnector());
+
+        return $api;
+    }
+
+    /**
+     * Returns an instance of the Standard Object API (mostly helper methods).
+     *
+     * @return StandardObjectApi
+     */
+    public function getStandardObjectApi(): StandardObjectApi
+    {
+        $api = new StandardObjectApi(self::$instanceUrl, self::$apiVersion);
+        $api->setConnector($this->getConnector());
+
+        return $api;
+    }
+
+    /**
+     * Returns an instance of the tooling API.
+     *
+     * @return ToolingApi
+     */
+    public function getToolingApi(): ToolingApi
+    {
+        $api = new ToolingApi(self::$instanceUrl, self::$apiVersion);
+        $api->setConnector($this->getConnector());
+
+        return $api;
     }
 }

@@ -10,6 +10,7 @@ use Saloon\Traits\OAuth2\AuthorizationCodeGrant;
 class SalesforceOAuthLoginConnector extends Connector
 {
     use AuthorizationCodeGrant;
+
     public function setOauthConfiguration(OAuthConfiguration $configuration): void
     {
         $this->oauthConfig()->setClientId($configuration->getClientId());

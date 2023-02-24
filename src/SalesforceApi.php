@@ -86,9 +86,10 @@ class SalesforceApi
         ];
     }
 
-    public function validateOAuthLogin(string $code, string $state)
+    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($configuration);
         $authenticator = $connector->getAccessToken($code, $state);
 
         self::$connector = new SalesforceApiConnector();

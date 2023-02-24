@@ -7,14 +7,16 @@ class OAuthConfiguration
     protected string $clientId;
     protected string $clientSecret;
     protected string $redirectUri;
-    protected string $baseUri;
 
-    public function construct(array $oAuthConfiguration)
+
+    public static function withOauthConfiguration(array $oAuthConfiguration): self
     {
-        $this->clientId = $oAuthConfiguration['client_id'];
-        $this->clientSecret = $oAuthConfiguration['client_secret'];
-        $this->redirectUri = $oAuthConfiguration['redirect_uri'];
-        $this->baseUri = $oAuthConfiguration['base_uri'];
+        $oauthConfig = new self();
+        $oauthConfig->setClientId($oAuthConfiguration['client_id']);
+        $oauthConfig->setClientSecret($oAuthConfiguration['client_secret']);
+        $oauthConfig->setRedirectUri($oAuthConfiguration['redirect_uri']);
+
+        return $oauthConfig;
     }
 
     public function getClientId(): string
@@ -32,8 +34,27 @@ class OAuthConfiguration
         return $this->redirectUri;
     }
 
-    public function getBaseUri(): string
+    /**
+     * @param string $clientId
+     */
+    public function setClientId(string $clientId): void
     {
-        return $this->baseUri;
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret(string $clientSecret): void
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @param string $redirectUri
+     */
+    public function setRedirectUri(string $redirectUri): void
+    {
+        $this->redirectUri = $redirectUri;
     }
 }

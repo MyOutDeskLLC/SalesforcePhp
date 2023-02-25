@@ -154,7 +154,7 @@ class ReportApi extends SalesforceApi
             'accept' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
 
-        return self::$connector->send($request)->stream();
+        return $this->executeRequestDirectly($request)->stream();
     }
 
     /**

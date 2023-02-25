@@ -334,7 +334,7 @@ class SalesforceApi
     {
         $request = new DeleteRecords();
         $request->query()->set([
-            'ids' => implode(',', $ids),
+            'ids'       => implode(',', $ids),
             'allOrNone' => $allOrNone,
         ]);
 

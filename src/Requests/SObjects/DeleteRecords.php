@@ -11,6 +11,6 @@ class DeleteRecords extends Request
 
     public function resolveEndpoint(): string
     {
-        return "composite/sobjects";
+        return 'composite/sobjects';
     }
 }

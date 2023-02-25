@@ -122,7 +122,7 @@ class ToolingApi extends SalesforceApi
         $request = new RunApexTestsASync();
         $request->body()->set(['classNames' => implode(',', $listOfClassNames)]);
 
-        return str_replace('"', '', self::$connector->send($request)->body());
+        return str_replace('"', '', $this->executeRequestDirectly($request)->body());
     }
 
     /**
@@ -290,6 +290,6 @@ class ToolingApi extends SalesforceApi
      */
     public function deleteEmailTemplate(string $templateId): bool
     {
-        return self::$connector->send(new DeleteEmailTemplate($templateId))->successful();
+        return $this->executeRequestDirectly(new DeleteEmailTemplate($templateId))->successful();
     }
 }

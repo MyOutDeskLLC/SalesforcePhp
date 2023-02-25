@@ -324,8 +324,8 @@ class SalesforceApi
     /**
      * Deletes records from salesforce using the composite API.
      *
-     * @param array  $ids
-     * @param bool   $allOrNone
+     * @param array $ids
+     * @param bool  $allOrNone
      *
      * @return array
      */

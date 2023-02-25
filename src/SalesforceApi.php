@@ -148,9 +148,9 @@ class SalesforceApi
      * @param string $id
      * @param array  $fields
      *
-     * @return array|mixed
+     * @return array|null
      */
-    public function getRecord(string $object, string $id, array $fields)
+    public function getRecord(string $object, string $id, array $fields): ?array
     {
         if (empty($object)) {
             throw new InvalidArgumentException('Given object cannot be empty');
@@ -199,7 +199,7 @@ class SalesforceApi
      *
      * @return array|mixed|mixed[]
      */
-    protected function unpackResponseIfNeeded(Response $response)
+    protected function unpackResponseIfNeeded(Response $response): mixed
     {
         $inlineData = $response->json();
 
@@ -250,9 +250,9 @@ class SalesforceApi
      * @param string $object
      * @param array  $recordInformation
      *
-     * @return array|mixed
+     * @return array|null
      */
-    public function createRecord(string $object, array $recordInformation)
+    public function createRecord(string $object, array $recordInformation): ?array
     {
         $request = new CreateRecord($object);
         $request->body()->set($recordInformation);
@@ -520,7 +520,7 @@ class SalesforceApi
      *
      * @param QueryBuilder $builder
      */
-    public function executeQuery(QueryBuilder $builder)
+    public function executeQuery(QueryBuilder $builder): array
     {
         return $this->executeQueryRaw($builder->toSoql());
     }

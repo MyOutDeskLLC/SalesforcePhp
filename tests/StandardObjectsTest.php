@@ -42,7 +42,7 @@ test('it can delete multiple records', function() {
         ['Name' => 'Test Account ' . $seed + 2, 'Site' => 'https://www.example.com'],
         ['Name' => 'Test Account ' . $seed + 3, 'Site' => 'https://www.example.com'],
     ]);
-    $deleteResponse = $api->deleteRecords('Account', array_column($response, 'id'));
+    $deleteResponse = $api->deleteRecords(array_column($response, 'id'));
 
     expect($deleteResponse)->toHaveCount(3);
     foreach($deleteResponse as $itemDeleted) {

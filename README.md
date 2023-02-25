@@ -158,6 +158,16 @@ $salesforceApi->updateRecords('My_Custom_Object__c', [
 ]);
 ```
 
+### Delete Records
+You may delete records using the `deleteRecord` method.
+
+```php
+$salesforceApi->deleteRecord('My_Custom_Object__c', 'ACCOUNT_ID');
+// or using composite api
+$salesforceApi->deleteRecords(['id1','id2','id3']);
+```
+allOrNone is supported for delete operations as a second parameter.
+
 When updating multiple records, you may pass in a third boolean for allOrNone to determine if they should all succeed for the operation to be committed in salesforce.
 
 ### Searching For Records

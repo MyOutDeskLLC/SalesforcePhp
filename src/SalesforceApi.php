@@ -324,13 +324,12 @@ class SalesforceApi
     /**
      * Deletes records from salesforce using the composite API.
      *
-     * @param string $object
      * @param array  $ids
      * @param bool   $allOrNone
      *
      * @return array
      */
-    public function deleteRecords(string $object, array $ids, bool $allOrNone = true): array
+    public function deleteRecords(array $ids, bool $allOrNone = true): array
     {
         $request = new DeleteRecords();
         $request->query()->set([

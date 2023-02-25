@@ -18,6 +18,8 @@ use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
 use myoutdeskllc\SalesforcePhp\Requests\Query\Search;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecords;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\DeleteRecord;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\DeleteRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
@@ -300,6 +302,41 @@ class SalesforceApi
 
         $request = new UpdateRecords();
         $request->body()->set($payload);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Deletes a record from salesforce.
+     *
+     * @param string $object
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function deleteRecord(string $object, string $id): bool
+    {
+        $request = new DeleteRecord($object, $id);
+
+        return $this->executeRequestDirectly($request)->status() === 204;
+    }
+
+    /**
+     * Deletes records from salesforce using the composite API.
+     *
+     * @param string $object
+     * @param array  $ids
+     * @param bool   $allOrNone
+     *
+     * @return array
+     */
+    public function deleteRecords(string $object, array $ids, bool $allOrNone = true): array
+    {
+        $request = new DeleteRecords();
+        $request->query()->set([
+            'ids' => implode(',', $ids),
+            'allOrNone' => $allOrNone,
+        ]);
 
         return $this->executeRequest($request);
     }

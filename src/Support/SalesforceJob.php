@@ -234,7 +234,7 @@ class SalesforceJob
     }
 
     /**
-     * Returns the number of records processed
+     * Returns the number of records processed.
      *
      * @return int|null
      */
@@ -244,7 +244,7 @@ class SalesforceJob
     }
 
     /**
-     * Returns the number of records failed
+     * Returns the number of records failed.
      *
      * @return int|null
      */

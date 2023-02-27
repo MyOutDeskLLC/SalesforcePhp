@@ -24,9 +24,10 @@ class GetJobResults extends Request
 
     public function resolveEndpoint(): string
     {
-        if($this->type === BulkApiOptions::SUCCESSFUL_RESULTS) {
+        if ($this->type === BulkApiOptions::SUCCESSFUL_RESULTS) {
             return "/jobs/ingest/{$this->id}/".BulkApiOptions::SUCCESSFUL_RESULTS;
         }
+
         return "/jobs/ingest/{$this->id}/".BulkApiOptions::UNSUCCESSFUL_RESULTS;
     }
 }

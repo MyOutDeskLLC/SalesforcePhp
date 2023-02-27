@@ -290,7 +290,7 @@ class SalesforceJob
     }
 
     /**
-     * Returns successful results as a CSV reader object
+     * Returns successful results as a CSV reader object.
      *
      * @return Reader
      */
@@ -302,7 +302,7 @@ class SalesforceJob
     }
 
     /**
-     * Returns failed results as a CSV reader object
+     * Returns failed results as a CSV reader object.
      *
      * @return Reader
      */

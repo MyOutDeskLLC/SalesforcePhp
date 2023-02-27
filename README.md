@@ -216,7 +216,7 @@ Batch job support for records is available via a job wrapper, completed with CSV
 
 ```php
 // make sure you have a new api first to pass in
-$salesforceJob = new SalesforceJob($api);
+$salesforceJob = new SalesforceJob($api->getBulkApi());
 $salesforceJob->setObject('My_Object__c');
 $salesforceJob->setOperation(BulkApiOptions::INSERT);
 $salesforceJob->initJob();
@@ -244,6 +244,8 @@ $salesforceJob->refreshStatus();
 // check the state to see if its done
 $salesforceJob->getState();
 // returns 'JobComplete' if its finished
+// then, of course, you need to know what actually was returned
+$salesforceJob->getSuccessfulResults();
 ```
 
 

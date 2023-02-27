@@ -8,6 +8,7 @@ use League\Csv\Reader;
 use League\Csv\Writer;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Helper class to assist with the creation and uploading of Salesforce Jobs. You do not need to use this class.
@@ -274,22 +275,42 @@ class SalesforceJob
 
     /**
      * Returns data on successful operations.
-     *
-     * @return array
      */
-    public function getSuccessfulResults(): array
+    public function getSuccessfulResults(): StreamInterface
     {
         return $this->api->getSuccessfulRecords($this);
     }
 
     /**
      * Returns data from salesforce on failed records.
-     *
-     * @return array
      */
-    public function getFailedResults(): array
+    public function getFailedResults(): StreamInterface
     {
         return $this->api->getFailedRecords($this);
+    }
+
+    public function getSuccessfulResultsAsArray()
+    {
+        $csvStream = $this->getSuccessfulResults();
+        $reader = Reader::createFromString($csvStream);
+        $results = [];
+        foreach($reader as $row) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    public function getFailedResultsAsArray()
+    {
+        $csvStream = $this->getFailedResults();
+        $reader = Reader::createFromString($csvStream);
+        $results = [];
+        foreach($reader as $row) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

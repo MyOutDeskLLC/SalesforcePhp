@@ -10,6 +10,7 @@ use myoutdeskllc\SalesforcePhp\Requests\BulkApi\UpdateJobState;
 use myoutdeskllc\SalesforcePhp\Requests\BulkApi\UploadJobData;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
+use Psr\Http\Message\StreamInterface;
 
 class BulkApi2 extends SalesforceApi
 {
@@ -188,24 +189,22 @@ class BulkApi2 extends SalesforceApi
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
      */
-    public function getSuccessfulRecords(SalesforceJob $salesforceJob): array
+    public function getSuccessfulRecords(SalesforceJob $salesforceJob): StreamInterface
     {
         $request = new GetJobResults($salesforceJob->getJobId(), BulkApiOptions::SUCCESSFUL_RESULTS);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->stream();
     }
 
     /**
      * Returns records that failed to process for the given job.
      *
      * @param SalesforceJob $salesforceJob instance of SalesforceJob, with ID set
-     *
-     * @return array
      */
-    public function getFailedRecords(SalesforceJob $salesforceJob): array
+    public function getFailedRecords(SalesforceJob $salesforceJob): StreamInterface
     {
         $request = new GetJobResults($salesforceJob->getJobId(), BulkApiOptions::UNSUCCESSFUL_RESULTS);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->stream();
     }
 }

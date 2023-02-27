@@ -290,7 +290,7 @@ class SalesforceJob
     }
 
     /**
-     * Gets the successful operations and returns it as an array instead of a CSV stream
+     * Gets the successful operations and returns it as an array instead of a CSV stream.
      *
      * @return array
      */
@@ -300,7 +300,7 @@ class SalesforceJob
     }
 
     /**
-     * Gets the failed operations and returns it as an array instead of a CSV stream
+     * Gets the failed operations and returns it as an array instead of a CSV stream.
      *
      * @return array
      */
@@ -313,7 +313,7 @@ class SalesforceJob
     {
         $reader = Reader::createFromString($csvStream);
         $results = [];
-        foreach($reader as $row) {
+        foreach ($reader as $row) {
             $results[] = $row;
         }
 

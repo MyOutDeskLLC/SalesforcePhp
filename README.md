@@ -239,7 +239,7 @@ $salesforceJob->setRecords([
 // don't forget to "close" the job to lock it for salesforce so it begins processing
 $salesforceJob->closeJob();
 // then later, you can check the status
-$salesforceJob = SalesforceJob::getExistingJobById($jobId, $api);
+$salesforceJob = SalesforceJob::getExistingJobById($jobId, $api->getBulkApi());
 $salesforceJob->refreshStatus();
 // check the state to see if its done
 $salesforceJob->getState();

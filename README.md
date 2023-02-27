@@ -245,7 +245,8 @@ $salesforceJob->refreshStatus();
 $salesforceJob->getState();
 // returns 'JobComplete' if its finished
 // then, of course, you need to know what actually was returned
-$salesforceJob->getSuccessfulResults();
+// Row 1 is headers, so you'll want to skip that
+$salesforceJob->getSuccessfulResultsAsArray();
 ```
 
 

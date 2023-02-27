@@ -289,21 +289,28 @@ class SalesforceJob
         return $this->api->getFailedRecords($this);
     }
 
-    public function getSuccessfulResultsAsArray()
+    /**
+     * Gets the successful operations and returns it as an array instead of a CSV stream
+     *
+     * @return array
+     */
+    public function getSuccessfulResultsAsArray(): array
     {
-        $csvStream = $this->getSuccessfulResults();
-        $reader = Reader::createFromString($csvStream);
-        $results = [];
-        foreach($reader as $row) {
-            $results[] = $row;
-        }
-
-        return $results;
+        return $this->unpackResultsAsArray($this->getSuccessfulResults());
     }
 
-    public function getFailedResultsAsArray()
+    /**
+     * Gets the failed operations and returns it as an array instead of a CSV stream
+     *
+     * @return array
+     */
+    public function getFailedResultsAsArray(): array
     {
-        $csvStream = $this->getFailedResults();
+        return $this->unpackResultsAsArray($this->getFailedResults());
+    }
+
+    protected function unpackResultsAsArray($csvStream): array
+    {
         $reader = Reader::createFromString($csvStream);
         $results = [];
         foreach($reader as $row) {

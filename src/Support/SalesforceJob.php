@@ -290,6 +290,30 @@ class SalesforceJob
     }
 
     /**
+     * Returns successful results as a CSV reader object
+     *
+     * @return Reader
+     */
+    public function getSuccessfulResultsAsCsv(): Reader
+    {
+        $csvStream = $this->getSuccessfulResults();
+
+        return Reader::createFromString($csvStream);
+    }
+
+    /**
+     * Returns failed results as a CSV reader object
+     *
+     * @return Reader
+     */
+    public function getFailedResultsAsCsv(): Reader
+    {
+        $csvStream = $this->getFailedResults();
+
+        return Reader::createFromString($csvStream);
+    }
+
+    /**
      * Gets the successful operations and returns it as an array instead of a CSV stream.
      *
      * @return array

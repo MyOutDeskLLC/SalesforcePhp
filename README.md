@@ -211,6 +211,43 @@ $standardObjectApi->getLeads(['id1','id2','id3'], ['Id', 'Name']);
 
 You can see a full list of operations available in the [StandardObjectApi](/src/api/StandardObjectApi.php)
 
+## Batch Jobs
+Batch job support for records is available via a job wrapper, completed with CSV support.
+
+```php
+// make sure you have a new api first to pass in
+$salesforceJob = new SalesforceJob($api);
+$salesforceJob->setObject('My_Object__c');
+$salesforceJob->setOperation(BulkApiOptions::INSERT);
+$salesforceJob->initJob();
+$salesforeJob->getJobId();
+// prints a job id
+$salesforceJob->setCsvFile('path/to/file.csv');
+// this will set a CSV file stream for you, otherwise, set up a file yourself with fopen
+$salesforceJob->setFileStream(fopen('path/to/file.csv', 'r'));
+// or, just set up records directly as an array
+$salesforceJob->setRecords([
+    [
+        'Field__c' => 'Value',
+        'Other_Field__c' => 'Other Value'
+    ],
+    [
+        'Field__c' => 'Value',
+        'Other_Field__c' => 'Other Value'
+    ]
+]);
+// don't forget to "close" the job to lock it for salesforce so it begins processing
+$salesforceJob->closeJob();
+// then later, you can check the status
+$salesforceJob = SalesforceJob::getExistingJobById($jobId, $api);
+$salesforceJob->refreshStatus();
+// check the state to see if its done
+$salesforceJob->getState();
+// returns 'JobComplete' if its finished
+```
+
+
+
 ## Soql Builder
 The SOQL builder can help build out queries in your app more effectively. You'll want to make sure security is tight before
 it hits the builder, but it offers a fluent API to help build out queries.

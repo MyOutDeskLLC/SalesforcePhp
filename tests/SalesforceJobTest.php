@@ -12,7 +12,6 @@ test('Can create a bulk API job', function () {
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Virtual_Youtuber__c');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
-
     $salesforceJob->initJob();
 
     expect($salesforceJob->getJobId())->not()->toBeNull();

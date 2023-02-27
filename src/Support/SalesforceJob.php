@@ -223,11 +223,33 @@ class SalesforceJob
     /**
      * Returns the job state, if available.
      *
+     * One of: Open, UploadComplete, JobComplete, Aborted, Failed
+     *
      * @return string|null
      */
     public function getState(): ?string
     {
         return $this->state;
+    }
+
+    /**
+     * Returns the number of records processed
+     *
+     * @return int|null
+     */
+    public function getNumberOfRecordsProcessed(): ?int
+    {
+        return $this->numberOfRecordsProcessed;
+    }
+
+    /**
+     * Returns the number of records failed
+     *
+     * @return int|null
+     */
+    public function getNumberOfRecordsFailed(): ?int
+    {
+        return $this->numberOfRecordsFailed;
     }
 
     /**

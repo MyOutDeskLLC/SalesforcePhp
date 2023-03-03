@@ -2,39 +2,141 @@
 
 namespace myoutdeskllc\SalesforcePhp;
 
-use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
+use JsonException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
 use myoutdeskllc\SalesforcePhp\Api\ReportApi;
 use myoutdeskllc\SalesforcePhp\Api\SObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\StandardObjectApi;
 use myoutdeskllc\SalesforcePhp\Api\ToolingApi;
+use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiConnector;
+use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
+use myoutdeskllc\SalesforcePhp\Requests\Auth\LoginApiUser;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
 use myoutdeskllc\SalesforcePhp\Requests\Query\Search;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecords;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\DeleteRecord;
+use myoutdeskllc\SalesforcePhp\Requests\SObjects\DeleteRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
-use myoutdeskllc\SalesforcePhp\Traits\HasApiTokens;
-use Sammyjo20\Saloon\Exceptions\SaloonException;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
+use SalesforceQueryBuilder\QueryBuilder;
+use Saloon\Contracts\OAuthAuthenticator;
+use Saloon\Http\Auth\AccessTokenAuthenticator;
+use Saloon\Http\Connector;
+use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 class SalesforceApi
 {
-    use HasApiTokens;
-
+    protected Connector $connector;
+    protected bool $async = false;
+    protected bool $eatErrors = false;
     protected bool $recordsOnly = false;
+    protected static string $apiVersion = 'v51.0';
+    protected static string $instanceUrl = 'https://test.salesforce.com';
 
-    public function __construct(string $accessToken, string $instanceUrl, string $apiVersion = null)
+    public function __construct(string $instanceUrl = 'https://test.salesforce.com', string $apiVersion = 'v51.0')
     {
-        self::$token = $accessToken;
         self::$instanceUrl = $instanceUrl;
-        self::$apiVersion = $apiVersion ?? null;
+        self::$apiVersion = $apiVersion;
+    }
+
+    public function setApiVersion(string $version): void
+    {
+        self::$apiVersion = $version;
+    }
+
+    public function setInstanceUrl(string $instanceUrl): void
+    {
+        self::$instanceUrl = $instanceUrl;
+    }
+
+    public function login(string $username, string $password, string $consumerKey, string $consumerSecret): string
+    {
+        $this->connector = new Connectors\SalesforceApiConnector();
+
+        $loginRequest = new LoginApiUser();
+        $loginRequest->body()->set([
+            'grant_type'    => 'password',
+            'client_id'     => $consumerKey,
+            'client_secret' => $consumerSecret,
+            'username'      => $username,
+            'password'      => $password,
+        ]);
+
+        $response = $this->connector->send($loginRequest)->json();
+
+        // this must be set after the login request for both OAuth and username / password flows
+        self::$instanceUrl = $response['instance_url'];
+
+        $this->connector->withTokenAuth($response['access_token']);
+
+        return $response['access_token'];
+    }
+
+    public function restoreAccessToken(string $accessToken): void
+    {
+        $this->connector->withTokenAuth($accessToken);
+    }
+
+    public function startOAuthLogin(OAuthConfiguration $configuration): array
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($configuration);
+
+        return [
+            'url'   => $connector->getAuthorizationUrl(),
+            'state' => $connector->getState(),
+        ];
+    }
+
+    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state): OAuthAuthenticator
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($configuration);
+        $authenticator = $connector->getAccessToken($code, $state);
+
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
+
+        return $authenticator;
+    }
+
+    public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $connector->authenticate($authenticator);
+
+        if ($authenticator->hasExpired()) {
+            $authenticator = $connector->refreshAccessToken($authenticator);
+            $afterRefresh($authenticator);
+        }
+
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
+    }
+
+    public function refreshToken($serializedAuthenticator, callable $afterRefresh)
+    {
+        return $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
+    }
+
+    public static function getApiVersion(): string
+    {
+        return self::$apiVersion;
+    }
+
+    public static function getInstanceUrl(): string
+    {
+        return self::$instanceUrl;
     }
 
     /**
@@ -46,9 +148,9 @@ class SalesforceApi
      * @param string $id
      * @param array  $fields
      *
-     * @return array|mixed
+     * @return array|null
      */
-    public function getRecord(string $object, string $id, array $fields)
+    public function getRecord(string $object, string $id, array $fields): ?array
     {
         if (empty($object)) {
             throw new InvalidArgumentException('Given object cannot be empty');
@@ -61,9 +163,85 @@ class SalesforceApi
         }
 
         $request = new GetRecord($object, $id);
-        $request->addQuery('fields', implode(',', $fields));
+        $request->query()->add('fields', implode(',', $fields));
 
         return $this->executeRequest($request);
+    }
+
+    /**
+     * Executes the request, extracting records only if needed.
+     *
+     * @return array|null
+     */
+    protected function executeRequest(Request $request): ?array
+    {
+        return $this->unpackResponseIfNeeded($this->executeRequestSync($request));
+    }
+
+    /**
+     * Executes the request directly, allowing the caller to handle the specifics of the response (it may not be JSON).
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    protected function executeRequestDirectly(Request $request): Response
+    {
+        return $this->executeRequestSync($request);
+    }
+
+    /**
+     * Unpacks a response object if needed.
+     *
+     * @param Response $response
+     *
+     * @throws JsonException
+     *
+     * @return array|mixed|mixed[]
+     */
+    protected function unpackResponseIfNeeded(Response $response): mixed
+    {
+        $inlineData = $response->json();
+
+        if (isset($inlineData['records']) && $this->recordsOnly) {
+            return array_map(function ($item) {
+                unset($item['attributes']);
+
+                return $item;
+            }, $inlineData['records']);
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Configures this API to unset the 'attribute' key and return only records.
+     *
+     * @return $this
+     */
+    public function recordsOnly(): self
+    {
+        $this->recordsOnly = true;
+
+        return $this;
+    }
+
+    /**
+     * Executes a request synchronously.
+     */
+    protected function executeRequestSync(Request $request): Response
+    {
+        if ($this->eatErrors) {
+            return $this->connector->send($request);  // @phpstan-ignore-line
+        }
+
+        $response = $this->connector->send($request);
+
+        if ($response->failed()) {
+            $response->throw();
+        }
+
+        return $response; // @phpstan-ignore-line
     }
 
     /**
@@ -72,12 +250,12 @@ class SalesforceApi
      * @param string $object
      * @param array  $recordInformation
      *
-     * @return array|mixed
+     * @return array|null
      */
-    public function createRecord(string $object, array $recordInformation)
+    public function createRecord(string $object, array $recordInformation): ?array
     {
         $request = new CreateRecord($object);
-        $request->setData($recordInformation);
+        $request->body()->set($recordInformation);
 
         return $this->executeRequest($request);
     }
@@ -94,7 +272,7 @@ class SalesforceApi
     public function updateRecord(string $object, string $id, array $recordInformation): array
     {
         $request = new UpdateRecord($object, $id);
-        $request->setData($recordInformation);
+        $request->body()->set($recordInformation);
 
         return $this->executeRequest($request);
     }
@@ -123,7 +301,41 @@ class SalesforceApi
         ];
 
         $request = new UpdateRecords();
-        $request->setData($payload);
+        $request->body()->set($payload);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Deletes a record from salesforce.
+     *
+     * @param string $object
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function deleteRecord(string $object, string $id): bool
+    {
+        $request = new DeleteRecord($object, $id);
+
+        return $this->executeRequestDirectly($request)->status() === 204;
+    }
+
+    /**
+     * Deletes records from salesforce using the composite API.
+     *
+     * @param array $ids
+     * @param bool  $allOrNone
+     *
+     * @return array
+     */
+    public function deleteRecords(array $ids, bool $allOrNone = true): array
+    {
+        $request = new DeleteRecords();
+        $request->query()->set([
+            'ids'       => implode(',', $ids),
+            'allOrNone' => $allOrNone,
+        ]);
 
         return $this->executeRequest($request);
     }
@@ -154,7 +366,7 @@ class SalesforceApi
         ];
 
         $request = new CreateRecords();
-        $request->setData($payload);
+        $request->body()->set($payload);
 
         return $this->executeRequest($request);
     }
@@ -182,40 +394,8 @@ class SalesforceApi
             throw new InvalidArgumentException('You must select at least one field');
         }
         $request = new GetRecords($object);
-        $request->addQuery('ids', implode(',', $ids));
-        $request->addQuery('fields', implode(',', $fields));
-
-        return $this->executeRequest($request);
-    }
-
-    /**
-     * Executes a query against salesforce. Make sure this is safe on your application end.
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
-     *
-     * @param SoqlQueryBuilder $builder
-     *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
-     *
-     * @return array|mixed
-     */
-    public function executeQuery(SoqlQueryBuilder $builder)
-    {
-        return $this->executeQueryRaw($builder->toSoql());
-    }
-
-    /**
-     * Directly execute SOQL and get results.
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
-     *
-     * @param string $rawQuery
-     *
-     * @return array
-     */
-    public function executeQueryRaw(string $rawQuery): array
-    {
-        $request = new ExecuteQuery($rawQuery);
+        $request->query()->add('ids', implode(',', $ids));
+        $request->query()->add('fields', implode(',', $fields));
 
         return $this->executeRequest($request);
     }
@@ -225,47 +405,11 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_limits.htm
      */
-    public function getLimits()
+    public function getLimits(): ?array
     {
         $request = new GetLimits();
 
         return $this->executeRequest($request);
-    }
-
-    /**
-     * Executes the request, extracting records only if needed.
-     *
-     * @param SaloonRequest $request
-     *
-     * @throws GuzzleException|SaloonException|\ReflectionException
-     *
-     * @return array|null
-     */
-    protected function executeRequest(SaloonRequest $request): ?array
-    {
-        $response = $request->send()->json();
-
-        if (isset($response['records']) && $this->recordsOnly()) {
-            return array_map(function ($item) {
-                unset($item['attributes']);
-
-                return $item;
-            }, $response['records']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Configures this API to unset the 'attribute' key and return only records.
-     *
-     * @return $this
-     */
-    public function recordsOnly(): self
-    {
-        $this->recordsOnly = true;
-
-        return $this;
     }
 
     /**
@@ -303,7 +447,8 @@ class SalesforceApi
      */
     public function search(string $query): array
     {
-        $searchRequest = (new Search())->setQuery(['q' => $query]);
+        $searchRequest = new Search();
+        $searchRequest->query()->set(['q' => $query]);
 
         return $this->executeRequest($searchRequest);
     }
@@ -324,7 +469,8 @@ class SalesforceApi
             return strtolower($fieldName) !== 'id';
         });
 
-        $searchRequest = (new Search())->setQuery([
+        $searchRequest = new Search();
+        $searchRequest->query()->set([
             'q'       => $query,
             'sobject' => $object,
             'fields'  => implode(',', array_map(function ($field) use ($object) {
@@ -358,13 +504,51 @@ class SalesforceApi
     }
 
     /**
+     * Returns an instance of the SoqlQueryBuilder.
+     *
+     * @return SoqlQueryBuilder
+     */
+    public static function getQueryBuilder(): SoqlQueryBuilder
+    {
+        return new SoqlQueryBuilder();
+    }
+
+    /**
+     * Executes a query against salesforce. Make sure this is safe on your application end.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param QueryBuilder $builder
+     */
+    public function executeQuery(QueryBuilder $builder): array
+    {
+        return $this->executeQueryRaw($builder->toSoql());
+    }
+
+    /**
+     * Directly execute SOQL and get results.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param string $rawQuery
+     *
+     * @return array
+     */
+    public function executeQueryRaw(string $rawQuery): array
+    {
+        $request = new ExecuteQuery($rawQuery);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
      * Returns only one record found for the given sObject, based on its properties.
      *
      * @param string $object         sObject name to search in
      * @param array  $properties     array of key value pairs, where the key is the field name
      * @param array  $fieldsToSelect which fields to return from the query
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array|null
      */
@@ -385,13 +569,49 @@ class SalesforceApi
     }
 
     /**
+     * @return Connector
+     */
+    public function getConnector(): Connector
+    {
+        return $this->connector;
+    }
+
+    /**
+     * @param Connector $connector
+     */
+    public function setConnector(Connector $connector): void
+    {
+        $this->connector = $connector;
+    }
+
+    /**
+     * Set this to TRUE if you don't want to throw exceptions on errors.
+     *
+     * @param bool $eatErrors
+     *
+     * @return SalesforceApi
+     */
+    public function eatErrors(bool $eatErrors): SalesforceApi
+    {
+        $this->eatErrors = $eatErrors;
+
+        return $this;
+    }
+
+    /**
      * Returns an instance of the ReportApi.
      *
      * @return ReportApi
      */
-    public static function getReportApi(): ReportApi
+    public function getReportApi(): ReportApi
     {
-        return new ReportApi(self::$token, self::$instanceUrl, self::$apiVersion);
+        $api = new ReportApi(self::$instanceUrl, self::$apiVersion);
+        if ($this->recordsOnly) {
+            $api->recordsOnly();
+        }
+        $api->setConnector($this->getConnector());
+
+        return $api;
     }
 
     /**
@@ -399,9 +619,15 @@ class SalesforceApi
      *
      * @return SObjectApi
      */
-    public static function getSObjectApi(): SObjectApi
+    public function getSObjectApi(): SObjectApi
     {
-        return new SObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
+        $api = new SObjectApi(self::$instanceUrl, self::$apiVersion);
+        if ($this->recordsOnly) {
+            $api->recordsOnly();
+        }
+        $api->setConnector($this->getConnector());
+
+        return $api;
     }
 
     /**
@@ -409,9 +635,15 @@ class SalesforceApi
      *
      * @return BulkApi2
      */
-    public static function getBulkApi(): BulkApi2
+    public function getBulkApi(): BulkApi2
     {
-        return new BulkApi2(self::$token, self::$instanceUrl, self::$apiVersion);
+        $api = new BulkApi2(self::$instanceUrl, self::$apiVersion);
+        if ($this->recordsOnly) {
+            $api->recordsOnly();
+        }
+        $api->setConnector($this->getConnector());
+
+        return $api;
     }
 
     /**
@@ -419,9 +651,15 @@ class SalesforceApi
      *
      * @return StandardObjectApi
      */
-    public static function getStandardObjectApi(): StandardObjectApi
+    public function getStandardObjectApi(): StandardObjectApi
     {
-        return new StandardObjectApi(self::$token, self::$instanceUrl, self::$apiVersion);
+        $api = new StandardObjectApi(self::$instanceUrl, self::$apiVersion);
+        if ($this->recordsOnly) {
+            $api->recordsOnly();
+        }
+        $api->setConnector($this->getConnector());
+
+        return $api;
     }
 
     /**
@@ -429,18 +667,14 @@ class SalesforceApi
      *
      * @return ToolingApi
      */
-    public static function getToolingApi(): ToolingApi
+    public function getToolingApi(): ToolingApi
     {
-        return new ToolingApi(self::$token, self::$instanceUrl, self::$apiVersion);
-    }
+        $api = new ToolingApi(self::$instanceUrl, self::$apiVersion);
+        if ($this->recordsOnly) {
+            $api->recordsOnly();
+        }
+        $api->setConnector($this->getConnector());
 
-    /**
-     * Returns an instance of the SoqlQueryBuilder.
-     *
-     * @return SoqlQueryBuilder
-     */
-    public static function getQueryBuilder(): SoqlQueryBuilder
-    {
-        return new SoqlQueryBuilder();
+        return $api;
     }
 }

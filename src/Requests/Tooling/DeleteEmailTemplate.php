@@ -2,22 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class DeleteEmailTemplate extends SaloonRequest
+class DeleteEmailTemplate extends Request
 {
     protected ?string $templateId = null;
-    protected ?string $method = Saloon::DELETE;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::DELETE;
 
     public function __construct(string $templateId)
     {
         $this->templateId = $templateId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/tooling/sobjects/EmailTemplate/{$this->templateId}";
     }

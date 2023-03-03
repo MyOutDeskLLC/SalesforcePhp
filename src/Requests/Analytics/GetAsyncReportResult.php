@@ -2,16 +2,14 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetAsyncReportResult extends SaloonRequest
+class GetAsyncReportResult extends Request
 {
     protected ?string $id = null;
     protected ?string $queueId = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
     public function __construct(string $originalReportId, string $queueId)
     {
@@ -19,7 +17,7 @@ class GetAsyncReportResult extends SaloonRequest
         $this->queueId = $queueId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/reports/{$this->id}/instances/{$this->queueId}";
     }

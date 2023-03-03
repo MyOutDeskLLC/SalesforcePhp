@@ -2,22 +2,24 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class SaveReport extends SaloonRequest
+class SaveReport extends Request implements HasBody
 {
+    use HasJsonBody;
+
     protected ?string $id;
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::PATCH;
 
     public function __construct(string $id)
     {
         $this->id = $id;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/reports/{$this->id}";
     }

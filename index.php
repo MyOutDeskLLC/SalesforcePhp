@@ -1,36 +1,38 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\OAuth\SalesforceApiUserLogin;
-use myoutdeskllc\SalesforcePhp\OAuth\SalesforceAuthenticator;
-use myoutdeskllc\SalesforcePhp\OAuth\SalesforceOAuthConfiguration;
+use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
+use myoutdeskllc\SalesforcePhp\SalesforceApi;
 
 require 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-if (env('AUTH_METHOD') === 'oauth') {
-    $sfAuth = new SalesforceOAuthConfiguration();
-    $sfAuth->setClientId(env('CLIENT_ID'));
-    $sfAuth->setSecret(env('CLIENT_SECRET'));
-    $sfAuth->setRedirectUri(env('REDIRECT_URL'));
-    $sfAuth->setBaseUrl(env('BASE_URL'));
+if (!isset($_ENV['REDIRECT_URI'], $_ENV['SALESFORCE_CONSUMER_KEY'], $_ENV['SALESFORCE_CONSUMER_SECRET'])) {
+    echo 'Please make sure you have REDIRECT_URI, SALESFORCE_CONSUMER_KEY, and SALESFORCE_CONSUMER_SECRET set in your .env file.';
+    exit();
+}
 
-    $sfAuthenticator = new SalesforceAuthenticator();
-    $sfAuthenticator->configure($sfAuth);
-    if (!isset($_GET['code'])) {
-        header('Location: '.$sfAuthenticator->getAuthorizationUrl());
-    } else {
-        $token = $sfAuthenticator->handleAuthorizationCallback($_GET['code']);
-        $owner = $sfAuthenticator->getProvider()->getResourceOwner($token);
+$oauthConfig = OAuthConfiguration::create([
+    'client_id'     => $_ENV['SALESFORCE_CONSUMER_KEY'],
+    'client_secret' => $_ENV['SALESFORCE_CONSUMER_SECRET'],
+    'redirect_uri'  => $_ENV['REDIRECT_URI'],
+]);
+$salesforceApi = new SalesforceApi();
+$salesforceApi->setInstanceUrl($_ENV['SALESFORCE_INSTANCE_URL']);
 
-        echo '<p>Please place these into your .env</p>';
-        echo "<p>Token: {$token->getToken()}</p><p>Refresh Token: {$token->getRefreshToken()}</p><p>Instance URL: {$token->getValues()['instance_url']}</p>";
-    }
+if (!isset($_GET['code'])) {
+    [$url, $state] = array_values($salesforceApi->startOAuthLogin($oauthConfig));
+
+    file_put_contents(__DIR__.'/.state', $state);
+
+    echo "<a class='text-center' href='$url'>Click here to login via OAuth</a>";
 } else {
-    $apiLogin = new SalesforceApiUserLogin();
-    $apiLogin->configureApp(env('CLIENT_ID'), env('CLIENT_SECRET'));
-    $result = $apiLogin->authenticateUser(env('USERNAME'), env('PASSWORD'));
-    echo '<p>Please place these into your .env</p>';
-    echo "<p>Token: {$result['access_token']}</p>";
-    echo "<p>Instance URL: {$result['instance_url']}</p>";
+    $state = file_get_contents(__DIR__.'/.state');
+    $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $_GET['code'], $state);
+    $token = $authenticator->getAccessToken();
+    $refresh = $authenticator->getRefreshToken();
+
+    file_put_contents('.authenticator', $authenticator->serialize());
+
+    echo '<p>Token is ready, you can use the authenticator by deserializing .authenticator in the root or boot tinkerwell and just use $api.</p>';
 }

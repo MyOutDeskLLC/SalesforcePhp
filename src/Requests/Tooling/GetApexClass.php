@@ -2,22 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetApexClass extends SaloonRequest
+class GetApexClass extends Request
 {
     protected ?string $apexClassId = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
     public function __construct(string $apexClassId)
     {
         $this->apexClassId = $apexClassId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/tooling/sobjects/ApexClass/{$this->apexClassId}";
     }

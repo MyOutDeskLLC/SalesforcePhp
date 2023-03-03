@@ -2,6 +2,7 @@
 
 namespace myoutdeskllc\SalesforcePhp\Api;
 
+use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Constants\StandardObjectFields;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CloneDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateDashboard;
@@ -24,25 +25,11 @@ use myoutdeskllc\SalesforcePhp\Requests\Analytics\UpdateDashboard;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceRules;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
+use Psr\Http\Message\StreamInterface;
+use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 
 class ReportApi extends SalesforceApi
 {
-    /**
-     * Returns report metadata.
-     *
-     * @param string $id salesforce id of the report to query
-     *
-     * @return array
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/sforce_analytics_rest_api_get_reportmetadata.htm
-     */
-    public function getReportMetadata(string $id): array
-    {
-        $request = new GetReportMetadata($id);
-
-        return $this->executeRequest($request);
-    }
-
     /**
      * Save a report at the given ID with new metadata. If the metadata key is not set, we will set it prior to sending the PATCH request.
      *
@@ -62,30 +49,7 @@ class ReportApi extends SalesforceApi
                 'reportMetadata' => $metadata,
             ];
         }
-        $request->setData($metadata);
-
-        return $this->executeRequest($request);
-    }
-
-    /**
-     * Saves a new report with the given metadata.
-     *
-     * @param array $reportMetadata additional filters, user settings for the report
-     *
-     * @return array
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/sforce_analytics_rest_api_save_report.htm#example_save_report
-     */
-    public function createReport(array $reportMetadata): array
-    {
-        $request = new CreateReport();
-
-        if (!isset($metadata['reportMetadata'])) {
-            $reportMetadata = [
-                'reportMetadata' => $reportMetadata,
-            ];
-        }
-        $request->setData($reportMetadata);
+        $request->body()->set($metadata);
 
         return $this->executeRequest($request);
     }
@@ -95,13 +59,13 @@ class ReportApi extends SalesforceApi
      *
      * @param string $reportId salesforce id of the report
      *
-     * @return array|null
+     * @return bool
      */
-    public function deleteReport(string $reportId): ?array
+    public function deleteReport(string $reportId): bool
     {
         $request = new DeleteReport($reportId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->status() === 204;
     }
 
     /**
@@ -109,13 +73,13 @@ class ReportApi extends SalesforceApi
      *
      * @param string $dashboardId salesforce id of the dashboard
      *
-     * @return array|null
+     * @return bool
      */
-    public function deleteDashboard(string $dashboardId): ?array
+    public function deleteDashboard(string $dashboardId): bool
     {
         $request = new DeleteDashboard($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->status() === 204;
     }
 
     /**
@@ -131,8 +95,8 @@ class ReportApi extends SalesforceApi
     public function runReportSync(string $id, array $runtimeMetadata = [])
     {
         $request = new RunReport($id);
-        $request->setData($runtimeMetadata);
-        $request->mergeQuery([
+        $request->body()->set($runtimeMetadata);
+        $request->query()->set([
             'includeDetails' => true,
         ]);
 
@@ -152,7 +116,7 @@ class ReportApi extends SalesforceApi
     public function runReportAsync(string $id, array $runtimeMetadata = [])
     {
         $request = new QueueReport($id);
-        $request->setData($runtimeMetadata);
+        $request->body()->set($runtimeMetadata);
 
         return $this->executeRequest($request);
     }
@@ -179,22 +143,18 @@ class ReportApi extends SalesforceApi
      *
      * @param string $id ID of the report to export
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
-     * @return \Psr\Http\Message\StreamInterface
+     * @return StreamInterface
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/sforce_analytics_rest_api_download_excel.htm
      */
-    public function downloadReport(string $id): \Psr\Http\Message\StreamInterface
+    public function downloadReport(string $id): StreamInterface
     {
         $request = new RunReport($id);
-        $request->mergeHeaders([
+        $request->headers()->merge([
             'accept' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
 
-        return $request->send()->getStream();
+        return $this->executeRequestDirectly($request)->stream();
     }
 
     /**
@@ -246,7 +206,7 @@ class ReportApi extends SalesforceApi
      *
      * @param array $additionalSelects additional fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -266,7 +226,7 @@ class ReportApi extends SalesforceApi
      * @param string $reportName        name of the report
      * @param array  $additionalSelects additional fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array|null
      */
@@ -294,7 +254,7 @@ class ReportApi extends SalesforceApi
      * @param string $dashboardName     name of the dashboard
      * @param array  $additionalSelects additional fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array|null
      */
@@ -321,7 +281,7 @@ class ReportApi extends SalesforceApi
      *
      * @param array $additionalSelects additional fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -337,13 +297,28 @@ class ReportApi extends SalesforceApi
     }
 
     /**
+     * Returns a folder by name, but this one is set with the type to Dashboard as SF treats them differently.
+     *
+     * @param string $folderName        folder name to query
+     * @param array  $additionalSelects fields to select
+     *
+     * @throws InvalidQueryException
+     *
+     * @return array
+     */
+    public function getDashboardFolderByName(string $folderName, array $additionalSelects = []): array
+    {
+        return $this->getFolderByName($folderName, 'Dashboard', $additionalSelects);
+    }
+
+    /**
      * Finds the folder with the given name.
      *
      * @param string $folderName        folder name to query
      * @param string $type              the type of folder (dashboard or report)
      * @param array  $additionalSelects fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array|null
      */
@@ -368,27 +343,12 @@ class ReportApi extends SalesforceApi
     }
 
     /**
-     * Returns a folder by name, but this one is set with the type to Dashboard as SF treats them differently.
-     *
-     * @param string $folderName        folder name to query
-     * @param array  $additionalSelects fields to select
-     *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
-     *
-     * @return array
-     */
-    public function getDashboardFolderByName(string $folderName, array $additionalSelects = []): array
-    {
-        return $this->getFolderByName($folderName, 'Dashboard', $additionalSelects);
-    }
-
-    /**
      * Returns reports in the target folder name.
      *
      * @param string $folderName        folder name to query
      * @param array  $additionalSelects fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -410,7 +370,7 @@ class ReportApi extends SalesforceApi
      * @param string $folderName        folder name to query
      * @param array  $additionalSelects fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -432,7 +392,7 @@ class ReportApi extends SalesforceApi
      * @param string $folderId          salesforce id of the folder
      * @param array  $additionalSelects fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -454,7 +414,7 @@ class ReportApi extends SalesforceApi
      * @param string $folderId          salesforce id of the folder
      * @param array  $additionalSelects fields to select
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -481,7 +441,7 @@ class ReportApi extends SalesforceApi
     public function copyReportToSameFolder(string $reportId, string $newReportName): array
     {
         if (empty($newReportName) || strlen($newReportName) >= 40) {
-            throw new \InvalidArgumentException('Report name invalid. Must be between 1-40 characters');
+            throw new InvalidArgumentException('Report name invalid. Must be between 1-40 characters');
         }
         $existingMetadata = $this->getReportMetadata($reportId);
         $metadata = $existingMetadata['reportMetadata'];
@@ -489,6 +449,45 @@ class ReportApi extends SalesforceApi
         unset($metadata['id'], $metadata['developerName'], $metadata['attributes']);
 
         return $this->createReport($metadata);
+    }
+
+    /**
+     * Returns report metadata.
+     *
+     * @param string $id salesforce id of the report to query
+     *
+     * @return array
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/sforce_analytics_rest_api_get_reportmetadata.htm
+     */
+    public function getReportMetadata(string $id): array
+    {
+        $request = new GetReportMetadata($id);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Saves a new report with the given metadata.
+     *
+     * @param array $reportMetadata additional filters, user settings for the report
+     *
+     * @return array
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.234.0.api_analytics.meta/api_analytics/sforce_analytics_rest_api_save_report.htm#example_save_report
+     */
+    public function createReport(array $reportMetadata): array
+    {
+        $request = new CreateReport();
+
+        if (!isset($reportMetadata['reportMetadata'])) {
+            $reportMetadata = [
+                'reportMetadata' => $reportMetadata,
+            ];
+        }
+        $request->body()->set($reportMetadata);
+
+        return $this->executeRequest($request);
     }
 
     /**
@@ -503,7 +502,7 @@ class ReportApi extends SalesforceApi
     public function copyReportToNewFolder(string $reportId, string $newReportName, string $folderId): array
     {
         if (empty($newReportName) || strlen($newReportName) >= 40) {
-            throw new \InvalidArgumentException('Report name invalid. Must be between 1-40 characters');
+            throw new InvalidArgumentException('Report name invalid. Must be between 1-40 characters');
         }
         $existingMetadata = $this->getReportMetadata($reportId);
         $metadata = $existingMetadata['reportMetadata'];
@@ -517,7 +516,7 @@ class ReportApi extends SalesforceApi
     /**
      * Uses SOQL to query for a list of Dashboards available to the user.
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -543,7 +542,7 @@ class ReportApi extends SalesforceApi
     {
         $request = new GetDashboardMetadata($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -559,7 +558,7 @@ class ReportApi extends SalesforceApi
     {
         $request = new GetDashboardResults($dashboardId);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -574,7 +573,7 @@ class ReportApi extends SalesforceApi
     public function createDashboard(array $dashboardMetadata): array
     {
         $request = new CreateDashboard();
-        $request->setData($dashboardMetadata);
+        $request->body()->set($dashboardMetadata);
 
         return $this->executeRequest($request);
     }
@@ -609,7 +608,7 @@ class ReportApi extends SalesforceApi
     public function updateDashboard(string $dashboardId, array $dashboardMetadata): array
     {
         $request = new UpdateDashboard($dashboardId);
-        $request->setData($dashboardMetadata);
+        $request->body()->set($dashboardMetadata);
 
         return $this->executeRequest($request);
     }
@@ -627,11 +626,11 @@ class ReportApi extends SalesforceApi
     public function getDashboardComponentDetails(string $dashboardId, array $componentIds): array
     {
         $request = new GetDashboardResults($dashboardId);
-        $request->setData([
+        $request->body()->set([
             'componentIds' => $componentIds,
         ]);
 
-        return $this->executeRequest($request);
+        return $this->executeRequestDirectly($request)->json();
     }
 
     /**
@@ -646,48 +645,11 @@ class ReportApi extends SalesforceApi
     public function createReportFolder(string $folderName): array
     {
         $request = new CreateFolder();
-        $request->setData([
+        $request->body()->set([
             'label' => $folderName,
             'name'  => $this->prepareFolderApiName($folderName),
             'type'  => 'report',
         ]);
-
-        return $this->executeRequest($request);
-    }
-
-    /**
-     * Creates a dashboard folder with the given name.
-     *
-     * @param string $folderName The Folder API Name can only contain underscores and alphanumeric characters. It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.
-     *
-     * @return array
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
-     */
-    public function createDashboardFolder(string $folderName): array
-    {
-        $request = new CreateFolder();
-        $request->setData([
-            'label' => $folderName,
-            'name'  => $this->prepareFolderApiName($folderName),
-            'type'  => 'dashboard',
-        ]);
-
-        return $this->executeRequest($request);
-    }
-
-    /**
-     * Delete a folder with the given ID.
-     *
-     * @param string $folderId salesforce id of the folder
-     *
-     * @return array|null
-     *
-     * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
-     */
-    public function deleteFolder(string $folderId): ?array
-    {
-        $request = new DeleteFolder($folderId);
 
         return $this->executeRequest($request);
     }
@@ -705,9 +667,48 @@ class ReportApi extends SalesforceApi
 
         $folderRegex = SalesforceRules::getFolderNameValidation();
         if (preg_match($folderRegex, $apiName) === 0) {
-            throw new \InvalidArgumentException('The Folder API Name can only contain underscores and alphanumeric characters. It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.');
+            throw new InvalidArgumentException('The Folder API Name can only contain underscores and alphanumeric characters. It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.');
         }
 
         return $apiName;
+    }
+
+    /**
+     * Creates a dashboard folder with the given name.
+     *
+     * @param string $folderName The Folder API Name can only contain underscores and alphanumeric characters. It must be unique, begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores.
+     *
+     * @return array
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
+     */
+    public function createDashboardFolder(string $folderName): array
+    {
+        $request = new CreateFolder();
+        $request->body()->set([
+            'label' => $folderName,
+            'name'  => $this->prepareFolderApiName($folderName),
+            'type'  => 'dashboard',
+        ]);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Delete a folder with the given ID.
+     *
+     * @param string $folderId salesforce id of the folder
+     *
+     * @return bool
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_folders_create.htm
+     */
+    public function deleteFolder(string $folderId): bool
+    {
+        $request = new DeleteFolder($folderId);
+
+        $response = $this->executeRequestDirectly($request);
+
+        return $response->status() === 204;
     }
 }

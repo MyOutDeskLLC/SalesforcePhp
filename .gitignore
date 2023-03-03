@@ -3,3 +3,5 @@ vendor/*
 .phpunit*
 .idea
 .env
+.authenticator
+.state

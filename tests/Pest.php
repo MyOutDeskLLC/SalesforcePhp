@@ -46,7 +46,16 @@ function getAPI()
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
     $dotenv->load();
 
-    return new SalesforceApi(env('TOKEN'), env('INSTANCE_URL'), env('API_VERSION'));
+    $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL'], $_ENV['API_VERSION']);
+
+    // this is questionable, but works for testing with OAuth connections
+    $api->restoreExistingOAuthConnection((file_get_contents('.authenticator')), function ($authenticator) {
+        file_put_contents('.authenticator', $authenticator->serialize());
+    });
+
+    $api->recordsOnly();
+
+    return $api;
 }
 
 function toFlatArray(array $results, string $key)
@@ -58,17 +67,19 @@ function toFlatArray(array $results, string $key)
 
 function destroyPestPhpSalesforceChanges()
 {
-    $reportApi = SalesforceApi::getReportApi();
+    $reportApi = getAPI()->recordsOnly()->getReportApi();
+
     $reports = $reportApi->listReports();
     $folders = $reportApi->listFolders();
 
     foreach ($reports as $report) {
-        if (str_starts_with($report['Name'], 'PESTPHP')) {
+        if (stripos($report['Name'], 'PESTPHP') !== false) {
             $reportApi->deleteReport($report['Id']);
         }
     }
+
     foreach ($folders as $folder) {
-        if (str_starts_with($folder['Name'], 'PESTPHP')) {
+        if (stripos($folder['Name'], 'PESTPHP') !== false) {
             if ($folder['Type'] === 'Dashboard') {
                 $dashboardsInFolder = $reportApi->recordsOnly()->listDashboardsInFolderById($folder['Id']);
                 foreach ($dashboardsInFolder as $dashboard) {

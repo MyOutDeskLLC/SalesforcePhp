@@ -2,22 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class DeleteDashboard extends SaloonRequest
+class DeleteDashboard extends Request
 {
     protected ?string $dashboardId = null;
-    protected ?string $method = Saloon::DELETE;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::DELETE;
 
     public function __construct(string $dashboardId)
     {
         $this->dashboardId = $dashboardId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/dashboards/{$this->dashboardId}";
     }

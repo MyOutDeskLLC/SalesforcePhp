@@ -197,10 +197,10 @@ class StandardObjectApi extends SalesforceApi
     {
         $request = new CreateAttachment();
 
-        $request->setData([
+        $request->body()->set([
             'ParentId'    => $parentObjectId,
             'Name'        => $name,
-            'Body'        => base64_encode($attachmentBody),
+            'Body'        => base64_encode($attachmentBody.''),
             'ContentType' => $contentType,
             'Description' => $description,
         ]);

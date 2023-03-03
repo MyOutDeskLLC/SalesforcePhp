@@ -2,21 +2,20 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetJob extends \Sammyjo20\Saloon\Http\SaloonRequest
+class GetJob extends Request
 {
-    protected ?string $id = null;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected string $id;
+    protected Method $method = Method::GET;
 
     public function __construct(string $id)
     {
         $this->id = $id;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/jobs/ingest/{$this->id}";
     }

@@ -2,23 +2,25 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Analytics;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class UpdateDashboard extends SaloonRequest
+class UpdateDashboard extends Request implements HasBody
 {
+    use HasJsonBody;
+
     protected ?string $dashboardId;
     protected ?string $targetFolder;
-    protected ?string $method = Saloon::PATCH;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::PATCH;
 
     public function __construct(string $dashboardId)
     {
         $this->dashboardId = $dashboardId;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/analytics/dashboards/{$this->dashboardId}";
     }

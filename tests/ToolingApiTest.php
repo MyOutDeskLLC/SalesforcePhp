@@ -1,13 +1,11 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
-
 beforeEach(function () {
     getAPI();
 });
 
 test('Can query list of apex classes, finding a class named Totoro', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $classes = $api->getApexClasses();
 
     // Since this is our scratch org, we should find that the classes contain Totoro
@@ -17,18 +15,19 @@ test('Can query list of apex classes, finding a class named Totoro', function ()
 });
 
 test('Can query list of apex pages, finding a page named TotoroPage', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $pages = $api->getApexPages();
 
     // Since this is our scratch org, we should find a page with Totoro
     expect($pages)->not()->toBeEmpty();
+
     // It's uppercase for VFpages
     expect($pages[0])->toHaveKey('Name');
     expect($pages[0]['Name'])->toContain('TotoroPage');
 });
 
 test('Can execute anonyous apex', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $result = $api->executeAnonymousApex("System.debug('test');");
 
     expect($result)->toHaveKey('compiled', true);
@@ -36,14 +35,14 @@ test('Can execute anonyous apex', function () {
 });
 
 test('can list ApexLogs', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $logs = $api->getApexLogs();
 
     expect($logs)->not()->toBeEmpty();
 });
 
 test('can get the body of an ApexLog', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $logs = $api->getApexLogs();
     $firstLogBody = $api->getApexLog($logs[0]['Id']);
 
@@ -51,7 +50,7 @@ test('can get the body of an ApexLog', function () {
 });
 
 test('can locate ApexClass by name', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $totoroClass = $api->getApexClassByName('Totoro');
 
     expect($totoroClass)->not()->toBeEmpty();
@@ -59,7 +58,7 @@ test('can locate ApexClass by name', function () {
 });
 
 test('can execute apex tests with specific methods (1 test method)', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $totoroTest = $api->getApexClassByName('TotoroTest');
     $testResults = $api->runTestsSynchronous([[
         'classId'     => $totoroTest[0]['Id'],
@@ -71,7 +70,7 @@ test('can execute apex tests with specific methods (1 test method)', function ()
 });
 
 test('can execute apex tests with just class ID (4 test methods)', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $totoroTest = $api->getApexClassByName('TotoroTest');
     $testResults = $api->runTestsSynchronous([[
         'classId' => $totoroTest[0]['Id'],
@@ -82,7 +81,7 @@ test('can execute apex tests with just class ID (4 test methods)', function () {
 });
 
 test('can execute apex tests async by using an array of ids', function () {
-    $api = SalesforceApi::getToolingApi();
+    $api = getAPI()->getToolingApi();
     $totoroTest = $api->getApexClassByName('TotoroTest');
     $asyncRun = $api->runTestsAsynchronousById([$totoroTest[0]['Id']]);
 
@@ -117,7 +116,7 @@ test('it can create emails in the public folder', function () {
             'encodingKey' => 'utf-8',
         ],
     ];
-    $result = SalesforceApi::getToolingApi()->createEmailTemplate($testEmailTemplate);
+    $result = getAPI()->getToolingApi()->createEmailTemplate($testEmailTemplate);
 
     expect($result)->toHaveKey('id');
 });
@@ -131,7 +130,7 @@ test('it can create emails in the public folder', function () {
  */
 //
 //test('can execute apex tests async by using an array class names', function () {
-//    $api = SalesforceApi::getToolingApi();
+//    getAPI()->getToolingApi();
 //    $asyncRun = $api->runTestsAsynchronousByClassNames(['TotoroTest']);
 //
 //    // Since this is a string for reasons unknown, just check that it's a salesforce id for a test run

@@ -2,23 +2,21 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
 use myoutdeskllc\SalesforcePhp\Constants\SoqlDates;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class GetDeletedRecords extends SaloonRequest
+class GetDeletedRecords extends Request
 {
     protected ?string $object;
-    protected ?string $method = Saloon::GET;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::GET;
 
     public function __construct(string $object)
     {
         $this->object = $object;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "sobjects/{$this->object}/deleted";
     }

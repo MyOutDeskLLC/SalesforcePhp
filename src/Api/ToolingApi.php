@@ -20,15 +20,13 @@ use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsASync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsSync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\UpdateEmailTemplate;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
+use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 
 class ToolingApi extends SalesforceApi
 {
     /**
      * Uses SOQL to return a list of apex logs.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array array of apex logs
      *
@@ -44,10 +42,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $logId id of the apex log to fetch
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return string raw log contents
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_apexlog.htm
@@ -56,15 +50,12 @@ class ToolingApi extends SalesforceApi
     {
         $request = new GetApexLog($logId);
 
-        return $request->send()->body();
+        return $this->executeRequestDirectly($request)->body();
     }
 
     /**
      * Gets all visualforce pages.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array array of visualforce \ apex pages
      */
@@ -77,10 +68,6 @@ class ToolingApi extends SalesforceApi
      * Returns information about a specific visualforce\apex page, including the body itself.
      *
      * @param string $pageId
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array
      */
@@ -95,10 +82,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $testsToExecute array of test declarations ([classId: 'classId', testMethods: ['methodName']]
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return array
      */
     public function runTestsSynchronous(array $testsToExecute): array
@@ -107,7 +90,7 @@ class ToolingApi extends SalesforceApi
             $testsToExecute = ['tests' => $testsToExecute];
         }
         $request = new RunApexTestsSync();
-        $request->setData($testsToExecute);
+        $request->body()->set($testsToExecute);
 
         return $this->executeRequest($request);
     }
@@ -117,18 +100,14 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $listOfClassIds array of apex class ids
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return string returns the string ID of the run for checking the status later, without quotes
      */
     public function runTestsAsynchronousById(array $listOfClassIds): string
     {
         $request = new RunApexTestsASync();
-        $request->setData(['classids' => implode(',', $listOfClassIds)]);
+        $request->body()->set(['classids' => implode(',', $listOfClassIds)]);
 
-        return str_replace('"', '', $request->send()->body());
+        return str_replace('"', '', $this->executeRequestDirectly($request)->body());
     }
 
     /**
@@ -136,18 +115,14 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $listOfClassNames array of apex test class names
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return string returns the string ID of the run for checking the status later,  without quotes
      */
     public function runTestsAsynchronousByClassNames(array $listOfClassNames): string
     {
         $request = new RunApexTestsASync();
-        $request->setData(['classNames' => implode(',', $listOfClassNames)]);
+        $request->body()->set(['classNames' => implode(',', $listOfClassNames)]);
 
-        return str_replace('"', '', $request->send()->body());
+        return str_replace('"', '', $this->executeRequestDirectly($request)->body());
     }
 
     /**
@@ -157,17 +132,12 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $apexCode valid apex code. must end in ;, as normal.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonInvalidConnectorException
-     *
      * @return array
      */
     public function executeAnonymousApex(string $apexCode): array
     {
         $request = new ExecuteAnonymousApex();
-        $request->setQuery([
+        $request->query()->set([
             'anonymousBody' => $apexCode,
         ]);
 
@@ -177,9 +147,6 @@ class ToolingApi extends SalesforceApi
     /**
      * List test executions and the result.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array array of apex test executions
      */
@@ -193,10 +160,6 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $testRunId the ID of the test run
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return array
      */
     public function getApexTestRunResult(string $testRunId): array
@@ -209,7 +172,7 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $apexClassName
      *
-     * @throws \SalesforceQueryBuilder\Exceptions\InvalidQueryException
+     * @throws InvalidQueryException
      *
      * @return array
      */
@@ -226,9 +189,6 @@ class ToolingApi extends SalesforceApi
     /**
      * Returns a list of apex classes available on the instance. (With sharing rules applied. User must have access to them).
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array list of ApexClasses
      *
@@ -243,10 +203,6 @@ class ToolingApi extends SalesforceApi
      * Returns metadata for the apex class, including the content itself.
      *
      * @param string $classId ID of the apex class
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array metadata of the apex class
      *
@@ -266,9 +222,6 @@ class ToolingApi extends SalesforceApi
     /**
      * Lists email templates.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array array of email templates
      *
@@ -283,10 +236,6 @@ class ToolingApi extends SalesforceApi
      * Returns metadata for a specific email template.
      *
      * @param string $templateId ID of the template to query
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
      *
      * @return array metadata for an email template
      *
@@ -303,16 +252,12 @@ class ToolingApi extends SalesforceApi
      * @param string $templateId       id of the email template to update
      * @param array  $templateMetadata updated template metadata
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return array array updated metadata template (Docs are not clear)
      */
     public function updateEmailTemplate(string $templateId, array $templateMetadata)
     {
         $updateRequest = new UpdateEmailTemplate($templateId);
-        $updateRequest->setData($templateMetadata);
+        $updateRequest->body()->set($templateMetadata);
 
         return $this->executeRequest($updateRequest);
     }
@@ -324,15 +269,12 @@ class ToolingApi extends SalesforceApi
      *
      * @param array $metadata email template metadata
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return array
      */
     public function createEmailTemplate(array $metadata)
     {
-        $request = (new CreateEmailTemplate())->setData($metadata);
+        $request = new CreateEmailTemplate();
+        $request->body()->set($metadata);
 
         return $this->executeRequest($request);
     }
@@ -342,16 +284,12 @@ class ToolingApi extends SalesforceApi
      *
      * @param string $templateId ID of the template to delete
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \ReflectionException
-     * @throws \Sammyjo20\Saloon\Exceptions\SaloonException
-     *
      * @return bool if deletion succeeded
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_emailtemplate.htm
      */
     public function deleteEmailTemplate(string $templateId): bool
     {
-        return (new DeleteEmailTemplate($templateId))->send()->successful();
+        return $this->executeRequestDirectly(new DeleteEmailTemplate($templateId))->successful();
     }
 }

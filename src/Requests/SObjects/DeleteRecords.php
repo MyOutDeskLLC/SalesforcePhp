@@ -2,16 +2,12 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
-use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Traits\Body\HasJsonBody;
 
-class CreateRecords extends Request implements HasBody
+class DeleteRecords extends Request
 {
-    use HasJsonBody;
-
-    protected Method $method = Method::POST;
+    protected Method $method = Method::DELETE;
 
     public function resolveEndpoint(): string
     {

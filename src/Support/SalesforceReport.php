@@ -11,6 +11,5 @@ class SalesforceReport
     protected string $folderId;
     protected string $developerName;
     protected string $readableName;
-
     protected array $filters;
 }

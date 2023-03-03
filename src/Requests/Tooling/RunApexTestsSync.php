@@ -2,24 +2,23 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Tooling;
 
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Http\SaloonRequest;
-use Sammyjo20\Saloon\Traits\Plugins\HasJsonBody;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
+use Saloon\Traits\Body\HasJsonBody;
 
-class RunApexTestsSync extends SaloonRequest
+class RunApexTestsSync extends Request implements HasBody
 {
     use HasJsonBody;
 
-    protected ?string $method = Saloon::POST;
-    protected ?string $connector = SalesforceConnector::class;
+    protected Method $method = Method::POST;
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return '/tooling/runTestsSynchronous';
     }
 
-    public function defaultData(): array
+    public function defaultBody(): array
     {
         return [
             [

@@ -1,20 +1,18 @@
 <?php
 
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
-
 beforeEach(function () {
     getAPI();
 });
 
 test('Can describe all SObjects available on an instance', function () {
-    $api = SalesforceApi::getSObjectApi();
+    $api = getAPI()->getSObjectApi();
     $objects = $api->listObjects();
 
     expect($objects)->toHaveKey('sobjects');
 });
 
 test('Can get basic SObject information', function () {
-    $api = SalesforceApi::getSObjectApi();
+    $api = getAPI()->getSObjectApi();
     $objectInformation = $api->getObjectInformation('Virtual_Youtuber__c');
 
     expect($objectInformation)->toHaveKey('objectDescribe.label', 'Virtual Youtuber');
@@ -22,21 +20,21 @@ test('Can get basic SObject information', function () {
 });
 
 test('Can describe a custom SObject', function () {
-    $api = SalesforceApi::getSObjectApi();
+    $api = getAPI()->getSObjectApi();
     $objectInformation = $api->describeObject('Virtual_Youtuber__c');
 
     expect($objectInformation)->tohaveKeys(['label', 'fields', 'recordTypeInfos', 'childRelationships']);
 });
 
 test('Can get a more concise list of fields from an SObject', function () {
-    $api = SalesforceApi::getSObjectApi();
+    $api = getAPI()->getSObjectApi();
     $fieldInformation = $api->getObjectFields('Virtual_Youtuber__c');
     // expect 6 default fields to be appearing in here
     expect($fieldInformation[0])->toHaveCount(6);
 });
 
 test('Can request a more specific set of field keys from an SObject (add scale to selection list)', function () {
-    $api = SalesforceApi::getSObjectApi();
+    $api = getAPI()->getSObjectApi();
     $fieldInformation = $api->getObjectFields('Virtual_Youtuber__c', ['scale']);
     // expect 6 default fields to be appearing in here
     expect($fieldInformation[0])->toHaveCount(7);
@@ -66,8 +64,6 @@ test('Can create multiple records', function () {
 });
 
 test('Throws on non-existent records', function () {
-    expect(function () {
-        $api = getAPI();
-        $api->getRecord('Virtual_Youtuber__c', 'TestNotExisting', ['Id']);
-    })->toThrow(\Sammyjo20\Saloon\Exceptions\SaloonRequestException::class);
-});
+    $api = getAPI();
+    $api->getRecord('Virtual_Youtuber__c', 'TestNotExisting', ['Id']);
+})->throws(\Saloon\Exceptions\Request\Statuses\NotFoundException::class);

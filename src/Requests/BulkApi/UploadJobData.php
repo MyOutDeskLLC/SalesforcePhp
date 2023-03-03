@@ -3,18 +3,18 @@
 namespace myoutdeskllc\SalesforcePhp\Requests\BulkApi;
 
 use League\Csv\AbstractCsv;
-use myoutdeskllc\SalesforcePhp\Connectors\SalesforceConnector;
-use Sammyjo20\Saloon\Constants\Saloon;
-use Sammyjo20\Saloon\Traits\Plugins\HasBody;
+use Saloon\Contracts\Body\HasBody;
+use Saloon\Enums\Method;
+use Saloon\Http\Request;
 
-class UploadJobData extends \Sammyjo20\Saloon\Http\SaloonRequest
+class UploadJobData extends Request implements HasBody
 {
-    use HasBody;
+    use \Saloon\Traits\Body\HasBody;
 
-    protected ?string $jobId = null;
-    protected ?string $method = Saloon::PUT;
-    protected ?string $connector = SalesforceConnector::class;
-    protected ?AbstractCsv $stream = null;
+    protected string $jobId;
+    protected AbstractCsv $stream;
+
+    protected Method $method = Method::PUT;
 
     public function __construct(string $jobId, AbstractCsv $stream)
     {
@@ -22,12 +22,12 @@ class UploadJobData extends \Sammyjo20\Saloon\Http\SaloonRequest
         $this->stream = $stream;
     }
 
-    public function defineEndpoint(): string
+    public function resolveEndpoint(): string
     {
         return "/jobs/ingest/{$this->jobId}/batches";
     }
 
-    public function defineBody(): string
+    public function defaultBody(): string
     {
         return $this->stream->toString();
     }

@@ -249,8 +249,6 @@ $salesforceJob->getState();
 $salesforceJob->getSuccessfulResultsAsArray();
 ```
 
-
-
 ## Soql Builder
 The SOQL builder can help build out queries in your app more effectively. You'll want to make sure security is tight before
 it hits the builder, but it offers a fluent API to help build out queries.
@@ -288,57 +286,6 @@ Copy .env.example to .env, update the redirect_url to be your local machine URL.
 6. Create a scratch org`sfdx force:org:create -f config/project-scratch-def.json --setalias salesforcephpdx --durationdays 7 --setdefaultusername --json --loglevel fatal`
 7. Use `sfdx force:org:open` to open your scratch organization
 8. Execute the apex in `scripts/apex/seed.apex` in dev console (or use VSCODE)
-
-
-## Authentication
-
-### Instance URL
-Automatic instance url detection is now removed. You can find your instance via the URL (which salesforce required you to set up as part of Enhanced Domains)
-or by running `System.debug(System.URL.getSalesforceBaseURL());` in the developer console. Please set this before doing any calls.
-
-### Password Flow
-Password flow is possible using the `SalesforceApiUserLogin` class. Please do an API only user profile for this, and ensure you use
-whitelisted IP addresses on production if you take this approach. You can configure this by setting the method to `AUTH_METHOD` inside of `.env` to `login`.
-```php
-$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi('https://MY_INSTANCE.my.salesforce.com');
-// this call will return an access_token for you to cache in your own database for a time
-$salesforceApi->login('username', 'password', 'consumer_key', 'consumer_secret');
-// if you have an access token that is still valid, you can restore it
-// I recommend caching this for at least 5 minutes, so you don't bombard salesforce with password requests
-$salesforceApi->restoreAccessToken('access_token');
-```
-
-### Security Token
-Please visit `YOUR_DOMAIN.com/_ui/system/security/ResetApiTokenEdit` to get a security token reset. It will email the user. This must be
-appended to the back of the password when authenticating with the password flow **unless** you are using a whitelisted IP address range.
-
-### OAuth Flow (Recommended)
-When deploying the above, a new application should be installed called `SalesforcePhpApi` under `Apps -> App Manager`, find
-SalesforcePhpApi, click the dropdown and select `View`
-
-1. Adjust the callback URL to match your local machine
-2. Copy the consumer secret and key into your .env file
-3. Launch this project's `index.php` in a browser, it should redirect you to authenticate against the scratch organization
-
-Here is how it can work in your application:
-
-```php
-$salesforceApi = new \myoutdeskllc\SalesforcePhp\SalesforceApi('https://MY_INSTANCE.my.salesforce.com');
-
-$sfOauthConfiguration = new \myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration();
-$sfOauthConfiguration->setClientId('client_id');
-$sfOauthConfiguration->setSecret('secret');
-$sfOauthConfiguration->setRedirectUri('redirect_uri');
-
-[$state, $url] = array_values($salesforceApi->startOAuthLogin($oauthConfig));
-// store the state yourself somewhere and redirect to the url returned
-// once the user is redirected back to your application, you can get the access token
-$authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state);
-// store this in an encrypted field in the database
-$serialized = $authenticator->serialize();
-// unserialize it later to restore 
-$authenticator = AccessTokenAuthenticator::unserialize($serialized);
-```
 
 ## Contributors
 - [JL](https://github.com/WalrusSoup)

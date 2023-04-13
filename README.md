@@ -9,6 +9,9 @@ This API provides a feature rich, elegant baseline for working with the Salesfor
 install and leverage this API to help them integrate Salesforce easily and beautifully. These endpoints return salesforce
 responses, and most of the endpoints contain links to specific documentation.
 
+## Installation
+`composer require myoutdeskllc/salesforce-php` 
+
 ## Features
 There are many out of the box features ready for you to build upon.
 

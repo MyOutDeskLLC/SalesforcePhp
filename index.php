@@ -9,7 +9,7 @@ $dotenv->load();
 
 if (!isset($_ENV['REDIRECT_URI'], $_ENV['SALESFORCE_CONSUMER_KEY'], $_ENV['SALESFORCE_CONSUMER_SECRET'])) {
     echo 'Please make sure you have REDIRECT_URI, SALESFORCE_CONSUMER_KEY, and SALESFORCE_CONSUMER_SECRET set in your .env file.';
-    exit();
+    exit;
 }
 
 $oauthConfig = OAuthConfiguration::create([

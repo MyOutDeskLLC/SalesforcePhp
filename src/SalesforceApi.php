@@ -569,12 +569,13 @@ class SalesforceApi
     }
 
     /**
-     * Returns records found for the given sObject, based on its properties (up to 2,000)
+     * Returns records found for the given sObject, based on its properties (up to 2,000).
      *
-     * @param string $object sObject name to search in
-     * @param array $properties array of key value pairs, where the key is the field name
-     * @param array $fieldsToSelect which fields to return from the query
-     * @param int $limit limit the number of records returned (default is max, which is 2,000)
+     * @param string $object         sObject name to search in
+     * @param array  $properties     array of key value pairs, where the key is the field name
+     * @param array  $fieldsToSelect which fields to return from the query
+     * @param int    $limit          limit the number of records returned (default is max, which is 2,000)
+     *
      * @return array|null
      */
     public function findRecords(string $object, array $properties, array $fieldsToSelect, int $limit = 2000): ?array
@@ -588,6 +589,7 @@ class SalesforceApi
         }
 
         $builder->limit($limit);
+
         return $this->executeQuery($builder);
     }
 

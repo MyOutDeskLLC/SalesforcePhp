@@ -54,8 +54,8 @@ class BulkApi2 extends SalesforceApi
     /**
      * Uploads data to a job directly. resourceStream should be some sort of stream interface or string CSV.
      *
-     * @param string $jobId salesforce ID of the job
-     * @param $resourceStream
+     * @param string $jobId          salesforce ID of the job
+     * @param        $resourceStream
      *
      * @return int status code returned from salesforce. Should be 201 for success.
      */

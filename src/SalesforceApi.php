@@ -201,6 +201,10 @@ class SalesforceApi
      */
     protected function unpackResponseIfNeeded(Response $response): mixed
     {
+        if ($response->successful() && empty($response->body())) {
+            return [];
+        }
+
         $inlineData = $response->json();
 
         if (isset($inlineData['records']) && $this->recordsOnly) {

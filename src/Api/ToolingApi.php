@@ -20,7 +20,7 @@ use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsASync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsSync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\UpdateEmailTemplate;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
-use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
+use Myoutdeskllc\SalesforcePhpQueryBuilder\Exceptions\InvalidQueryException;
 
 class ToolingApi extends SalesforceApi
 {

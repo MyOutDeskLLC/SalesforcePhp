@@ -17,6 +17,7 @@ There are many out of the box features ready for you to build upon.
 
 - Authentication
   - OAuth
+  - OAuth + PKCE
   - Username \ Password Flow (API Users)
 - Basic Operations
   - Query record(s)
@@ -84,6 +85,21 @@ $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state)
 // store this in an encrypted field in your database
 $serialized = $authenticator->serialize();
 ```
+
+#### OAuth + PKCE
+Pass in a `code_verifier` parameter into the oAuth configuration and it will kick off the flow for this. You'll need to store the
+`code_verifier` parameter on your own end - make it random of course. Library will handle the oddities of SHA256 + base64url encoding for you.
+
+```php
+$oauthConfig = OAuthConfiguration::create([
+    'client_id'     => 'SALESFORCE_CONSUMER_KEY',
+    'client_secret' => 'SALESFORCE_CONSUMER_SECRET',
+    'redirect_uri'  => 'REDIRECT_URI',
+    'code_verifier' => 'code-verifier-challenge-make-sure-this-is-random-and-not-shown-to-user',
+]);
+```
+
+It's a little hacky, but this is not implemented upstream and I haven't updated Saloon so it is what it is.
 
 #### Password Authentication
 Please visit `YOUR_DOMAIN.com/_ui/system/security/ResetApiTokenEdit` to get a security token reset. It will email the user. This must be

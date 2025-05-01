@@ -25,8 +25,8 @@ use myoutdeskllc\SalesforcePhp\Requests\Analytics\UpdateDashboard;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceRules;
 use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
+use Myoutdeskllc\SalesforcePhpQueryBuilder\Exceptions\InvalidQueryException;
 use Psr\Http\Message\StreamInterface;
-use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 
 class ReportApi extends SalesforceApi
 {

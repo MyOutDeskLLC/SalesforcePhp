@@ -18,7 +18,7 @@
         "php": ">=8.0",
         "sammyjo20/saloon": "^2.0",
         "league/csv": "^9.8",
-        "mihasicehcek/php_salesforce_soql_builder": "^1.0"
+        "myoutdeskllc/salesforce-php-query-builder": "^1.0"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

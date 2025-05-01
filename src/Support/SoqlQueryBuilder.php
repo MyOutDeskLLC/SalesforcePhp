@@ -3,7 +3,7 @@
 namespace myoutdeskllc\SalesforcePhp\Support;
 
 use myoutdeskllc\SalesforcePhp\Constants\SoqlDates;
-use SalesforceQueryBuilder\QueryBuilder;
+use Myoutdeskllc\SalesforcePhpQueryBuilder\QueryBuilder;
 
 class SoqlQueryBuilder extends QueryBuilder
 {

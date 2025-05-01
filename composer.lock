@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cb247bccdd4b7e8b0dca4291cdfc763",
+    "content-hash": "7cc47db90c3beb102bb2e14c40e2e185",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -422,41 +422,45 @@
             "time": "2022-01-04T00:13:07+00:00"
         },
         {
-            "name": "mihasicehcek/php_salesforce_soql_builder",
-            "version": "v1.0.12",
+            "name": "myoutdeskllc/salesforce-php-query-builder",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mihasicehcek/php-salesforce-soql-builder.git",
-                "reference": "13bb29c72935a2c8de0f6e86ee4685627c1ccb16"
+                "url": "https://github.com/MyOutDeskLLC/salesforcephp-query-builder.git",
+                "reference": "d78c18df21531bbcce944518bc0b06f0564c96b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mihasicehcek/php-salesforce-soql-builder/zipball/13bb29c72935a2c8de0f6e86ee4685627c1ccb16",
-                "reference": "13bb29c72935a2c8de0f6e86ee4685627c1ccb16",
+                "url": "https://api.github.com/repos/MyOutDeskLLC/salesforcephp-query-builder/zipball/d78c18df21531bbcce944518bc0b06f0564c96b3",
+                "reference": "d78c18df21531bbcce944518bc0b06f0564c96b3",
                 "shasum": ""
             },
-            "require": {
-                "php": "^7.3 || ^8.0"
-            },
             "require-dev": {
-                "phpunit/phpunit": "^9.5"
+                "pestphp/pest": "^3.8",
+                "phpstan/phpstan": "^2.1"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SalesforceQueryBuilder\\": "src/"
+                    "Myoutdeskllc\\SalesforcePhpQueryBuilder\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "SOQL Builder",
+            "authors": [
+                {
+                    "name": "JL",
+                    "email": "jay@jaysonlindsley.dev"
+                }
+            ],
+            "description": "library to help build soql queries for use with the rest api",
             "support": {
-                "issues": "https://github.com/mihasicehcek/php-salesforce-soql-builder/issues",
-                "source": "https://github.com/mihasicehcek/php-salesforce-soql-builder/tree/v1.0.12"
+                "issues": "https://github.com/MyOutDeskLLC/salesforcephp-query-builder/issues",
+                "source": "https://github.com/MyOutDeskLLC/salesforcephp-query-builder/tree/1.0.0"
             },
-            "time": "2021-07-12T06:25:02+00:00"
+            "time": "2025-05-01T19:05:55+00:00"
         },
         {
             "name": "psr/http-client",
@@ -4008,12 +4012,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.0"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }

@@ -34,7 +34,7 @@ class GetAccessTokenWithPKCERequest extends Request implements HasBody
     /**
      * Requires the authorization code and OAuth 2 config.
      *
-     * @param string $code
+     * @param string                             $code
      * @param \Saloon\Helpers\OAuth2\OAuthConfig $oauthConfig
      */
     public function __construct(protected string $code, protected OAuthConfig $oauthConfig)
@@ -56,11 +56,11 @@ class GetAccessTokenWithPKCERequest extends Request implements HasBody
     public function defaultBody(): array
     {
         return [
-            'grant_type' => 'authorization_code',
-            'code' => $this->code,
-            'client_id' => $this->oauthConfig->getClientId(),
+            'grant_type'    => 'authorization_code',
+            'code'          => $this->code,
+            'client_id'     => $this->oauthConfig->getClientId(),
             'client_secret' => $this->oauthConfig->getClientSecret(),
-            'redirect_uri' => $this->oauthConfig->getRedirectUri(),
+            'redirect_uri'  => $this->oauthConfig->getRedirectUri(),
         ];
     }
 }

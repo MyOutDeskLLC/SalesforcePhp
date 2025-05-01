@@ -27,16 +27,16 @@ class SalesforceOAuthLoginConnector extends Connector
         $this->codeVerifier = $codeVerifier;
     }
 
-    public function getAccessToken(string $code, string $state = null, string $expectedState = null, bool $returnResponse = false): OAuthAuthenticator|Response
+    public function getAccessToken(string $code, ?string $state = null, ?string $expectedState = null, bool $returnResponse = false): OAuthAuthenticator|Response
     {
-        if(empty($this->codeVerifier)) {
-           return $this->authorizeWithoutPkce($code, $state, $expectedState, $returnResponse);
+        if (empty($this->codeVerifier)) {
+            return $this->authorizeWithoutPkce($code, $state, $expectedState, $returnResponse);
         }
 
         $this->oauthConfig()->validate();
 
-        if (! empty($state) && ! empty($expectedState) && $state !== $expectedState) {
-            throw new InvalidStateException;
+        if (!empty($state) && !empty($expectedState) && $state !== $expectedState) {
+            throw new InvalidStateException();
         }
 
         $oauthPKCERequest = new GetAccessTokenWithPKCERequest($code, $this->oauthConfig());
@@ -55,12 +55,12 @@ class SalesforceOAuthLoginConnector extends Connector
         return $this->createOAuthAuthenticatorFromResponse($response, '');
     }
 
-    public function authorizeWithoutPkce(string $code, string $state = null, string $expectedState = null, bool $returnResponse = false): OAuthAuthenticator|Response
+    public function authorizeWithoutPkce(string $code, ?string $state = null, ?string $expectedState = null, bool $returnResponse = false): OAuthAuthenticator|Response
     {
         $this->oauthConfig()->validate();
 
-        if (! empty($state) && ! empty($expectedState) && $state !== $expectedState) {
-            throw new InvalidStateException;
+        if (!empty($state) && !empty($expectedState) && $state !== $expectedState) {
+            throw new InvalidStateException();
         }
 
         $response = $this->send(new GetAccessTokenRequest($code, $this->oauthConfig()));

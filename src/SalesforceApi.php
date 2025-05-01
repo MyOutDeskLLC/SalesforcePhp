@@ -96,7 +96,7 @@ class SalesforceApi
         if (!empty($configuration->getCodeChallenge())) {
             $base64Challenge = base64_encode(hex2bin($configuration->getCodeChallenge()));
             $base64Challenge = str_replace(['+', '/', '='], ['-', '_', ''], $base64Challenge);
-            $authorizationUrl .= '&code_challenge=' . $base64Challenge . '&code_challenge_method=S256';
+            $authorizationUrl .= '&code_challenge='.$base64Challenge.'&code_challenge_method=S256';
         }
 
         return [

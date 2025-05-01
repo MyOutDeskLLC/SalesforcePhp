@@ -108,7 +108,6 @@ class SalesforceApi
     public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state, string $codeVerifier = ''): OAuthAuthenticator
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $connector->setOauthConfiguration($configuration);
         $connector->setOauthConfiguration($configuration, $codeVerifier);
         $authenticator = $connector->getAccessToken($code, $state);
 

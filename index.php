@@ -16,6 +16,7 @@ $oauthConfig = OAuthConfiguration::create([
     'client_id'     => $_ENV['SALESFORCE_CONSUMER_KEY'],
     'client_secret' => $_ENV['SALESFORCE_CONSUMER_SECRET'],
     'redirect_uri'  => $_ENV['REDIRECT_URI'],
+    'code_verifier' => 'code-verifier-challenge-make-sure-this-is-random-and-not-shown-to-user',
 ]);
 $salesforceApi = new SalesforceApi();
 $salesforceApi->setInstanceUrl($_ENV['SALESFORCE_INSTANCE_URL']);
@@ -28,9 +29,12 @@ if (!isset($_GET['code'])) {
     echo "<a class='text-center' href='$url'>Click here to login via OAuth</a>";
 } else {
     $state = file_get_contents(__DIR__.'/.state');
-    $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $_GET['code'], $state);
+    $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $_GET['code'], $state, 'code-verifier-challenge-make-sure-this-is-random-and-not-shown-to-user');
     $token = $authenticator->getAccessToken();
     $refresh = $authenticator->getRefreshToken();
+
+    echo "<p>Access Token: <code>$token</code></p>";
+    echo "<p>Refresh Token: <code>$refresh</code></p>";
 
     file_put_contents('.authenticator', $authenticator->serialize());
 

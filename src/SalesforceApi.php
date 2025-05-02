@@ -714,4 +714,11 @@ class SalesforceApi
 
         return $api;
     }
+
+    public function getCurrentUserInfo(): array
+    {
+        $request = new Requests\OAuth2\UserInfo();
+
+        return $this->executeRequest($request);
+    }
 }

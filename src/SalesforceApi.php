@@ -91,16 +91,24 @@ class SalesforceApi
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $connector->setOauthConfiguration($configuration);
 
+        $authorizationUrl = $connector->getAuthorizationUrl();
+        // If we have a code challenge, we need to include it here
+        if (!empty($configuration->getCodeChallenge())) {
+            $base64Challenge = base64_encode(hex2bin($configuration->getCodeChallenge()));
+            $base64Challenge = str_replace(['+', '/', '='], ['-', '_', ''], $base64Challenge);
+            $authorizationUrl .= '&code_challenge='.$base64Challenge.'&code_challenge_method=S256';
+        }
+
         return [
-            'url'   => $connector->getAuthorizationUrl(),
+            'url'   => $authorizationUrl,
             'state' => $connector->getState(),
         ];
     }
 
-    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state): OAuthAuthenticator
+    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state, string $codeVerifier = ''): OAuthAuthenticator
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $connector->setOauthConfiguration($configuration);
+        $connector->setOauthConfiguration($configuration, $codeVerifier);
         $authenticator = $connector->getAccessToken($code, $state);
 
         $this->connector = new SalesforceApiConnector();

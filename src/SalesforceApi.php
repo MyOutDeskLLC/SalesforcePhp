@@ -117,6 +117,22 @@ class SalesforceApi
         return $authenticator;
     }
 
+    public function restoreExistingOAuthConnectionWithCodeVerification($serializedAuthenticator, OAuthConfiguration $originalConfiguration, string $codeVerifier, callable $afterRefresh)
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($originalConfiguration, $codeVerifier);
+        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $connector->authenticate($authenticator);
+
+        if ($authenticator->hasExpired() || $authenticator->getExpiresAt() === null) {
+            $authenticator = $connector->refreshAccessToken($authenticator);
+            $afterRefresh($authenticator);
+        }
+
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
+    }
+
     public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
@@ -134,7 +150,7 @@ class SalesforceApi
 
     public function refreshToken($serializedAuthenticator, callable $afterRefresh)
     {
-        return $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
+        $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
     }
 
     public static function getApiVersion(): string

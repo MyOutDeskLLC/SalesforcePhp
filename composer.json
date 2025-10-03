@@ -17,11 +17,10 @@
     "require": {
         "php": ">=8.0",
         "league/csv": "^9.8",
-        "myoutdeskllc/salesforce-php-query-builder": "^1.0",
         "saloonphp/saloon": "^2.0"
     },
     "require-dev": {
-        "pestphp/pest": "^1.21",
+        "pestphp/pest": "4",
         "fakerphp/faker": "^1.19",
         "vlucas/phpdotenv": "^5.5",
         "phpstan/phpstan": "^1.10"

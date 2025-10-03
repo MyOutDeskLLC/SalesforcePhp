@@ -24,9 +24,8 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
-use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
-use Myoutdeskllc\SalesforcePhpQueryBuilder\Exceptions\InvalidQueryException;
-use Myoutdeskllc\SalesforcePhpQueryBuilder\QueryBuilder;
+use myoutdeskllc\SalesforcePhp\QueryBuilder\SoqlQueryBuilder;
+use myoutdeskllc\SalesforcePhp\Exceptions\InvalidQueryException;
 use Saloon\Contracts\OAuthAuthenticator;
 use Saloon\Http\Auth\AccessTokenAuthenticator;
 use Saloon\Http\Connector;
@@ -546,9 +545,9 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
      *
-     * @param QueryBuilder $builder
+     * @param SoqlQueryBuilder $builder
      */
-    public function executeQuery(QueryBuilder $builder): array
+    public function executeQuery(SoqlQueryBuilder $builder): array
     {
         return $this->executeQueryRaw($builder->toSoql());
     }

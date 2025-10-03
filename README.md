@@ -40,8 +40,8 @@ There are many out of the box features ready for you to build upon.
   - Includes SalesforceJob class to help manage operations
     - This is optional and direct methods are also exposed
 - Run SOQL Queries
-  - Access [SOQL Query Builder](https://github.com/mihasicehcek/php-salesforce-soql-builder)
-  - Helper functions for [SOQL date constants](/src/Constants/SoqlDates.php)
+  - Access SOQL Query Builder
+  - Helper functions for SOQL Date Functions
 - Analytics API (Reports, Dashboards)
   - List, Query Basic Information, Metadata for Reports, Dashboards
   - List, Create, Update, Delete, Search for report and dashboard folders

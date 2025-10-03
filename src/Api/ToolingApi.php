@@ -2,6 +2,7 @@
 
 namespace myoutdeskllc\SalesforcePhp\Api;
 
+use myoutdeskllc\SalesforcePhp\Exceptions\InvalidQueryException;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\CreateEmailTemplate;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\DeleteEmailTemplate;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\ExecuteAnonymousApex;
@@ -20,7 +21,6 @@ use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsASync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\RunApexTestsSync;
 use myoutdeskllc\SalesforcePhp\Requests\Tooling\UpdateEmailTemplate;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
-use Myoutdeskllc\SalesforcePhpQueryBuilder\Exceptions\InvalidQueryException;
 
 class ToolingApi extends SalesforceApi
 {

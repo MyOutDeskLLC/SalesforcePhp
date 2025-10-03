@@ -4,6 +4,7 @@ namespace myoutdeskllc\SalesforcePhp\Api;
 
 use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Constants\StandardObjectFields;
+use myoutdeskllc\SalesforcePhp\QueryBuilder\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CloneDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateFolder;

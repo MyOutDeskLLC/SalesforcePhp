@@ -126,7 +126,7 @@ class SalesforceApi
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $connector->setOauthConfiguration($originalConfiguration, $codeVerifier);
-        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $authenticator = self::unserializeAuthenticator($serializedAuthenticator);
         $connector->authenticate($authenticator);
 
         if ($authenticator->hasExpired() || $authenticator->getExpiresAt() === null) {
@@ -305,7 +305,7 @@ class SalesforceApi
     protected function executeRequestSync(Request $request): Response
     {
         if ($this->eatErrors) {
-            return $this->connector->send($request);  // @phpstan-ignore-line
+            return $this->connector->send($request);
         }
 
         $response = $this->connector->send($request);
@@ -314,7 +314,7 @@ class SalesforceApi
             $response->throw();
         }
 
-        return $response; // @phpstan-ignore-line
+        return $response;
     }
 
     /**

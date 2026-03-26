@@ -6,10 +6,10 @@ use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
 use myoutdeskllc\SalesforcePhp\Requests\OAuth\GetAccessTokenWithPKCERequest;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use Saloon\Contracts\OAuthAuthenticator;
-use Saloon\Contracts\Response;
 use Saloon\Exceptions\InvalidStateException;
 use Saloon\Http\Connector;
 use Saloon\Http\OAuth2\GetAccessTokenRequest;
+use Saloon\Http\Response;
 use Saloon\Traits\OAuth2\AuthorizationCodeGrant;
 
 class SalesforceOAuthLoginConnector extends Connector

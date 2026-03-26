@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.4",
         "league/csv": "^9.8",
         "saloonphp/saloon": "^4.0"
     },
@@ -36,6 +36,9 @@
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.4.0"
         }
     }
 }

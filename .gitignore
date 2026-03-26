@@ -5,3 +5,4 @@ vendor/*
 .env
 .authenticator
 .state
+/my-scratch-project/

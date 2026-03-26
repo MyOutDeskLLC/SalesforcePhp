@@ -49,8 +49,18 @@ function getAPI()
     $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL'], $_ENV['API_VERSION']);
 
     // this is questionable, but works for testing with OAuth connections
-    $api->restoreExistingOAuthConnection(file_get_contents('.authenticator'), function ($authenticator) {
-        file_put_contents('.authenticator', $authenticator->serialize());
+    $stored = json_decode(file_get_contents('.authenticator'), true);
+    $authenticator = new \Saloon\Http\Auth\AccessTokenAuthenticator(
+        accessToken: $stored['access_token'],
+        refreshToken: $stored['refresh_token'] ?? '',
+        expiresAt: isset($stored['expires_at']) ? new \DateTimeImmutable($stored['expires_at']) : null,
+    );
+    $api->restoreExistingOAuthConnection($authenticator, function ($authenticator) {
+        file_put_contents('.authenticator', json_encode([
+            'access_token' => $authenticator->getAccessToken(),
+            'refresh_token' => $authenticator->getRefreshToken(),
+            'expires_at' => $authenticator->getExpiresAt()?->format(DATE_ATOM),
+        ]));
     });
 
     $api->recordsOnly();

@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.4",
         "league/csv": "^9.8",
-        "saloonphp/saloon": "^2.0"
+        "saloonphp/saloon": "^4.0"
     },
     "require-dev": {
-        "pestphp/pest": "4",
+        "pestphp/pest": "^4.0",
         "fakerphp/faker": "^1.19",
         "vlucas/phpdotenv": "^5.5",
         "phpstan/phpstan": "^2.0"
@@ -36,6 +36,9 @@
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.4.0"
         }
     }
 }

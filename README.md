@@ -1,5 +1,5 @@
 # Salesforce PHP API
-A beautiful, extendable API powered by [Saloon](https://github.com/sammyjo20/saloon).
+A beautiful, extendable API powered by [Saloon](https://github.com/saloonphp/saloon).
 
 ![img](https://github.styleci.io/repos/467300822/shield)
 ![MyOutDeskLLC](https://circleci.com/gh/MyOutDeskLLC/SalesforcePhp.svg?style=shield)
@@ -83,7 +83,7 @@ $sfOauthConfiguration = OAuthConfiguration::create(
 // once the user is redirected back to your application, you can get the access token
 $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state);
 // store this in an encrypted field in your database
-$serialized = $authenticator->serialize();
+$serialized = SalesforceApi::serializeAuthenticator($authenticator);
 ```
 
 #### OAuth + PKCE
@@ -289,22 +289,52 @@ $builder
 
 
 ## Testing
-Testing is done via PestPHP. To ensure full coverage of Salesforce features a scratch org was set up to test this against a live sandbox API.
-While this means expanding tests is going to be more work, it also means it's battle tested against real data.
-
-[Get a copy of the scratch org definition](https://github.com/WalrusSoup/salesforce-php-dx)
-
-Copy .env.example to .env, update the redirect_url to be your local machine URL. Set the base_url to `https://test.salesforce.com`.
+Testing is done via PestPHP against a live Salesforce org. Tests use standard objects (Account, etc.) so no custom metadata deployment is needed.
 
 ### Scratch Org Setup
 1. Signup for a developer edition organization [here](https://developer.salesforce.com/signup)
 2. Login and head to the Dev Hub `/lightning/setup/DevHub/home` and turn the slider to `enabled`
-3. Install the Salesforce DX CLI
-4. Pull the salesforce-php-dx project
-5. In terminal, type `sfdx force:auth:web:login --setdefaultdevhubusername` and login to the developer hub
-6. Create a scratch org`sfdx force:org:create -f config/project-scratch-def.json --setalias salesforcephpdx --durationdays 7 --setdefaultusername --json --loglevel fatal`
-7. Use `sfdx force:org:open` to open your scratch organization
-8. Execute the apex in `scripts/apex/seed.apex` in dev console (or use VSCODE)
+3. Install the [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli)
+4. Authorize your Dev Hub:
+   ```bash
+   sf org login web --set-default-dev-hub
+   ```
+5. Create a scratch org:
+   ```bash
+   sf org create scratch --edition developer --alias my-scratch --set-default --duration-days 7
+   ```
+6. Copy `.env.example` to `.env` and fill in your scratch org details:
+   ```bash
+   cp .env.example .env
+   ```
+   Set `SALESFORCE_INSTANCE_URL` to your scratch org URL:
+   ```bash
+   sf org display --target-org my-scratch --json | jq -r '.result.instanceUrl'
+   ```
+7. Create the `.authenticator` file with your access token:
+   ```bash
+   sf org display --target-org my-scratch --json | jq '{accessToken: .result.accessToken, refreshToken: null, expiresAt: null}' > .authenticator
+   ```
+8. Install dependencies and run tests:
+   ```bash
+   composer install
+   composer test
+   ```
+
+### Sandbox Setup
+If you prefer to test against an existing sandbox instead of a scratch org:
+
+1. Copy `.env.example` to `.env` and set `SALESFORCE_INSTANCE_URL` to your sandbox URL (e.g. `https://mycompany--sandbox.sandbox.my.salesforce.com`)
+2. Authenticate to get your access token. If using OAuth, complete the flow and serialize the authenticator. For a quick setup, you can grab the token from an active session:
+   ```bash
+   sf org display --target-org my-sandbox --json | jq '{accessToken: .result.accessToken, refreshToken: null, expiresAt: null}' > .authenticator
+   ```
+3. Run the tests:
+   ```bash
+   composer test
+   ```
+
+> **Note:** Scratch org access tokens expire when the org expires (default 7 days). If tests fail with auth errors, regenerate the `.authenticator` file with a fresh token.
 
 ## Contributors
 - [JL](https://github.com/WalrusSoup)

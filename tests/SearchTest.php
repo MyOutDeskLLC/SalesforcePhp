@@ -4,6 +4,17 @@ beforeEach(function () {
     getAPI();
 });
 
+beforeAll(function () {
+    $api = getAPI();
+    // Create a known account for search tests
+    $api->createRecord('Account', [
+        'Name' => 'SalesforcePhp Test',
+        'Website' => 'https://salesforcephp.test',
+    ]);
+    // Search index needs a moment to update
+    sleep(3);
+});
+
 test('Can search all records for SalesforcePhp', function () {
     $api = getAPI();
     $results = $api->search('SalesforcePhp');

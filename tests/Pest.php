@@ -50,7 +50,7 @@ function getAPI()
 
     // this is questionable, but works for testing with OAuth connections
     $api->restoreExistingOAuthConnection(file_get_contents('.authenticator'), function ($authenticator) {
-        file_put_contents('.authenticator', $authenticator->serialize());
+        file_put_contents('.authenticator', SalesforceApi::serializeAuthenticator($authenticator));
     });
 
     $api->recordsOnly();

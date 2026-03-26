@@ -9,7 +9,7 @@ trait WithSalesforceAuthHeader
 {
     public function bootWithSalesforceAuthHeader(): void
     {
-        $this->mergeHeaders([
+        $this->headers()->merge([
             'Authorization' => 'Bearer '.SalesforceApi::token(),
         ]);
     }

@@ -8,10 +8,9 @@ beforeEach(function () {
 });
 
 test('Can create a bulk API job', function () {
-    $api = getAPI();
-    $api = $api->getBulkApi();
+    $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setObject('Virtual_Youtuber__c');
+    $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
 
     $salesforceJob->initJob();
@@ -22,11 +21,11 @@ test('Can create a bulk API job', function () {
 test('Can upload records to a bulk API job', function () {
     $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setObject('Virtual_Youtuber__c');
+    $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
 
-    $salesforceJob->setCsvFile(__DIR__.'/fixtures/vtubers.csv')->upload();
+    $salesforceJob->setCsvFile(__DIR__.'/fixtures/accounts.csv')->upload();
     $salesforceJob->closeJob();
 
     expect($salesforceJob->getState())->toEqual('UploadComplete');
@@ -35,19 +34,19 @@ test('Can upload records to a bulk API job', function () {
 test('Can get existing job status', function () {
     $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setObject('Virtual_Youtuber__c');
+    $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
     // after this, store the ID and throw out the job
     $queriedJob = SalesforceJob::getExistingJobById($salesforceJob->getJobId(), $api);
     // It should contain our object as the target of the job
-    expect($queriedJob->getObject())->toEqual('Virtual_Youtuber__c');
+    expect($queriedJob->getObject())->toEqual('Account');
 });
 
 test('Can abort a job', function () {
     $api = getAPI()->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
-    $salesforceJob->setObject('Virtual_Youtuber__c');
+    $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
     $salesforceJob->initJob();
     // after this, store the ID and throw out the job

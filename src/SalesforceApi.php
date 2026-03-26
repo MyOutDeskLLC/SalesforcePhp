@@ -116,11 +116,10 @@ class SalesforceApi
         return $authenticator;
     }
 
-    public function restoreExistingOAuthConnectionWithCodeVerification($serializedAuthenticator, OAuthConfiguration $originalConfiguration, string $codeVerifier, callable $afterRefresh)
+    public function restoreExistingOAuthConnectionWithCodeVerification(AccessTokenAuthenticator $authenticator, OAuthConfiguration $originalConfiguration, string $codeVerifier, callable $afterRefresh)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $connector->setOauthConfiguration($originalConfiguration, $codeVerifier);
-        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
         $connector->authenticate($authenticator);
 
         if ($authenticator->hasExpired() || $authenticator->getExpiresAt() === null) {
@@ -132,10 +131,9 @@ class SalesforceApi
         $this->connector->authenticate($authenticator);
     }
 
-    public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
+    public function restoreExistingOAuthConnection(AccessTokenAuthenticator $authenticator, callable $afterRefresh)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
         $connector->authenticate($authenticator);
 
         if ($authenticator->hasExpired()) {
@@ -147,9 +145,9 @@ class SalesforceApi
         $this->connector->authenticate($authenticator);
     }
 
-    public function refreshToken($serializedAuthenticator, callable $afterRefresh)
+    public function refreshToken(AccessTokenAuthenticator $authenticator, callable $afterRefresh)
     {
-        $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
+        $this->restoreExistingOAuthConnection($authenticator, $afterRefresh);
     }
 
     public static function getApiVersion(): string
@@ -259,7 +257,7 @@ class SalesforceApi
     protected function executeRequestSync(Request $request): Response
     {
         if ($this->eatErrors) {
-            return $this->connector->send($request);  // @phpstan-ignore-line
+            return $this->connector->send($request);
         }
 
         $response = $this->connector->send($request);
@@ -268,7 +266,7 @@ class SalesforceApi
             $response->throw();
         }
 
-        return $response; // @phpstan-ignore-line
+        return $response;
     }
 
     /**

@@ -11,6 +11,8 @@ use Saloon\Traits\Body\HasFormBody;
 class LoginApiUser extends Request implements HasBody
 {
     use HasFormBody;
+
+    public ?bool $allowBaseUrlOverride = true;
     protected Method $method = Method::POST;
 
     public function defaultBody(): array

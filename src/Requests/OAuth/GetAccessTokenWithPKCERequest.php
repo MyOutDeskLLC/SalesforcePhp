@@ -14,6 +14,8 @@ class GetAccessTokenWithPKCERequest extends Request implements HasBody
     use HasFormBody;
     use AcceptsJson;
 
+    public ?bool $allowBaseUrlOverride = true;
+
     /**
      * Define the method that the request will use.
      *

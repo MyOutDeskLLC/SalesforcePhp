@@ -8,6 +8,7 @@ use Saloon\Http\Request;
 
 class UserInfo extends Request
 {
+    public ?bool $allowBaseUrlOverride = true;
     protected Method $method = Method::GET;
 
     public function resolveEndpoint(): string

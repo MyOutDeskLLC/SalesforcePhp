@@ -6,7 +6,7 @@ use myoutdeskllc\SalesforcePhp\OAuth\OAuthConfiguration;
 use myoutdeskllc\SalesforcePhp\Requests\OAuth\GetAccessTokenWithPKCERequest;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use Saloon\Contracts\OAuthAuthenticator;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 use Saloon\Exceptions\InvalidStateException;
 use Saloon\Http\Connector;
 use Saloon\Http\OAuth2\GetAccessTokenRequest;
@@ -24,6 +24,7 @@ class SalesforceOAuthLoginConnector extends Connector
         $this->oauthConfig()->setRedirectUri($configuration->getRedirectUri());
         $this->oauthConfig()->setAuthorizeEndpoint($this->resolveBaseUrl().'/services/oauth2/authorize');
         $this->oauthConfig()->setTokenEndpoint($this->resolveBaseUrl().'/services/oauth2/token');
+        $this->oauthConfig()->setAllowBaseUrlOverride();
         $this->codeVerifier = $codeVerifier;
     }
 

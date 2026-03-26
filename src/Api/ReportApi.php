@@ -4,6 +4,7 @@ namespace myoutdeskllc\SalesforcePhp\Api;
 
 use InvalidArgumentException;
 use myoutdeskllc\SalesforcePhp\Constants\StandardObjectFields;
+use myoutdeskllc\SalesforcePhp\QueryBuilder\SoqlQueryBuilder;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CloneDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateDashboard;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\CreateFolder;
@@ -24,9 +25,8 @@ use myoutdeskllc\SalesforcePhp\Requests\Analytics\SaveReport;
 use myoutdeskllc\SalesforcePhp\Requests\Analytics\UpdateDashboard;
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceRules;
-use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
+use myoutdeskllc\SalesforcePhp\Exceptions\InvalidQueryException;
 use Psr\Http\Message\StreamInterface;
-use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
 
 class ReportApi extends SalesforceApi
 {

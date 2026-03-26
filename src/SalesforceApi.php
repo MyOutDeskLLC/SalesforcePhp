@@ -26,9 +26,8 @@ use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\GetRecords;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\UpdateRecords;
-use myoutdeskllc\SalesforcePhp\Support\SoqlQueryBuilder;
-use SalesforceQueryBuilder\Exceptions\InvalidQueryException;
-use SalesforceQueryBuilder\QueryBuilder;
+use myoutdeskllc\SalesforcePhp\QueryBuilder\SoqlQueryBuilder;
+use myoutdeskllc\SalesforcePhp\Exceptions\InvalidQueryException;
 use Saloon\Contracts\OAuthAuthenticator;
 use Saloon\Http\Auth\AccessTokenAuthenticator;
 use Saloon\Http\Connector;
@@ -96,16 +95,24 @@ class SalesforceApi
         $connector = new Connectors\SalesforceOAuthLoginConnector();
         $connector->setOauthConfiguration($configuration);
 
+        $authorizationUrl = $connector->getAuthorizationUrl();
+        // If we have a code challenge, we need to include it here
+        if (!empty($configuration->getCodeChallenge())) {
+            $base64Challenge = base64_encode(hex2bin($configuration->getCodeChallenge()));
+            $base64Challenge = str_replace(['+', '/', '='], ['-', '_', ''], $base64Challenge);
+            $authorizationUrl .= '&code_challenge='.$base64Challenge.'&code_challenge_method=S256';
+        }
+
         return [
-            'url'   => $connector->getAuthorizationUrl(),
+            'url'   => $authorizationUrl,
             'state' => $connector->getState(),
         ];
     }
 
-    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state): OAuthAuthenticator
+    public function completeOAuthLogin(OAuthConfiguration $configuration, string $code, string $state, string $codeVerifier = ''): OAuthAuthenticator
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $connector->setOauthConfiguration($configuration);
+        $connector->setOauthConfiguration($configuration, $codeVerifier);
         $authenticator = $connector->getAccessToken($code, $state);
 
         $this->connector = new SalesforceApiConnector();
@@ -113,6 +120,22 @@ class SalesforceApi
         self::$accessToken = $authenticator->getAccessToken();
 
         return $authenticator;
+    }
+
+    public function restoreExistingOAuthConnectionWithCodeVerification($serializedAuthenticator, OAuthConfiguration $originalConfiguration, string $codeVerifier, callable $afterRefresh)
+    {
+        $connector = new Connectors\SalesforceOAuthLoginConnector();
+        $connector->setOauthConfiguration($originalConfiguration, $codeVerifier);
+        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $connector->authenticate($authenticator);
+
+        if ($authenticator->hasExpired() || $authenticator->getExpiresAt() === null) {
+            $authenticator = $connector->refreshAccessToken($authenticator);
+            $afterRefresh($authenticator);
+        }
+
+        $this->connector = new SalesforceApiConnector();
+        $this->connector->authenticate($authenticator);
     }
 
     public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
@@ -133,7 +156,7 @@ class SalesforceApi
 
     public function refreshToken($serializedAuthenticator, callable $afterRefresh)
     {
-        return $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
+        $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
     }
 
     /**
@@ -247,6 +270,10 @@ class SalesforceApi
      */
     protected function unpackResponseIfNeeded(Response $response): mixed
     {
+        if ($response->successful() && empty($response->body())) {
+            return [];
+        }
+
         $inlineData = $response->json();
 
         if (isset($inlineData['records']) && $this->recordsOnly) {
@@ -564,9 +591,9 @@ class SalesforceApi
      *
      * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
      *
-     * @param QueryBuilder $builder
+     * @param SoqlQueryBuilder $builder
      */
-    public function executeQuery(QueryBuilder $builder): array
+    public function executeQuery(SoqlQueryBuilder $builder): array
     {
         return $this->executeQueryRaw($builder->toSoql());
     }
@@ -747,5 +774,12 @@ class SalesforceApi
         $api->setConnector($this->getConnector());
 
         return $api;
+    }
+
+    public function getCurrentUserInfo(): array
+    {
+        $request = new Requests\OAuth2\UserInfo();
+
+        return $this->executeRequest($request);
     }
 }

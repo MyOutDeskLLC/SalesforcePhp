@@ -17,6 +17,7 @@ There are many out of the box features ready for you to build upon.
 
 - Authentication
   - OAuth
+  - OAuth + PKCE
   - Username \ Password Flow (API Users)
 - Basic Operations
   - Query record(s)
@@ -39,8 +40,8 @@ There are many out of the box features ready for you to build upon.
   - Includes SalesforceJob class to help manage operations
     - This is optional and direct methods are also exposed
 - Run SOQL Queries
-  - Access [SOQL Query Builder](https://github.com/mihasicehcek/php-salesforce-soql-builder)
-  - Helper functions for [SOQL date constants](/src/Constants/SoqlDates.php)
+  - Access SOQL Query Builder
+  - Helper functions for SOQL Date Functions
 - Analytics API (Reports, Dashboards)
   - List, Query Basic Information, Metadata for Reports, Dashboards
   - List, Create, Update, Delete, Search for report and dashboard folders
@@ -84,6 +85,21 @@ $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state)
 // store this in an encrypted field in your database
 $serialized = SalesforceApi::serializeAuthenticator($authenticator);
 ```
+
+#### OAuth + PKCE
+Pass in a `code_verifier` parameter into the oAuth configuration and it will kick off the flow for this. You'll need to store the
+`code_verifier` parameter on your own end - make it random of course. Library will handle the oddities of SHA256 + base64url encoding for you.
+
+```php
+$oauthConfig = OAuthConfiguration::create([
+    'client_id'     => 'SALESFORCE_CONSUMER_KEY',
+    'client_secret' => 'SALESFORCE_CONSUMER_SECRET',
+    'redirect_uri'  => 'REDIRECT_URI',
+    'code_verifier' => 'code-verifier-challenge-make-sure-this-is-random-and-not-shown-to-user',
+]);
+```
+
+It's a little hacky, but this is not implemented upstream and I haven't updated Saloon so it is what it is.
 
 #### Password Authentication
 Please visit `YOUR_DOMAIN.com/_ui/system/security/ResetApiTokenEdit` to get a security token reset. It will email the user. This must be

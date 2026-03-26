@@ -7,6 +7,7 @@ class OAuthConfiguration
     protected string $clientId;
     protected string $clientSecret;
     protected string $redirectUri;
+    protected string $codeChallenge;
 
     public static function create(array $oAuthConfiguration): self
     {
@@ -14,8 +15,16 @@ class OAuthConfiguration
         $oauthConfig->setClientId($oAuthConfiguration['client_id']);
         $oauthConfig->setClientSecret($oAuthConfiguration['client_secret']);
         $oauthConfig->setRedirectUri($oAuthConfiguration['redirect_uri']);
+        $oauthConfig->setCodeChallenge($oAuthConfiguration['code_verifier'] ?? '');
 
         return $oauthConfig;
+    }
+
+    public function setCodeChallenge(string $codeVerifier): string
+    {
+        $this->codeChallenge = hash('sha256', $codeVerifier);
+
+        return $this->codeChallenge;
     }
 
     public function getClientId(): string
@@ -55,5 +64,10 @@ class OAuthConfiguration
     public function setRedirectUri(string $redirectUri): void
     {
         $this->redirectUri = $redirectUri;
+    }
+
+    public function getCodeChallenge(): string
+    {
+        return $this->codeChallenge;
     }
 }

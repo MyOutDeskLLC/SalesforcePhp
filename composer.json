@@ -17,18 +17,17 @@
     "require": {
         "php": ">=8.0",
         "league/csv": "^9.8",
-        "mihasicehcek/php_salesforce_soql_builder": "^1.0",
         "saloonphp/saloon": "^4.0"
     },
     "require-dev": {
-        "pestphp/pest": "^1.21|^2.0",
+        "pestphp/pest": "^4.0",
         "fakerphp/faker": "^1.19",
         "vlucas/phpdotenv": "^5.5",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^2.0"
     },
     "scripts": {
         "test": "pest",
-        "phpstan": "phpstan analyse src --level=5"
+        "phpstan": "phpstan analyse src --level=5 --memory-limit=512M"
     },
     "scripts-descriptions": {
         "test": "Run the tests",

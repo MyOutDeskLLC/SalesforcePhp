@@ -38,7 +38,7 @@ class SalesforcePhpTinkerwellDriver extends LaravelTinkerwellDriver
             'api' =>(function() : SalesforceApi {
                 $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL']);
                 $api->restoreExistingOAuthConnection((file_get_contents('.authenticator')), function($authenticator) {
-                    file_put_contents('.authenticator', $authenticator->serialize());
+                    file_put_contents('.authenticator', SalesforceApi::serializeAuthenticator($authenticator));
                 });
                 return $api;
             })()

@@ -32,7 +32,7 @@ if (!isset($_GET['code'])) {
     $token = $authenticator->getAccessToken();
     $refresh = $authenticator->getRefreshToken();
 
-    file_put_contents('.authenticator', $authenticator->serialize());
+    file_put_contents('.authenticator', SalesforceApi::serializeAuthenticator($authenticator));
 
     echo '<p>Token is ready, you can use the authenticator by deserializing .authenticator in the root or boot tinkerwell and just use $api.</p>';
 }

@@ -9,7 +9,7 @@ use Saloon\Http\Request;
 
 class UploadJobData extends Request implements HasBody
 {
-    use \Saloon\Traits\Body\HasBody;
+    use \Saloon\Traits\Body\HasStringBody;
 
     protected string $jobId;
     protected AbstractCsv $stream;

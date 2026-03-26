@@ -2,6 +2,8 @@
 
 namespace myoutdeskllc\SalesforcePhp;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
 use myoutdeskllc\SalesforcePhp\Api\BulkApi2;
@@ -41,6 +43,7 @@ class SalesforceApi
     protected bool $recordsOnly = false;
     protected static string $apiVersion = 'v51.0';
     protected static string $instanceUrl = 'https://test.salesforce.com';
+    protected static string $accessToken = '';
 
     public function __construct(string $instanceUrl = 'https://test.salesforce.com', string $apiVersion = 'v51.0')
     {
@@ -77,6 +80,7 @@ class SalesforceApi
         self::$instanceUrl = $response['instance_url'];
 
         $this->connector->withTokenAuth($response['access_token']);
+        self::$accessToken = $response['access_token'];
 
         return $response['access_token'];
     }
@@ -84,6 +88,7 @@ class SalesforceApi
     public function restoreAccessToken(string $accessToken): void
     {
         $this->connector->withTokenAuth($accessToken);
+        self::$accessToken = $accessToken;
     }
 
     public function startOAuthLogin(OAuthConfiguration $configuration): array
@@ -105,6 +110,7 @@ class SalesforceApi
 
         $this->connector = new SalesforceApiConnector();
         $this->connector->authenticate($authenticator);
+        self::$accessToken = $authenticator->getAccessToken();
 
         return $authenticator;
     }
@@ -112,7 +118,7 @@ class SalesforceApi
     public function restoreExistingOAuthConnection($serializedAuthenticator, callable $afterRefresh)
     {
         $connector = new Connectors\SalesforceOAuthLoginConnector();
-        $authenticator = AccessTokenAuthenticator::unserialize($serializedAuthenticator);
+        $authenticator = self::unserializeAuthenticator($serializedAuthenticator);
         $connector->authenticate($authenticator);
 
         if ($authenticator->hasExpired()) {
@@ -122,11 +128,46 @@ class SalesforceApi
 
         $this->connector = new SalesforceApiConnector();
         $this->connector->authenticate($authenticator);
+        self::$accessToken = $authenticator->getAccessToken();
     }
 
     public function refreshToken($serializedAuthenticator, callable $afterRefresh)
     {
         return $this->restoreExistingOAuthConnection($serializedAuthenticator, $afterRefresh);
+    }
+
+    /**
+     * Serialize an OAuthAuthenticator to a JSON string for storage.
+     * Replaces the serialize() method removed from Saloon v4.
+     */
+    public static function serializeAuthenticator(OAuthAuthenticator $authenticator): string
+    {
+        return json_encode([
+            'accessToken'  => $authenticator->getAccessToken(),
+            'refreshToken' => $authenticator->getRefreshToken(),
+            'expiresAt'    => $authenticator->getExpiresAt()?->format(DateTimeInterface::ATOM),
+        ]);
+    }
+
+    /**
+     * Restore an OAuthAuthenticator from a JSON string previously produced by serializeAuthenticator().
+     * Replaces the unserialize() static method removed from Saloon v4.
+     *
+     * @throws \InvalidArgumentException if the string is not valid JSON or is missing required fields.
+     */
+    public static function unserializeAuthenticator(string $serialized): AccessTokenAuthenticator
+    {
+        $data = json_decode($serialized, true);
+
+        if (!is_array($data) || !isset($data['accessToken'])) {
+            throw new InvalidArgumentException('Invalid serialized authenticator: expected a JSON object with an accessToken field.');
+        }
+
+        return new AccessTokenAuthenticator(
+            accessToken:  $data['accessToken'],
+            refreshToken: $data['refreshToken'] ?? null,
+            expiresAt:    isset($data['expiresAt']) ? new DateTimeImmutable($data['expiresAt']) : null,
+        );
     }
 
     public static function getApiVersion(): string
@@ -137,6 +178,11 @@ class SalesforceApi
     public static function getInstanceUrl(): string
     {
         return self::$instanceUrl;
+    }
+
+    public static function token(): string
+    {
+        return self::$accessToken;
     }
 
     /**

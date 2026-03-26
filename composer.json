@@ -18,10 +18,10 @@
         "php": ">=8.0",
         "league/csv": "^9.8",
         "mihasicehcek/php_salesforce_soql_builder": "^1.0",
-        "saloonphp/saloon": "^3.0"
+        "saloonphp/saloon": "^4.0"
     },
     "require-dev": {
-        "pestphp/pest": "^1.21",
+        "pestphp/pest": "^1.21|^2.0",
         "fakerphp/faker": "^1.19",
         "vlucas/phpdotenv": "^5.5",
         "phpstan/phpstan": "^1.10"

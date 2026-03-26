@@ -2,11 +2,12 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\SObjects;
 
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-class UpdateRecords extends Request
+class UpdateRecords extends Request implements HasBody
 {
     use HasJsonBody;
 

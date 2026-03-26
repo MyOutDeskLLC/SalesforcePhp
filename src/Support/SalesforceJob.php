@@ -298,7 +298,7 @@ class SalesforceJob
     {
         $csvStream = $this->getSuccessfulResults();
 
-        return Reader::createFromString($csvStream);
+        return Reader::fromString($csvStream);
     }
 
     /**
@@ -310,7 +310,7 @@ class SalesforceJob
     {
         $csvStream = $this->getFailedResults();
 
-        return Reader::createFromString($csvStream);
+        return Reader::fromString($csvStream);
     }
 
     /**
@@ -335,7 +335,7 @@ class SalesforceJob
 
     protected function unpackResultsAsArray($csvStream): array
     {
-        $reader = Reader::createFromString($csvStream);
+        $reader = Reader::fromString($csvStream);
         $results = [];
         foreach ($reader as $row) {
             $results[] = $row;
@@ -418,7 +418,7 @@ class SalesforceJob
     public function setRecordsToUpload(array $records): self
     {
         $this->closeExistingStream();
-        $writer = Writer::createFromString();
+        $writer = Writer::fromString();
         $writer->insertAll($records);
         $this->stream = $writer;
 
@@ -463,7 +463,7 @@ class SalesforceJob
      */
     public function setFileStream($stream): self
     {
-        $this->stream = Reader::createFromStream($stream);
+        $this->stream = Reader::from($stream);
         $this->delimiter = $this->stream->getDelimiter();
 
         return $this;
@@ -518,7 +518,7 @@ class SalesforceJob
     public function setCsvFile(string $csvFile): self
     {
         $this->closeExistingStream();
-        $this->stream = Reader::createFromPath($csvFile);
+        $this->stream = Reader::from($csvFile);
 
         return $this;
     }

@@ -43,6 +43,7 @@ class SalesforceApi
     protected bool $recordsOnly = false;
     protected static string $apiVersion = 'v51.0';
     protected static string $instanceUrl = 'https://test.salesforce.com';
+    protected static string $accessToken = '';
 
     public function __construct(string $instanceUrl = 'https://test.salesforce.com', string $apiVersion = 'v51.0')
     {
@@ -79,6 +80,7 @@ class SalesforceApi
         self::$instanceUrl = $response['instance_url'];
 
         $this->connector->withTokenAuth($response['access_token']);
+        self::$accessToken = $response['access_token'];
 
         return $response['access_token'];
     }
@@ -86,6 +88,7 @@ class SalesforceApi
     public function restoreAccessToken(string $accessToken): void
     {
         $this->connector->withTokenAuth($accessToken);
+        self::$accessToken = $accessToken;
     }
 
     public function startOAuthLogin(OAuthConfiguration $configuration): array
@@ -107,6 +110,7 @@ class SalesforceApi
 
         $this->connector = new SalesforceApiConnector();
         $this->connector->authenticate($authenticator);
+        self::$accessToken = $authenticator->getAccessToken();
 
         return $authenticator;
     }
@@ -124,6 +128,7 @@ class SalesforceApi
 
         $this->connector = new SalesforceApiConnector();
         $this->connector->authenticate($authenticator);
+        self::$accessToken = $authenticator->getAccessToken();
     }
 
     public function refreshToken($serializedAuthenticator, callable $afterRefresh)
@@ -173,6 +178,11 @@ class SalesforceApi
     public static function getInstanceUrl(): string
     {
         return self::$instanceUrl;
+    }
+
+    public static function token(): string
+    {
+        return self::$accessToken;
     }
 
     /**

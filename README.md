@@ -82,7 +82,7 @@ $sfOauthConfiguration = OAuthConfiguration::create(
 // once the user is redirected back to your application, you can get the access token
 $authenticator = $salesforceApi->completeOAuthLogin($oauthConfig, $code, $state);
 // store this in an encrypted field in your database
-$serialized = $authenticator->serialize();
+$serialized = SalesforceApi::serializeAuthenticator($authenticator);
 ```
 
 #### Password Authentication

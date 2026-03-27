@@ -14,8 +14,10 @@ MockConfig::setFixturePath('tests/fixtures/responses');
 
 function getAPI(?MockClient $mockClient = null): SalesforceApi
 {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
-    $dotenv->safeLoad();
+    if (file_exists(__DIR__.'/../.env')) {
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+        $dotenv->load();
+    }
 
     $api = new SalesforceApi(
         $_ENV['SALESFORCE_INSTANCE_URL'] ?? 'https://test.salesforce.com',

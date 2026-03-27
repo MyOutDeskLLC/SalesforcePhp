@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:33:57 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "X-Robots-Tag": "none",
+        "Vary": "Accept-Encoding",
+        "X-Content-Type-Options": "nosniff",
+        "Sforce-Limit-Info": "api-usage=71\/5000000",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure",
+            "BrowserId=wNxs5Sn6EfGPblcyIENGrw; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "e638bce97bc16b1fd2bf6c51c0c9d7a0",
+        "X-Request-Id": "e638bce97bc16b1fd2bf6c51c0c9d7a0",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"totalSize\":5,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002yWjpAAE\"},\"Id\":\"00lcb000002yWjpAAE\",\"Name\":\"Shared App\",\"DeveloperName\":\"SharedApp\",\"Type\":\"Insights\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null},{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002yWjqAAE\"},\"Id\":\"00lcb000002yWjqAAE\",\"Name\":\"Einstein Bot Reports\",\"DeveloperName\":\"EinsteinBotReports\",\"Type\":\"Report\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null},{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002yWjrAAE\"},\"Id\":\"00lcb000002yWjrAAE\",\"Name\":\"Einstein Bot Reports Rel_238\",\"DeveloperName\":\"EinsteinBotReports_v2\",\"Type\":\"Report\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null},{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002yWjsAAE\"},\"Id\":\"00lcb000002yWjsAAE\",\"Name\":\"Einstein Bot Reports Winter '23\",\"DeveloperName\":\"EBotR_v3\",\"Type\":\"Report\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null},{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002yWjtAAE\"},\"Id\":\"00lcb000002yWjtAAE\",\"Name\":\"Einstein Bot Reports Summer '23\",\"DeveloperName\":\"EBotR_v5\",\"Type\":\"Report\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null}]}",
+    "context": []
+}

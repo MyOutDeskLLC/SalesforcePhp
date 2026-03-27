@@ -1,0 +1,25 @@
+{
+    "statusCode": 404,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:34:04 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Robots-Tag": "none",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:04 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:04 GMT; Max-Age=31536000; secure",
+            "BrowserId=xMFvACn6EfGoKGGD8Es2_A; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:34:04 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Sforce-Limit-Info": "api-usage=74\/5000000",
+        "Vary": "Accept-Encoding",
+        "X-Content-Type-Options": "nosniff",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "ee34a506ec3a18c5c949a348261b7ad3",
+        "X-Request-Id": "ee34a506ec3a18c5c949a348261b7ad3"
+    },
+    "data": "[{\"errorCode\":\"NOT_FOUND\",\"message\":\"Provided external ID field does not exist or is not accessible: TestNotExisting\"}]",
+    "context": []
+}

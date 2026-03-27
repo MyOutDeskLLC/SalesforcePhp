@@ -1,57 +1,43 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "uses()" function to bind a different classes or traits.
-|
-*/
-
-// uses(Tests\TestCase::class)->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
 use myoutdeskllc\SalesforcePhp\SalesforceApi;
+use myoutdeskllc\SalesforcePhp\Connectors\SalesforceApiConnector;
+use Saloon\MockConfig;
+use Saloon\Http\Faking\MockClient;
+use Saloon\Http\Faking\MockResponse;
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
+MockConfig::setFixturePath('tests/fixtures/responses');
 
-function getAPI()
+function getAPI(?MockClient $mockClient = null): SalesforceApi
 {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
-    $dotenv->load();
+    $dotenv->safeLoad();
 
-    $api = new SalesforceApi($_ENV['SALESFORCE_INSTANCE_URL'], $_ENV['API_VERSION']);
+    $api = new SalesforceApi(
+        $_ENV['SALESFORCE_INSTANCE_URL'] ?? 'https://test.salesforce.com',
+        $_ENV['API_VERSION'] ?? 'v51.0'
+    );
 
-    // this is questionable, but works for testing with OAuth connections
-    $api->restoreExistingOAuthConnection(file_get_contents('.authenticator'), function ($authenticator) {
-        file_put_contents('.authenticator', SalesforceApi::serializeAuthenticator($authenticator));
-    });
+    $authenticatorFile = __DIR__.'/../.authenticator';
+
+    if (file_exists($authenticatorFile)) {
+        $api->restoreExistingOAuthConnection(file_get_contents($authenticatorFile), function ($authenticator) use ($authenticatorFile) {
+            file_put_contents($authenticatorFile, SalesforceApi::serializeAuthenticator($authenticator));
+        });
+    } else {
+        // No live credentials - fixtures must already exist
+        $connector = new SalesforceApiConnector();
+        $connector->withTokenAuth('mock-access-token');
+        $api->setConnector($connector);
+    }
+
+    if ($mockClient !== null) {
+        $api->getConnector()->withMockClient($mockClient);
+    }
 
     $api->recordsOnly();
 
@@ -63,35 +49,4 @@ function toFlatArray(array $results, string $key)
     return array_map(function ($result) use ($key) {
         return $result[$key];
     }, $results);
-}
-
-function destroyPestPhpSalesforceChanges()
-{
-    $reportApi = getAPI()->recordsOnly()->getReportApi();
-
-    $reports = $reportApi->listReports();
-    $folders = $reportApi->listFolders();
-
-    foreach ($reports as $report) {
-        if (stripos($report['Name'], 'PESTPHP') !== false) {
-            $reportApi->deleteReport($report['Id']);
-        }
-    }
-
-    foreach ($folders as $folder) {
-        if (stripos($folder['Name'], 'PESTPHP') !== false) {
-            if ($folder['Type'] === 'Dashboard') {
-                $dashboardsInFolder = $reportApi->recordsOnly()->listDashboardsInFolderById($folder['Id']);
-                foreach ($dashboardsInFolder as $dashboard) {
-                    $reportApi->deleteDashboard($dashboard['Id']);
-                }
-            }
-
-            try {
-                $reportApi->deleteFolder($folder['Id']);
-            } catch (\Exception $e) {
-                // eat this error. Sometimes deletions just fail due to needing a hard delete from the bulk api
-            }
-        }
-    }
 }

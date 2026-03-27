@@ -1,18 +1,23 @@
 <?php
 
-beforeEach(function () {
-    getAPI();
-});
+use Saloon\Http\Faking\MockClient;
+use Saloon\Http\Faking\MockResponse;
 
 test('Can query list of apex classes', function () {
-    $api = getAPI()->getToolingApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('tooling/apex_classes'),
+    ]);
+    $api = getAPI($mockClient)->getToolingApi();
     $classes = $api->getApexClasses();
 
     expect($classes)->toBeArray();
 });
 
 test('Can execute anonymous apex', function () {
-    $api = getAPI()->getToolingApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('tooling/execute_anonymous'),
+    ]);
+    $api = getAPI($mockClient)->getToolingApi();
     $result = $api->executeAnonymousApex("System.debug('test');");
 
     expect($result)->toHaveKey('compiled', true);
@@ -20,18 +25,21 @@ test('Can execute anonymous apex', function () {
 });
 
 test('can query ApexLogs endpoint', function () {
-    $api = getAPI()->getToolingApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('tooling/apex_logs'),
+    ]);
+    $api = getAPI($mockClient)->getToolingApi();
     $logs = $api->getApexLogs();
 
-    // ApexLogs requires a trace flag to capture logs, so we just verify the API call works
     expect($logs)->toBeArray();
 });
 
 test('it can create emails in the public folder', function () {
-    $faker = Faker\Factory::create();
-
+    $mockClient = new MockClient([
+        MockResponse::fixture('tooling/create_email_template'),
+    ]);
     $testEmailTemplate = [
-        'FullName' => 'unfiled$public/test'.$faker->randomNumber(4),
+        'FullName' => 'unfiled$public/test1234',
         'Metadata' => [
             'subject'     => 'Testing123',
             'available'   => true,
@@ -41,7 +49,7 @@ test('it can create emails in the public folder', function () {
             'encodingKey' => 'utf-8',
         ],
     ];
-    $result = getAPI()->getToolingApi()->createEmailTemplate($testEmailTemplate);
+    $result = getAPI($mockClient)->getToolingApi()->createEmailTemplate($testEmailTemplate);
 
     expect($result)->toHaveKey('id');
 });

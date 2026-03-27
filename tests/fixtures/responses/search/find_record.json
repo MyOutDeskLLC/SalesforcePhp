@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:34:09 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Sforce-Limit-Info": "api-usage=79\/5000000",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure",
+            "BrowserId=x-NIWin6EfGihBlZA9Vjyw; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "X-Robots-Tag": "none",
+        "Vary": "Accept-Encoding",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Content-Type-Options": "nosniff",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "4d31e68cfebe623dd3eb46b7dfdab2d9",
+        "X-Request-Id": "4d31e68cfebe623dd3eb46b7dfdab2d9",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"totalSize\":1,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fRpOwAAK\"},\"Id\":\"001cb00000fRpOwAAK\",\"Name\":\"SalesforcePhp Test\"}]}",
+    "context": []
+}

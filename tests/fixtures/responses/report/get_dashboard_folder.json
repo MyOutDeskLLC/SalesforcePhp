@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:33:58 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Content-Type-Options": "nosniff",
+        "Vary": "Accept-Encoding",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure",
+            "BrowserId=wVlk3Sn6EfG6PSEJvSxmDA; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Sforce-Limit-Info": "api-usage=70\/5000000",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "X-Robots-Tag": "none",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "4b2a3f59d8712d1cd72ced6aa0b7f27a",
+        "X-Request-Id": "4b2a3f59d8712d1cd72ced6aa0b7f27a",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"totalSize\":1,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Folder\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Folder\/00lcb000002zjjpAAA\"},\"Id\":\"00lcb000002zjjpAAA\",\"Name\":\"PESTPHPDashFolder\",\"DeveloperName\":\"PESTPHPDashFolder\",\"Type\":\"Dashboard\",\"AccessType\":\"Hidden\",\"NamespacePrefix\":null}]}",
+    "context": []
+}

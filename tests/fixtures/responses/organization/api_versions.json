@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:33:57 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Sforce-Limit-Info": "api-usage=70\/5000000",
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Robots-Tag": "none",
+        "Vary": "Accept-Encoding",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure",
+            "BrowserId=wL-Wdin6EfGFeEN23n3dzQ; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:33:57 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "0b672683aee7a2043a188377475f9fdb",
+        "X-Request-Id": "0b672683aee7a2043a188377475f9fdb",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"tooling\":\"\/services\/data\/v51.0\/tooling\",\"metadata\":\"\/services\/data\/v51.0\/metadata\",\"eclair\":\"\/services\/data\/v51.0\/eclair\",\"folders\":\"\/services\/data\/v51.0\/folders\",\"prechatForms\":\"\/services\/data\/v51.0\/prechatForms\",\"contact-tracing\":\"\/services\/data\/v51.0\/contact-tracing\",\"jsonxform\":\"\/services\/data\/v51.0\/jsonxform\",\"chatter\":\"\/services\/data\/v51.0\/chatter\",\"payments\":\"\/services\/data\/v51.0\/payments\",\"tabs\":\"\/services\/data\/v51.0\/tabs\",\"appMenu\":\"\/services\/data\/v51.0\/appMenu\",\"quickActions\":\"\/services\/data\/v51.0\/quickActions\",\"queryAll\":\"\/services\/data\/v51.0\/queryAll\",\"commerce\":\"\/services\/data\/v51.0\/commerce\",\"wave\":\"\/services\/data\/v51.0\/wave\",\"iot\":\"\/services\/data\/v51.0\/iot\",\"analytics\":\"\/services\/data\/v51.0\/analytics\",\"search\":\"\/services\/data\/v51.0\/search\",\"smartdatadiscovery\":\"\/services\/data\/v51.0\/smartdatadiscovery\",\"identity\":\"https:\/\/test.salesforce.com\/id\/00Dcb00000CvNQoEAN\/005cb00000EqeanAAB\",\"composite\":\"\/services\/data\/v51.0\/composite\",\"parameterizedSearch\":\"\/services\/data\/v51.0\/parameterizedSearch\",\"fingerprint\":\"\/services\/data\/v51.0\/fingerprint\",\"theme\":\"\/services\/data\/v51.0\/theme\",\"nouns\":\"\/services\/data\/v51.0\/nouns\",\"domino\":\"\/services\/data\/v51.0\/domino\",\"event\":\"\/services\/data\/v51.0\/event\",\"serviceTemplates\":\"\/services\/data\/v51.0\/serviceTemplates\",\"recent\":\"\/services\/data\/v51.0\/recent\",\"connect\":\"\/services\/data\/v51.0\/connect\",\"licensing\":\"\/services\/data\/v51.0\/licensing\",\"limits\":\"\/services\/data\/v51.0\/limits\",\"process\":\"\/services\/data\/v51.0\/process\",\"dedupe\":\"\/services\/data\/v51.0\/dedupe\",\"jobs\":\"\/services\/data\/v51.0\/jobs\",\"query\":\"\/services\/data\/v51.0\/query\",\"match\":\"\/services\/data\/v51.0\/match\",\"ai\":\"\/services\/data\/v51.0\/ai\",\"localizedvalue\":\"\/services\/data\/v51.0\/localizedvalue\",\"mobile\":\"\/services\/data\/v51.0\/mobile\",\"emailConnect\":\"\/services\/data\/v51.0\/emailConnect\",\"consent\":\"\/services\/data\/v51.0\/consent\",\"tokenizer\":\"\/services\/data\/v51.0\/tokenizer\",\"compactLayouts\":\"\/services\/data\/v51.0\/compactLayouts\",\"knowledgeManagement\":\"\/services\/data\/v51.0\/knowledgeManagement\",\"sobjects\":\"\/services\/data\/v51.0\/sobjects\",\"actions\":\"\/services\/data\/v51.0\/actions\",\"support\":\"\/services\/data\/v51.0\/support\"}",
+    "context": []
+}

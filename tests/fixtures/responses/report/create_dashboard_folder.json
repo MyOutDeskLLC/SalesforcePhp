@@ -1,0 +1,25 @@
+{
+    "statusCode": 201,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:33:58 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "X-Robots-Tag": "none",
+        "Sforce-Limit-Info": "api-usage=68\/5000000",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Content-Type-Options": "nosniff",
+        "Vary": "Accept-Encoding",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure",
+            "BrowserId=wT1RoSn6EfGKNsu_NBmzkQ; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:33:58 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "c67b1069599be3bc44507cecc89e9ab2",
+        "X-Request-Id": "c67b1069599be3bc44507cecc89e9ab2"
+    },
+    "data": "{\"ancestors\":[],\"childrenUrl\":\"\/services\/data\/v51.0\/folders\/00lcb000002zjjpAAA\/children\",\"depth\":0,\"id\":\"00lcb000002zjjpAAA\",\"label\":\"PESTPHPDashFolder\",\"name\":\"PESTPHPDashFolder\",\"shareRecipientsUrl\":\"\/services\/data\/v51.0\/folders\/00lcb000002zjjpAAA\/share-recipients?shareType=User&limit=100\",\"sharesUrl\":\"\/services\/data\/v51.0\/folders\/00lcb000002zjjpAAA\/shares\",\"supportedShareTypes\":[\"user\",\"group\"],\"type\":\"dashboard\",\"url\":\"\/services\/data\/v51.0\/folders\/00lcb000002zjjpAAA\"}",
+    "context": []
+}

@@ -2,7 +2,6 @@
 
 namespace myoutdeskllc\SalesforcePhp\Requests\Auth;
 
-use myoutdeskllc\SalesforcePhp\SalesforceApi;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -26,6 +25,6 @@ class LoginApiUser extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return SalesforceApi::getInstanceUrl().'/services/oauth2/token';
+        return '/services/oauth2/token';
     }
 }

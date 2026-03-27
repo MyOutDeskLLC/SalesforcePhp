@@ -62,7 +62,7 @@ class SalesforceApi
 
     public function login(string $username, string $password, string $consumerKey, string $consumerSecret): string
     {
-        $this->connector = new Connectors\SalesforceApiConnector();
+        $authConnector = new Connectors\SalesforceOAuthLoginConnector();
 
         $loginRequest = new LoginApiUser();
         $loginRequest->body()->set([
@@ -73,11 +73,12 @@ class SalesforceApi
             'password'      => $password,
         ]);
 
-        $response = $this->connector->send($loginRequest)->json();
+        $response = $authConnector->send($loginRequest)->json();
 
         // this must be set after the login request for both OAuth and username / password flows
         self::$instanceUrl = $response['instance_url'];
 
+        $this->connector = new Connectors\SalesforceApiConnector();
         $this->connector->withTokenAuth($response['access_token']);
         self::$accessToken = $response['access_token'];
 
@@ -778,8 +779,15 @@ class SalesforceApi
 
     public function getCurrentUserInfo(): array
     {
+        $authConnector = new Connectors\SalesforceOAuthLoginConnector();
+        $authConnector->withTokenAuth(self::$accessToken);
         $request = new Requests\OAuth2\UserInfo();
+        $response = $authConnector->send($request);
 
-        return $this->executeRequest($request);
+        if ($response->failed()) {
+            $response->throw();
+        }
+
+        return $response->json();
     }
 }

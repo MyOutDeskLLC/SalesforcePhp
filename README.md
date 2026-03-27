@@ -299,10 +299,15 @@ Testing is done via PestPHP against a live Salesforce org. Tests use standard ob
    ```bash
    sf org login web --set-default-dev-hub
    ```
+   If your Dev Hub is a sandbox, add the `--instance-url` flag:
+   ```bash
+   sf org login web --set-default-dev-hub --instance-url https://test.salesforce.com/
+   ```
 5. Create a scratch org:
    ```bash
    sf org create scratch --edition developer --alias my-scratch --set-default --duration-days 7
    ```
+   > If you logged into a sandbox Dev Hub in step 4, this will automatically use it as the target Dev Hub.
 6. Copy `.env.example` to `.env` and fill in your scratch org details:
    ```bash
    cp .env.example .env

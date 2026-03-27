@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:34:13 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Vary": "Accept-Encoding",
+        "Sforce-Limit-Info": "api-usage=82\/5000000",
+        "X-Robots-Tag": "none",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure",
+            "BrowserId=ydbbFCn6EfGPblcyIENGrw; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "0650209b84ca36533fa143f62814bb4b",
+        "X-Request-Id": "0650209b84ca36533fa143f62814bb4b",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"line\":-1,\"column\":-1,\"compiled\":true,\"success\":true,\"compileProblem\":null,\"exceptionStackTrace\":null,\"exceptionMessage\":null}",
+    "context": []
+}

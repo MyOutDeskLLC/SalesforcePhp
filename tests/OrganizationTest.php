@@ -1,13 +1,20 @@
 <?php
 
+use Saloon\Http\Faking\MockClient;
+use Saloon\Http\Faking\MockResponse;
+
 test('Can query organizational limits', function () {
-    $api = getAPI();
-    // Assert just a few keys should exist, well know the endpoint works
+    $mockClient = new MockClient([
+        MockResponse::fixture('organization/limits'),
+    ]);
+    $api = getAPI($mockClient);
     expect($api->getLimits())->toHaveKeys(['ConcurrentAsyncGetReportInstances', 'HourlyAsyncReportRuns', 'HourlyDashboardStatuses']);
 });
 
 test('Can query supported APIs', function () {
-    $api = getAPI();
-    // This will contain a lot of information on APIs available, so we'll just make sure it's not empty
+    $mockClient = new MockClient([
+        MockResponse::fixture('organization/api_versions'),
+    ]);
+    $api = getAPI($mockClient);
     expect($api->listApiVersionsAvailable())->not()->toBeEmpty();
 });

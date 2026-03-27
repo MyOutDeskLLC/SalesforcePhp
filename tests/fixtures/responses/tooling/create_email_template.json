@@ -1,0 +1,26 @@
+{
+    "statusCode": 201,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:34:13 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Sforce-Limit-Info": "api-usage=77\/5000000",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Location": "\/services\/data\/v51.0\/tooling\/sobjects\/EmailTemplate\/00Xcb000005rgSrEAI",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure",
+            "BrowserId=ygzfNyn6EfGe9bmAG7wk0w; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:34:13 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "X-Robots-Tag": "none",
+        "Vary": "Accept-Encoding",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "X-Content-Type-Options": "nosniff",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "efb52f8794fa587c5e2d8d185c97e560",
+        "X-Request-Id": "efb52f8794fa587c5e2d8d185c97e560"
+    },
+    "data": "{\"id\":\"00Xcb000005rgSrEAI\",\"success\":true,\"errors\":[],\"warnings\":[],\"infos\":[]}",
+    "context": []
+}

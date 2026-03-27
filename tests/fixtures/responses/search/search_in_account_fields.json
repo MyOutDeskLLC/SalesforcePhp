@@ -1,0 +1,27 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:34:09 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure",
+            "BrowserId=x5p_gyn6EfGihBlZA9Vjyw; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:34:09 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "Sforce-Limit-Info": "api-usage=78\/5000000",
+        "queryId": "-kb1e2xeuxjp3",
+        "X-Content-Type-Options": "nosniff",
+        "X-Robots-Tag": "none",
+        "Vary": "Accept-Encoding",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "aa105a4d701656751f8cc93f2936821b",
+        "X-Request-Id": "aa105a4d701656751f8cc93f2936821b",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"searchRecords\":[{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fbN5cAAE\"},\"Id\":\"001cb00000fbN5cAAE\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fadsgAAA\"},\"Id\":\"001cb00000fadsgAAA\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSpbCAAS\"},\"Id\":\"001cb00000fSpbCAAS\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSRfUAAW\"},\"Id\":\"001cb00000fSRfUAAW\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fS22tAAC\"},\"Id\":\"001cb00000fS22tAAC\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSguAAAS\"},\"Id\":\"001cb00000fSguAAAS\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSmtbAAC\"},\"Id\":\"001cb00000fSmtbAAC\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fRpOwAAK\"},\"Id\":\"001cb00000fRpOwAAK\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSVWEAA4\"},\"Id\":\"001cb00000fSVWEAA4\",\"Name\":\"SalesforcePhp Test\"},{\"attributes\":{\"type\":\"Account\",\"url\":\"\/services\/data\/v51.0\/sobjects\/Account\/001cb00000fSnbEAAS\"},\"Id\":\"001cb00000fSnbEAAS\",\"Name\":\"SalesforcePhp Test\"}]}",
+    "context": []
+}

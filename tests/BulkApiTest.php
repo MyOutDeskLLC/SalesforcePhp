@@ -2,13 +2,14 @@
 
 use myoutdeskllc\SalesforcePhp\Constants\BulkApiOptions;
 use myoutdeskllc\SalesforcePhp\Support\SalesforceJob;
-
-beforeEach(function () {
-    getAPI();
-});
+use Saloon\Http\Faking\MockClient;
+use Saloon\Http\Faking\MockResponse;
 
 test('Can create a bulk API job', function () {
-    $api = getAPI()->getBulkApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('bulk/create_job'),
+    ]);
+    $api = getAPI($mockClient)->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -19,7 +20,12 @@ test('Can create a bulk API job', function () {
 });
 
 test('Can upload records to a bulk API job', function () {
-    $api = getAPI()->getBulkApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('bulk/create_job_upload'),
+        MockResponse::fixture('bulk/upload_data'),
+        MockResponse::fixture('bulk/close_job'),
+    ]);
+    $api = getAPI($mockClient)->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -32,7 +38,11 @@ test('Can upload records to a bulk API job', function () {
 });
 
 test('Can get existing job status', function () {
-    $api = getAPI()->getBulkApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('bulk/create_job_status'),
+        MockResponse::fixture('bulk/get_job'),
+    ]);
+    $api = getAPI($mockClient)->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);
@@ -44,7 +54,12 @@ test('Can get existing job status', function () {
 });
 
 test('Can abort a job', function () {
-    $api = getAPI()->getBulkApi();
+    $mockClient = new MockClient([
+        MockResponse::fixture('bulk/create_job_abort'),
+        MockResponse::fixture('bulk/get_job_abort'),
+        MockResponse::fixture('bulk/abort_job'),
+    ]);
+    $api = getAPI($mockClient)->getBulkApi();
     $salesforceJob = new SalesforceJob($api);
     $salesforceJob->setObject('Account');
     $salesforceJob->setOperation(BulkApiOptions::INSERT);

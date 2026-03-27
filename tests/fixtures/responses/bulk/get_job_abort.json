@@ -1,0 +1,26 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Date": "Fri, 27 Mar 2026 16:33:57 GMT",
+        "Content-Type": "application\/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+        "Cache-Control": "no-cache,must-revalidate,max-age=0,no-store,private",
+        "Vary": "Accept-Encoding",
+        "X-Robots-Tag": "none",
+        "Sforce-Limit-Info": "api-usage=70\/5000000",
+        "Set-Cookie": [
+            "CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:56 GMT; Max-Age=31536000; secure",
+            "LSKey-c$CookieConsentPolicy=0:1; path=\/; expires=Sat, 27-Mar-2027 16:33:56 GMT; Max-Age=31536000; secure",
+            "BrowserId=wCr3ryn6EfGdIN1KaqGQpg; domain=.salesforce.com; path=\/; expires=Sat, 27-Mar-2027 16:33:56 GMT; Max-Age=31536000; secure; SameSite=None"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "Server": "sfdcedge",
+        "X-SFDC-Request-Id": "851f3ce4e003d44eb03db498ef90980c",
+        "X-Request-Id": "851f3ce4e003d44eb03db498ef90980c",
+        "X-SFDC-Edge-Cache": "MISS"
+    },
+    "data": "{\"id\":\"750cb00000DoJ9iAAF\",\"operation\":\"insert\",\"object\":\"Account\",\"createdById\":\"005cb00000EqeanAAB\",\"createdDate\":\"2026-03-27T16:33:56.000+0000\",\"systemModstamp\":\"2026-03-27T16:33:56.000+0000\",\"state\":\"Open\",\"concurrencyMode\":\"Parallel\",\"contentType\":\"CSV\",\"apiVersion\":51.0,\"jobType\":\"V2Ingest\",\"contentUrl\":\"services\/data\/v51.0\/jobs\/ingest\/750cb00000DoJ9iAAF\/batches\",\"lineEnding\":\"LF\",\"columnDelimiter\":\"COMMA\",\"retries\":0,\"totalProcessingTime\":0,\"apiActiveProcessingTime\":0,\"apexProcessingTime\":0}",
+    "context": []
+}

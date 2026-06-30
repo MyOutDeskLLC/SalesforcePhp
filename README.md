@@ -288,6 +288,71 @@ $builder
 `> SELECT Id, Name, created_at FROM Account WHERE Name = 'Test' ORDER BY created_at DESC LIMIT 20`
 
 
+## Running SOQL Queries
+
+You can execute SOQL directly, either from a builder or a raw string.
+
+```php
+$builder = SalesforceApi::getQueryBuilder()
+    ->select(['Id', 'Name'])
+    ->from('Account');
+
+// returns the first page of records (up to 2,000)
+$records = $salesforceApi->executeQuery($builder);
+// or with a raw SOQL string
+$records = $salesforceApi->executeQueryRaw('SELECT Id, Name FROM Account');
+```
+
+### queryAll (deleted and archived records)
+
+`queryAll` works exactly like `query` but also returns soft-deleted and archived records.
+
+```php
+$records = $salesforceApi->executeQueryAll($builder);
+// or
+$records = $salesforceApi->executeQueryAllRaw('SELECT Id, Name FROM Account');
+```
+
+### Pagination
+
+Salesforce returns query results in batches (up to 2,000 records per request). When more
+records remain, the response includes `done => false` and a `nextRecordsUrl`. Note that
+`recordsOnly()` strips this metadata, so do not enable it if you want to paginate manually.
+
+You can follow pagination yourself with `queryMore`, passing the `nextRecordsUrl` from the
+previous response. This works for both `query` and `queryAll` (Salesforce returns a `/query/`
+style `nextRecordsUrl` even for `queryAll` requests, and `queryMore` handles either).
+
+```php
+$response = $salesforceApi->executeQueryRaw('SELECT Id, Name FROM Account');
+
+while (($response['done'] ?? true) === false) {
+    $response = $salesforceApi->queryMore($response['nextRecordsUrl']);
+    // do something with $response['records']
+}
+```
+
+### Fetching every record at once
+
+If you just want the complete result set in one array, use `getAllRecords` (or
+`getAllRecordsRaw`). It follows `nextRecordsUrl` pagination until Salesforce reports `done`,
+collecting every batch for you.
+
+```php
+// every matching record, across all pages
+$records = $salesforceApi->getAllRecords($builder);
+// or from a raw SOQL string
+$records = $salesforceApi->getAllRecordsRaw('SELECT Id, Name FROM Account');
+
+// include deleted/archived records via the queryAll endpoint
+$records = $salesforceApi->getAllRecords($builder, true);
+$records = $salesforceApi->getAllRecordsRaw('SELECT Id, Name FROM Account', true);
+```
+
+> Be mindful of memory when fetching very large result sets — every record is held in memory.
+> For huge exports, prefer the Bulk API (see [Batch Jobs](#batch-jobs)).
+
+
 ## Testing
 Testing is done via PestPHP against a live Salesforce org. Tests use standard objects (Account, etc.) so no custom metadata deployment is needed.
 

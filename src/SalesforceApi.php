@@ -17,6 +17,8 @@ use myoutdeskllc\SalesforcePhp\Requests\Auth\LoginApiUser;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetLimits;
 use myoutdeskllc\SalesforcePhp\Requests\Organization\GetSupportedApiVersions;
 use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQuery;
+use myoutdeskllc\SalesforcePhp\Requests\Query\ExecuteQueryAll;
+use myoutdeskllc\SalesforcePhp\Requests\Query\QueryMore;
 use myoutdeskllc\SalesforcePhp\Requests\Query\Search;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecord;
 use myoutdeskllc\SalesforcePhp\Requests\SObjects\CreateRecords;
@@ -278,14 +280,26 @@ class SalesforceApi
         $inlineData = $response->json();
 
         if (isset($inlineData['records']) && $this->recordsOnly) {
-            return array_map(function ($item) {
-                unset($item['attributes']);
-
-                return $item;
-            }, $inlineData['records']);
+            return $this->stripAttributes($inlineData['records']);
         }
 
-        return $response->json();
+        return $inlineData;
+    }
+
+    /**
+     * Removes the salesforce 'attributes' metadata key from each record.
+     *
+     * @param array $records
+     *
+     * @return array
+     */
+    protected function stripAttributes(array $records): array
+    {
+        return array_map(function ($item) {
+            unset($item['attributes']);
+
+            return $item;
+        }, $records);
     }
 
     /**
@@ -611,6 +625,100 @@ class SalesforceApi
     public function executeQueryRaw(string $rawQuery): array
     {
         $request = new ExecuteQuery($rawQuery);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Executes a queryAll against salesforce, including deleted and archived records.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_queryall.htm
+     *
+     * @param SoqlQueryBuilder $builder
+     *
+     * @return array
+     */
+    public function executeQueryAll(SoqlQueryBuilder $builder): array
+    {
+        return $this->executeQueryAllRaw($builder->toSoql());
+    }
+
+    /**
+     * Directly execute SOQL against queryAll and get results, including deleted and archived records.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_queryall.htm
+     *
+     * @param string $rawQuery
+     *
+     * @return array
+     */
+    public function executeQueryAllRaw(string $rawQuery): array
+    {
+        $request = new ExecuteQueryAll($rawQuery);
+
+        return $this->executeRequest($request);
+    }
+
+    /**
+     * Executes a query and follows nextRecordsUrl pagination until salesforce reports done,
+     * returning the complete result set as a single array of records.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param SoqlQueryBuilder $builder
+     * @param bool             $includeDeleted use the queryAll endpoint to include deleted/archived records
+     *
+     * @return array
+     */
+    public function getAllRecords(SoqlQueryBuilder $builder, bool $includeDeleted = false): array
+    {
+        return $this->getAllRecordsRaw($builder->toSoql(), $includeDeleted);
+    }
+
+    /**
+     * Directly execute SOQL and follow nextRecordsUrl pagination until salesforce reports
+     * done, returning every record in a single array.
+     *
+     * Salesforce returns query results in batches (default 2,000 records). This walks every
+     * batch via queryMore so the caller receives the complete result set.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param string $rawQuery
+     * @param bool   $includeDeleted use the queryAll endpoint to include deleted/archived records
+     *
+     * @return array
+     */
+    public function getAllRecordsRaw(string $rawQuery, bool $includeDeleted = false): array
+    {
+        $request = $includeDeleted ? new ExecuteQueryAll($rawQuery) : new ExecuteQuery($rawQuery);
+        $response = $this->executeRequestSync($request)->json();
+        $records = $response['records'] ?? [];
+
+        while (! ($response['done'] ?? true) && ! empty($response['nextRecordsUrl'])) {
+            $response = $this->executeRequestSync(new QueryMore($response['nextRecordsUrl']))->json();
+            $records = array_merge($records, $response['records'] ?? []);
+        }
+
+        return $this->recordsOnly ? $this->stripAttributes($records) : $records;
+    }
+
+    /**
+     * Fetches the next batch of records from a paginated query or queryAll, using the
+     * nextRecordsUrl returned in the previous response.
+     *
+     * Note: when recordsOnly() is not enabled, the response contains 'done',
+     * 'totalSize', 'nextRecordsUrl' (if more remain) and 'records'.
+     *
+     * @link https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/dome_query.htm
+     *
+     * @param string $nextRecordsUrl the nextRecordsUrl value from a prior query response
+     *
+     * @return array
+     */
+    public function queryMore(string $nextRecordsUrl): array
+    {
+        $request = new QueryMore($nextRecordsUrl);
 
         return $this->executeRequest($request);
     }
